@@ -1,18 +1,28 @@
-
-import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
-import { Icons } from "@/components/icons"
+'use client'
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+import { Icons } from "@/components/icons";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
 
 export type NavItem = {
-  title: string
-  href?: string
-  disabled?: boolean
-  external?: boolean
-}
+  title: string;
+  href?: string;
+  disabled?: boolean;
+  external?: boolean;
+};
 
 type MainNavProps = {
-  items?: NavItem[]
-}
+  items?: NavItem[];
+};
 
 export function MainNav({ items }: MainNavProps) {
   return (
@@ -21,6 +31,17 @@ export function MainNav({ items }: MainNavProps) {
         <Icons.activity className="h-6 w-6" />
         <span className="inline-block font-bold">{siteConfig.name}</span>
       </a>
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
+            <NavigationMenuContent>
+            <NavigationMenuLink>Link</NavigationMenuLink>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+
       {items?.length ? (
         <nav className="flex gap-6">
           {items?.map(
@@ -41,5 +62,5 @@ export function MainNav({ items }: MainNavProps) {
         </nav>
       ) : null}
     </div>
-  )
+  );
 }
