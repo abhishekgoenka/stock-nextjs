@@ -1,3 +1,4 @@
+import { DataTable } from "@/components/companies/data-table";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,7 +10,27 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function Home() {
+import { promises as fs } from "fs";
+import path from "path";
+import { Metadata } from "next";
+import Image from "next/image";
+import { z } from "zod";
+import { taskSchema } from "@/components/companies/data/schema";
+import { columns } from "@/components/companies/columns";
+
+// Simulate a database read for tasks.
+async function getTasks() {
+  const data = await fs.readFile(
+    path.join(process.cwd(), "src/components/companies/data/tasks.json")
+  );
+
+  const tasks = JSON.parse(data.toString());
+
+  return z.array(taskSchema).parse(tasks);
+}
+
+export default async function Home() {
+  const tasks = await getTasks();
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       {/* <div className="flex max-w-[980px] flex-col items-start gap-2">
@@ -25,7 +46,7 @@ export default function Home() {
       <div className="flex gap-4">
         <Button>Documentation</Button>
       </div> */}
-      <Table>
+      {/* <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
@@ -43,7 +64,8 @@ export default function Home() {
             <TableCell className="text-right">$250.00</TableCell>
           </TableRow>
         </TableBody>
-      </Table>
+      </Table> */}
+      <DataTable data={tasks} columns={columns} />
     </section>
   );
 }
