@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { z } from "zod";
 import { taskSchema } from "@/components/companies/data/schema";
 import { columns } from "@/components/companies/columns";
+// import { CompanyService } from '@/actions/company.service';
 
 export const metadata: Metadata = {
   title: "StockSync : Companies",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 // Simulate a database read for tasks.
 async function getTasks() {
   const data = await fs.readFile(
-    path.join(process.cwd(), "src/components/companies/data/tasks.json")
+    path.join(process.cwd(), "src/components/companies/data/tasks.json"),
   );
 
   const tasks = JSON.parse(data.toString());
@@ -25,6 +26,8 @@ async function getTasks() {
 
 export default async function Home() {
   const tasks = await getTasks();
+  // const comp = new CompanyService();
+  // console.log(await comp.getCompanies());
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <DataTable data={tasks} columns={columns} />
