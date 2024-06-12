@@ -1,22 +1,11 @@
-import { Sequelize } from "sequelize-typescript";
 import Company from "@/models/company.model";
-import { ConnectionService } from "./connection.service";
+import { BaseService } from "./base.service";
 
-export class CompanyService {
-  private sequelize!: Sequelize;
-  static dbInstance: CompanyService;
-
-  constructor() {
-    if (CompanyService.dbInstance) {
-      return CompanyService.dbInstance;
-    }
-
-    CompanyService.dbInstance = this;
-    this.sequelize = ConnectionService.sequelize;
-  }
-
-  public async getCompanies(): Promise<any> {
+export class CompanyService extends BaseService {
+  public async getCompanies(): Promise<Company[]> {
     try {
+      await this.connectDB();
+      console.log("getCompanies");
       const companies = await Company.findAll({
         order: [["name", "ASC"]],
       });

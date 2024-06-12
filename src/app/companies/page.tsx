@@ -6,7 +6,8 @@ import { Metadata } from "next";
 import { z } from "zod";
 import { taskSchema } from "@/components/companies/data/schema";
 import { columns } from "@/components/companies/columns";
-// import { CompanyService } from '@/actions/company.service';
+import { CompanyService } from "@/actions/company.service";
+import { ConnectionService } from "@/actions/connection.service";
 
 export const metadata: Metadata = {
   title: "StockSync : Companies",
@@ -24,10 +25,18 @@ async function getTasks() {
   return z.array(taskSchema).parse(tasks);
 }
 
+async function GET() {
+  const res = await fetch("/api/hello", {});
+  const data = await res.json();
+
+  return Response.json({ data });
+}
+
 export default async function Home() {
   const tasks = await getTasks();
-  // const comp = new CompanyService();
-  // console.log(await comp.getCompanies());
+  const comp = new CompanyService();
+  const companies = await comp.getCompanies();
+  console.log(companies[0].name);
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <DataTable data={tasks} columns={columns} />

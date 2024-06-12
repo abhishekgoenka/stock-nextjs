@@ -1,27 +1,22 @@
-import { Sequelize } from "sequelize-typescript";
+import { Model, Sequelize } from "sequelize-typescript";
 import * as path from "path";
+import Company from "@/models/company.model";
+import StockInvestment from "@/models/stock-investment.model";
 
 export class ConnectionService {
-  static sequelizeInstance: typeof ConnectionService;
   static sequelize: Sequelize;
 
   private constructor() {}
 
-  static generateConnection() {
-    if (ConnectionService.sequelizeInstance) {
-      return ConnectionService.sequelizeInstance;
-    }
-    ConnectionService.sequelizeInstance = this;
-    console.log("generateConnection");
+  static async generateConnection() {
     try {
       this.sequelize = new Sequelize({
-        logging: false,
+        logging: true,
         dialect: "sqlite",
         storage: "portfolio.sqlite",
-        models: [path.join(__dirname, "..", "models")],
+        models: [Company, StockInvestment],
       });
-
-      // await this.sequelize.sync({ force: true });
+      await this.sequelize.authenticate();
     } catch (ex) {
       console.error(ex);
     }
