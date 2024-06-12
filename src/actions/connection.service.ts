@@ -1,5 +1,4 @@
-import { Model, Sequelize } from "sequelize-typescript";
-import * as path from "path";
+import { Sequelize } from "sequelize-typescript";
 import Company from "@/models/company.model";
 import StockInvestment from "@/models/stock-investment.model";
 
@@ -10,13 +9,13 @@ export class ConnectionService {
 
   static async generateConnection() {
     try {
-      this.sequelize = new Sequelize({
+      ConnectionService.sequelize = new Sequelize({
         logging: true,
         dialect: "sqlite",
         storage: "portfolio.sqlite",
         models: [Company, StockInvestment],
       });
-      await this.sequelize.authenticate();
+      await ConnectionService.sequelize.authenticate();
     } catch (ex) {
       console.error(ex);
     }

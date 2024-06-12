@@ -2,11 +2,8 @@ import {
   Model,
   Column,
   Table,
-  BelongsToMany,
-  Scopes,
   PrimaryKey,
   AutoIncrement,
-  HasMany,
 } from "sequelize-typescript";
 
 @Table

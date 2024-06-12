@@ -46,11 +46,7 @@ export type NavItem = {
   external?: boolean;
 };
 
-type MainNavProps = {
-  items?: NavItem[];
-};
-
-export function MainNav({ items }: MainNavProps) {
+export function MainNav() {
   return (
     <div className="flex gap-6 md:gap-10">
       <a href="/" className="flex items-center space-x-2">
