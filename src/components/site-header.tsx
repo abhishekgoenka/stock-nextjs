@@ -1,5 +1,4 @@
 import { MainNav } from "@/components/main-nav";
-import { siteConfig } from "@/config/site";
 
 export function SiteHeader() {
   return (

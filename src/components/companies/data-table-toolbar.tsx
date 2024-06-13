@@ -1,14 +1,42 @@
 "use client";
 
-import { Cross2Icon } from "@radix-ui/react-icons";
+import { Cross2Icon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
-
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { DataTableFacetedFilter } from "../ui/data-table/data-table-faceted-filter";
+import { DataTableViewOptions } from "../ui/data-table/data-table-view-options";
 
-import { priorities, statuses } from "./data/data";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { DataTableViewOptions } from "./data-table-view-options";
+const stockTypes = [
+  {
+    value: "Largecap",
+    label: "Largecap",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "Midcap",
+    label: "Midcap",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "Smallcap",
+    label: "Smallcap",
+    icon: QuestionMarkCircledIcon,
+  },
+];
+
+const exchange = [
+  {
+    value: "NASDAQ",
+    label: "NASDAQ",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "NSE",
+    label: "NSE",
+    icon: QuestionMarkCircledIcon,
+  },
+];
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -23,25 +51,25 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter tasks..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter companies..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={event =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("status") && (
+        {table.getColumn("type") && (
           <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={statuses}
+            column={table.getColumn("type")}
+            title="Type"
+            options={stockTypes}
           />
         )}
-        {table.getColumn("priority") && (
+        {table.getColumn("exchange") && (
           <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
+            column={table.getColumn("exchange")}
+            title="Exchange"
+            options={exchange}
           />
         )}
         {isFiltered && (

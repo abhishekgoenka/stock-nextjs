@@ -10,7 +10,7 @@ export class ConnectionService {
   static async generateConnection() {
     try {
       ConnectionService.sequelize = new Sequelize({
-        logging: true,
+        logging: false,
         dialect: "sqlite",
         storage: "portfolio.sqlite",
         models: [Company, StockInvestment],

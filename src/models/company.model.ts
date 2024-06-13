@@ -2,24 +2,11 @@ import {
   Model,
   Column,
   Table,
-  BelongsToMany,
-  Scopes,
   PrimaryKey,
   AutoIncrement,
   HasMany,
 } from "sequelize-typescript";
 import StockInvestment from "./stock-investment.model";
-
-// @Scopes(() => ({
-//   roles: {
-//     include: [
-//       {
-//         model: Role,
-//         through: { attributes: [] },
-//       },
-//     ],
-//   },
-// }))
 
 @Table
 export default class Company extends Model<Company> {
