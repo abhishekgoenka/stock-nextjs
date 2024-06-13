@@ -1,11 +1,16 @@
 name: Build Stock App
 
 on:
+  workflow_dispatch:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./
 jobs:
   build:
     runs-on: ubuntu-latest
