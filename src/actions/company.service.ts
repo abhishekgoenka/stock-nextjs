@@ -5,7 +5,6 @@ export class CompanyService extends BaseService {
   public async getCompanies(): Promise<Company[]> {
     try {
       await this.connectDB();
-      console.log("getCompanies");
       const companies = await Company.findAll({
         order: [["name", "ASC"]],
       });
