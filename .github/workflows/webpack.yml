@@ -21,14 +21,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        name: 'Checkout repository'
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Build
-        run: |
-          npm install
-          npm run lint
-          npm run build
+      - name: 'Install Dependencies'
+        run: npm install
+        
+      - name: 'Check lint errors'
+        run: npm run lint
+
+      - name: 'Build code'
+        run: npm run build
