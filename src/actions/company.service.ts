@@ -1,19 +1,26 @@
 import Company from "@/models/company.model";
-import { BaseService } from "./base.service";
+import { BaseService, connectDB } from "./base.service";
+
+export async function getCompanies(): Promise<Company[]> {
+  await connectDB();
+  return await Company.findAll({
+    order: [["name", "ASC"]],
+  });
+}
 
 export class CompanyService extends BaseService {
-  public async getCompanies(): Promise<Company[]> {
-    try {
-      await this.connectDB();
-      const companies = await Company.findAll({
-        order: [["name", "ASC"]],
-      });
-      return companies;
-    } catch (ex) {
-      console.error(ex);
-      throw "Failed to get all companies";
-    }
-  }
+  // public async getCompanies(): Promise<Company[]> {
+  //   try {
+  //     await this.connectDB();
+  //     const companies = await Company.findAll({
+  //       order: [["name", "ASC"]],
+  //     });
+  //     return companies;
+  //   } catch (ex) {
+  //     console.error(ex);
+  //     throw "Failed to get all companies";
+  //   }
+  // }
 
   public async getCompanyByID(id: string): Promise<any> {
     try {

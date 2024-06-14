@@ -1,17 +1,21 @@
 import MutualFund from "../models/mutual-fund.model";
-import { BaseService } from "./base.service";
+import { BaseService, connectDB } from "./base.service";
 
+export async function getMFs(): Promise<MutualFund[]> {
+  await connectDB();
+  return await MutualFund.findAll();
+}
 export class MutualFundService extends BaseService {
-  public async getMFs(): Promise<any> {
-    try {
-      await this.connectDB();
-      const mfs = await MutualFund.findAll();
-      return mfs;
-    } catch (ex) {
-      console.error(ex);
-      throw "Failed to get all mutual funds";
-    }
-  }
+  // public async getMFs(): Promise<any> {
+  //   try {
+  //     await this.connectDB();
+  //     const mfs = await MutualFund.findAll();
+  //     return mfs;
+  //   } catch (ex) {
+  //     console.error(ex);
+  //     throw "Failed to get all mutual funds";
+  //   }
+  // }
 
   public async getMFByID(id: string): Promise<any> {
     try {
