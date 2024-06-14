@@ -85,10 +85,7 @@ export function MainNav() {
                 <ListItem href="/companies" title="Company Information">
                   This menu adds information about the companies
                 </ListItem>
-                <ListItem
-                  href="/docs/installation"
-                  title="Mutual Fund Information"
-                >
+                <ListItem href="/mutual-fund" title="Mutual Fund Information">
                   This menu is designed add detailed information about MF.
                 </ListItem>
               </ul>

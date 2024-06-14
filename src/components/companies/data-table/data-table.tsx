@@ -23,10 +23,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../table";
+} from "../../ui/table";
 
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "../../companies/data-table-toolbar";
+import { DataTableToolbar } from "./data-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

@@ -1,8 +1,8 @@
-import { DataTable } from "@/components/ui/data-table/data-table";
+import { DataTable } from "@/components/companies/data-table/data-table";
 
 import { Metadata } from "next";
 import { CompanyService } from "@/actions/company.service";
-import { Columns } from "@/components/companies/columns";
+import { Columns } from "@/components/companies/data-table/columns";
 import Company from "@/models/company.model";
 
 export const metadata: Metadata = {

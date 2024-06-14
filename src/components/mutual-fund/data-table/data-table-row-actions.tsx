@@ -3,7 +3,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
 
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,10 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 
-import Company from "@/models/company.model";
 import Link from "next/link";
+import MutualFund from "@/models/mutual-fund.model";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -23,8 +23,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  // const company = taskSchema.parse(row.original);
-  const company: Company = row.original as Company;
+  const mf: MutualFund = row.original as MutualFund;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,7 +41,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuItem>
           <Link
             className="w-full"
-            href={company?.url}
+            href={mf?.url}
             rel="noopener noreferrer"
             target="_blank"
           >
