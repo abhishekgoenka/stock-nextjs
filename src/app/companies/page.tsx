@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function Companies() {
+export default async function CompaniesPage() {
   const companies = await getCompanies();
   const data: Company[] = JSON.parse(JSON.stringify(companies));
   return (

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function MutualFunds() {
+export default async function MutualFundsPage() {
   const mfs = await getMFs();
   const data: MutualFund[] = JSON.parse(JSON.stringify(mfs));
   return (

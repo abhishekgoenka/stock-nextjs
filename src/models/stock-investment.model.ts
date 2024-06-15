@@ -44,6 +44,6 @@ export default class StockInvestment extends Model<StockInvestment> {
   @Column
   broker!: string;
 
-  // @BelongsTo(() => Company)
-  // company: Company;
+  @BelongsTo(() => Company)
+  company: ReturnType<() => Company>;
 }

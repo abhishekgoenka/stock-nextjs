@@ -16,7 +16,7 @@ import Link from "next/link";
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Buy Stock",
-    href: "/docs/primitives/alert-dialog",
+    href: "/investments/stock",
     description:
       "Allows users to initiate and manage stock purchasing activities.",
   },

@@ -3,7 +3,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
 
-import { Button } from "../../ui/button";
+import { Button } from "../../../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,10 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
+} from "../../../ui/dropdown-menu";
 
 import Link from "next/link";
-import MutualFund from "@/models/mutual-fund.model";
+import StockInvestment from "@/models/stock-investment.model";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -23,7 +23,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const mf: MutualFund = row.original as MutualFund;
+  const investment = row.original as StockInvestment;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,12 +36,12 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Purchase detail</DropdownMenuItem>
+        <DropdownMenuItem>Buy stock</DropdownMenuItem>
+        <DropdownMenuItem>Edit Investment</DropdownMenuItem>
         <DropdownMenuItem>
           <Link
             className="w-full"
-            href={mf?.url}
+            href={investment?.company?.url}
             rel="noopener noreferrer"
             target="_blank"
           >
