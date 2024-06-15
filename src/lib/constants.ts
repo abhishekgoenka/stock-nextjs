@@ -14,4 +14,14 @@ export const BROKERS = [
     value: "FidilityIndividual",
     icon: QuestionMarkCircledIcon,
   },
+  {
+    label: "Roth",
+    value: "FidilityRoth",
+    icon: QuestionMarkCircledIcon,
+  },
+];
+
+export const CURRENCY = [
+  { label: "INR", value: "INR" },
+  { label: "USD", value: "USD" },
 ];
