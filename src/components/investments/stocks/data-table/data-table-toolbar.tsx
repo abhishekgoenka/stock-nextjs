@@ -1,12 +1,13 @@
 "use client";
 
-import { Cross2Icon } from "@radix-ui/react-icons";
+import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { Button } from "../../../ui/button";
 import { Input } from "../../../ui/input";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { BROKERS } from "@/lib/constants";
+import Link from "next/link";
 
 const brokerTypes = BROKERS;
 
@@ -48,6 +49,21 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
+      <Button
+        variant="default"
+        size="sm"
+        className="hidden h-8 lg:flex ml-auto mr-2"
+      >
+        <PlusIcon className="mr-2 h-4 w-4" />
+
+        <Link
+          className="w-full"
+          href="/investments/stocks/add"
+          rel="noopener noreferrer"
+        >
+          Buy Stock
+        </Link>
+      </Button>
       <DataTableViewOptions table={table} />
     </div>
   );

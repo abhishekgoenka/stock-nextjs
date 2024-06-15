@@ -36,7 +36,6 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Buy stock</DropdownMenuItem>
         <DropdownMenuItem>Edit Investment</DropdownMenuItem>
         <DropdownMenuItem>
           <Link

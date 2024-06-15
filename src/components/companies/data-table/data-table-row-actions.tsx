@@ -46,7 +46,7 @@ export function DataTableRowActions<TData>({
             rel="noopener noreferrer"
             target="_blank"
           >
-            Visit URL
+            Show detail
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
