@@ -9,8 +9,21 @@ import {
 } from "sequelize-typescript";
 import Company from "./company.model";
 
+export type StockInvestmentType = {
+  id?: number;
+  companyID: number;
+  purchaseDate: string;
+  qty: number;
+  price: number;
+  stt: number;
+  brokerage: number;
+  otherCharges: number;
+  currency: string;
+  broker: string;
+};
+
 @Table
-export default class StockInvestment extends Model<StockInvestment> {
+export default class StockInvestment extends Model<StockInvestmentType> {
   @AutoIncrement
   @PrimaryKey
   @Column

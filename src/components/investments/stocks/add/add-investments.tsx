@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,40 +30,91 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+import { Toaster } from "@/components/ui/toaster";
+import { useState } from "react";
+import { NumericFormat } from "react-number-format";
+import { addStockInvestment } from "@/actions/stock-investment.service";
+import { StockInvestmentType } from "@/models/stock-investment.model";
+import { redirect, useRouter } from "next/navigation";
+import {
+  toastDBSaveError,
+  toastDBSaveSuccess,
+} from "@/components/shared/toast-message";
 
 const investmentFormSchema = z.object({
   companyID: z.string(),
   purchaseDate: z.date(),
-  qty: z.number().min(1, { message: "Quantity should be greater than zero" }),
-  price: z.number(),
-  stt: z.number(),
-  brokerage: z.number(),
-  otherCharges: z.number(),
+  qty: z.coerce
+    .number()
+    .min(1, { message: "Quantity should be greater than zero" }),
+  price: z.coerce.number(),
+  stt: z.coerce.number(),
+  brokerage: z.coerce.number(),
+  otherCharges: z.coerce.number(),
   currency: z.string(),
   broker: z.string(),
 });
 
 type InvestmentFormValues = z.infer<typeof investmentFormSchema>;
+type AddInvestmentsProps = {
+  companies: Array<{ id: number; name: string }>;
+};
+const defaultValues: Partial<InvestmentFormValues> = {
+  price: 0,
+  qty: 0,
+  stt: 0,
+  otherCharges: 0,
+  brokerage: 0,
+};
 
-const defaultValues: Partial<InvestmentFormValues> = {};
-
-export default function AddInvestments() {
+export default function AddInvestments({ companies }: AddInvestmentsProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+  const [netAmount, setNetAmount] = useState(0);
   const form = useForm<InvestmentFormValues>({
     resolver: zodResolver(investmentFormSchema),
     defaultValues,
     mode: "onChange",
   });
 
-  function onSubmit(data: InvestmentFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+  async function onSubmit(data: InvestmentFormValues) {
+    const {
+      companyID,
+      purchaseDate,
+      qty,
+      price,
+      stt,
+      brokerage,
+      otherCharges,
+      currency,
+      broker,
+    } = data;
+    const result = await addStockInvestment({
+      companyID: +companyID,
+      purchaseDate: purchaseDate.toDateString(),
+      qty: +qty,
+      price: +price,
+      stt: +stt,
+      brokerage: +brokerage,
+      otherCharges: +otherCharges,
+      currency,
+      broker,
     });
+    if (result) {
+      toastDBSaveSuccess();
+      router.push("/investments/stocks");
+    } else {
+      toastDBSaveError();
+    }
   }
+
+  const calculateNetAmount = () => {
+    const { qty, price, stt, brokerage, otherCharges } = form.getValues();
+    const amt = qty * +price + +stt + +brokerage + +otherCharges;
+    setNetAmount(amt);
+  };
+
   return (
     <>
       <Form {...form}>
@@ -84,9 +135,11 @@ export default function AddInvestments() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="m@example.com">m@example.com</SelectItem>
-                    <SelectItem value="m@google.com">m@google.com</SelectItem>
-                    <SelectItem value="m@support.com">m@support.com</SelectItem>
+                    {companies.map(c => (
+                      <SelectItem key={c.name} value={c.id.toString()}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -192,8 +245,137 @@ export default function AddInvestments() {
               )}
             />
           </div>
+
+          <div className="flex justify-between gap-3">
+            <FormField
+              control={form.control}
+              name="qty"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Qty</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Qty"
+                      {...field}
+                      onChange={e => {
+                        field.onChange(e), calculateNetAmount();
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Price"
+                      {...field}
+                      onChange={e => {
+                        field.onChange(e), calculateNetAmount();
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormItem className="w-44">
+              <FormLabel>Net Amount</FormLabel>
+              <FormControl className="mt-5">
+                <Label className="block !mt-5">
+                  {" "}
+                  <NumericFormat
+                    displayType="text"
+                    decimalScale={2}
+                    fixedDecimalScale
+                    thousandsGroupStyle="lakh"
+                    thousandSeparator=","
+                    value={netAmount}
+                  />
+                </Label>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </div>
+
+          <div className="flex justify-between gap-3">
+            <FormField
+              control={form.control}
+              name="stt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>STT</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="STT"
+                      {...field}
+                      onChange={e => {
+                        field.onChange(e), calculateNetAmount();
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="brokerage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Brokerage</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Brokerage"
+                      {...field}
+                      onChange={e => {
+                        field.onChange(e), calculateNetAmount();
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="otherCharges"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Other Charges</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Other Charges"
+                      {...field}
+                      onChange={e => {
+                        field.onChange(e), calculateNetAmount();
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button type="submit">Add Investments</Button>
         </form>
       </Form>
+      {/* <Toaster /> */}
     </>
   );
 }
