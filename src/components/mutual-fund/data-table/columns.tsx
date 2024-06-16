@@ -5,14 +5,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../companies/data-table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { NumericFormat } from "react-number-format";
-import MutualFund from "@/models/mutual-fund.model";
+import { MutualFundType } from "@/models/mutual-fund.model";
 
-export const Columns: ColumnDef<MutualFund>[] = [
+export const Columns: ColumnDef<MutualFundType>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Mutual Fund" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Mutual Fund" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
@@ -23,75 +21,44 @@ export const Columns: ColumnDef<MutualFund>[] = [
   },
   {
     accessorKey: "equity",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Equity" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Equity" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <NumericFormat
-            className="font-medium"
-            displayType="text"
-            decimalScale={2}
-            fixedDecimalScale
-            suffix={"%"}
-            value={row.getValue("equity")}
-          />
+          <NumericFormat className="font-medium" displayType="text" decimalScale={2} fixedDecimalScale suffix={"%"} value={row.getValue("equity")} />
         </div>
       );
     },
   },
   {
     accessorKey: "debt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Debt" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Debt" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <NumericFormat
-            className="font-medium"
-            displayType="text"
-            decimalScale={2}
-            fixedDecimalScale
-            suffix={"%"}
-            value={row.getValue("debt")}
-          />
+          <NumericFormat className="font-medium" displayType="text" decimalScale={2} fixedDecimalScale suffix={"%"} value={row.getValue("debt")} />
         </div>
       );
     },
   },
   {
     accessorKey: "others",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Others" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Others" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <NumericFormat
-            className="font-medium"
-            displayType="text"
-            decimalScale={2}
-            fixedDecimalScale
-            suffix={"%"}
-            value={row.getValue("others")}
-          />
+          <NumericFormat className="font-medium" displayType="text" decimalScale={2} fixedDecimalScale suffix={"%"} value={row.getValue("others")} />
         </div>
       );
     },
   },
   {
     accessorKey: "exchange",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Exchange" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Exchange" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[200px] truncate font-medium">
-            {row.getValue("exchange")}
-          </span>
+          <span className="max-w-[200px] truncate font-medium">{row.getValue("exchange")}</span>
         </div>
       );
     },
@@ -101,9 +68,7 @@ export const Columns: ColumnDef<MutualFund>[] = [
   },
   {
     accessorKey: "currentPrice",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="CurrentPrice" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="CurrentPrice" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2 w-20 flex-row-reverse">

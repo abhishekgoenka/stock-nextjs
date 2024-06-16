@@ -1,12 +1,4 @@
-import {
-  Model,
-  Column,
-  Table,
-  PrimaryKey,
-  AutoIncrement,
-  BelongsTo,
-  ForeignKey,
-} from "sequelize-typescript";
+import { Model, Column, Table, PrimaryKey, AutoIncrement, BelongsTo, ForeignKey } from "sequelize-typescript";
 import MutualFund from "./mutual-fund.model";
 
 @Table

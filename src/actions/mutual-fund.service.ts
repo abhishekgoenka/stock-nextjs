@@ -1,9 +1,10 @@
-import MutualFund from "../models/mutual-fund.model";
+import MutualFund, { MutualFundType } from "../models/mutual-fund.model";
 import { BaseService, connectDB } from "./base.service";
 
-export async function getMFs(): Promise<MutualFund[]> {
+export async function getMFs(): Promise<MutualFundType[]> {
   await connectDB();
-  return await MutualFund.findAll();
+  const result = await MutualFund.findAll();
+  return JSON.parse(JSON.stringify(result));
 }
 export class MutualFundService extends BaseService {
   // public async getMFs(): Promise<any> {

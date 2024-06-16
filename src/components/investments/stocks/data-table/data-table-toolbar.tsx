@@ -15,9 +15,7 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({
-  table,
-}: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
@@ -26,41 +24,21 @@ export function DataTableToolbar<TData>({
         <Input
           placeholder="Filter companies..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={event =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          onChange={event => table.getColumn("name")?.setFilterValue(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("broker") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("broker")}
-            title="Broker"
-            options={brokerTypes}
-          />
-        )}
+        {table.getColumn("broker") && <DataTableFacetedFilter column={table.getColumn("broker")} title="Broker" options={brokerTypes} />}
         {isFiltered && (
-          <Button
-            variant="ghost"
-            onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
-          >
+          <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>
-      <Button
-        variant="default"
-        size="sm"
-        className="hidden h-8 lg:flex ml-auto mr-2"
-      >
+      <Button variant="default" size="sm" className="hidden h-8 lg:flex ml-auto mr-2">
         <PlusIcon className="mr-2 h-4 w-4" />
 
-        <Link
-          className="w-full"
-          href="/investments/stocks/add"
-          rel="noopener noreferrer"
-        >
+        <Link className="w-full" href="/investments/stocks/add" rel="noopener noreferrer">
           Buy Stock
         </Link>
       </Button>

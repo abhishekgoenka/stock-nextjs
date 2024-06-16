@@ -17,14 +17,12 @@ const components: { title: string; href: string; description: string }[] = [
   {
     title: "Buy Stock",
     href: "/investments/stocks",
-    description:
-      "Allows users to initiate and manage stock purchasing activities.",
+    description: "Allows users to initiate and manage stock purchasing activities.",
   },
   {
     title: "Buy Mutual Fund",
     href: "/docs/primitives/hover-card",
-    description:
-      "This feature simplifies the process of purchasing mutual funds",
+    description: "This feature simplifies the process of purchasing mutual funds",
   },
   {
     title: "Fund Transfer",
@@ -57,9 +55,7 @@ export function MainNav() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link href="/" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Dashboard
-              </NavigationMenuLink>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>Dashboard</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -73,12 +69,8 @@ export function MainNav() {
                       href="/"
                     >
                       <Icons.activity className="h-6 w-6" />
-                      <div className="mb-2 mt-4 text-lg font-medium">
-                        StockSync
-                      </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
-                        Simplify Your Inventory and Order Management
-                      </p>
+                      <div className="mb-2 mt-4 text-lg font-medium">StockSync</div>
+                      <p className="text-sm leading-tight text-muted-foreground">Simplify Your Inventory and Order Management</p>
                     </a>
                   </NavigationMenuLink>
                 </li>
@@ -96,11 +88,7 @@ export function MainNav() {
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {components.map(component => (
-                  <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
-                  >
+                  <ListItem key={component.title} title={component.title} href={component.href}>
                     {component.description}
                   </ListItem>
                 ))}
@@ -109,23 +97,17 @@ export function MainNav() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Reports
-              </NavigationMenuLink>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>Reports</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Charts
-              </NavigationMenuLink>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>Charts</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Setting
-              </NavigationMenuLink>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>Setting</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
@@ -134,10 +116,7 @@ export function MainNav() {
   );
 }
 
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
+const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(({ className, title, children, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -150,9 +129,7 @@ const ListItem = React.forwardRef<
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
         </a>
       </NavigationMenuLink>
     </li>

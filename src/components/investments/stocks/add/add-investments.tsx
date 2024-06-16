@@ -1,53 +1,28 @@
 "use client";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BROKERS, CURRENCY } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CalendarIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { Toaster } from "@/components/ui/toaster";
 import { useState } from "react";
 import { NumericFormat } from "react-number-format";
 import { addStockInvestment } from "@/actions/stock-investment.service";
-import { StockInvestmentType } from "@/models/stock-investment.model";
-import { redirect, useRouter } from "next/navigation";
-import {
-  toastDBSaveError,
-  toastDBSaveSuccess,
-} from "@/components/shared/toast-message";
+import { useRouter } from "next/navigation";
+import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-message";
 
 const investmentFormSchema = z.object({
   companyID: z.string(),
   purchaseDate: z.date(),
-  qty: z.coerce
-    .number()
-    .min(1, { message: "Quantity should be greater than zero" }),
+  qty: z.coerce.number().min(1, { message: "Quantity should be greater than zero" }),
   price: z.coerce.number(),
   stt: z.coerce.number(),
   brokerage: z.coerce.number(),
@@ -69,7 +44,6 @@ const defaultValues: Partial<InvestmentFormValues> = {
 };
 
 export default function AddInvestments({ companies }: AddInvestmentsProps) {
-  const { toast } = useToast();
   const router = useRouter();
   const [netAmount, setNetAmount] = useState(0);
   const form = useForm<InvestmentFormValues>({
@@ -79,17 +53,7 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
   });
 
   async function onSubmit(data: InvestmentFormValues) {
-    const {
-      companyID,
-      purchaseDate,
-      qty,
-      price,
-      stt,
-      brokerage,
-      otherCharges,
-      currency,
-      broker,
-    } = data;
+    const { companyID, purchaseDate, qty, price, stt, brokerage, otherCharges, currency, broker } = data;
     const result = await addStockInvestment({
       companyID: +companyID,
       purchaseDate: purchaseDate.toDateString(),
@@ -125,10 +89,7 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Company</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a company" />
@@ -153,10 +114,7 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
               render={({ field }) => (
                 <FormItem className="w-40">
                   <FormLabel>Broker</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a broker" />
@@ -181,10 +139,7 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
               render={({ field }) => (
                 <FormItem className="w-36">
                   <FormLabel>Currency</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a currency" />
@@ -212,18 +167,8 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
+                        <Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -233,9 +178,7 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={date =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={date => date > new Date() || date < new Date("1900-01-01")}
                         initialFocus
                       />
                     </PopoverContent>
@@ -294,14 +237,7 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
               <FormControl className="mt-5">
                 <Label className="block !mt-5">
                   {" "}
-                  <NumericFormat
-                    displayType="text"
-                    decimalScale={2}
-                    fixedDecimalScale
-                    thousandsGroupStyle="lakh"
-                    thousandSeparator=","
-                    value={netAmount}
-                  />
+                  <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={netAmount} />
                 </Label>
               </FormControl>
               <FormMessage />
@@ -375,7 +311,6 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
           <Button type="submit">Add Investments</Button>
         </form>
       </Form>
-      {/* <Toaster /> */}
     </>
   );
 }

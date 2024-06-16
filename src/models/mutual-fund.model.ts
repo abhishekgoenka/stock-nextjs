@@ -1,13 +1,24 @@
-import {
-  Model,
-  Column,
-  Table,
-  PrimaryKey,
-  AutoIncrement,
-} from "sequelize-typescript";
+import { Model, Column, Table, PrimaryKey, AutoIncrement } from "sequelize-typescript";
+
+export type MutualFundType = {
+  id?: number;
+  name: string;
+  equity: number;
+  debt: number;
+  others: number;
+  largeCap: number;
+  midCap: number;
+  smallCap: number;
+  otherCap: number;
+  url: string;
+  exchange: string;
+  symbol: string;
+  currentPrice: number;
+  indexFund: boolean;
+};
 
 @Table
-export default class MutualFund extends Model<MutualFund> {
+export default class MutualFund extends Model<MutualFundType> {
   @AutoIncrement
   @PrimaryKey
   @Column

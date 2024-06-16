@@ -1,7 +1,6 @@
 import { getCompanies } from "@/actions/company.service";
 import AddInvestments from "@/components/investments/stocks/add/add-investments";
 import { Separator } from "@/components/ui/separator";
-import Company from "@/models/company.model";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,9 +11,8 @@ export const dynamic = "force-dynamic";
 
 export default async function StockInvestmentPage() {
   const companies = await getCompanies();
-  const data: Company[] = JSON.parse(JSON.stringify(companies));
-  const companyList = data.map(c => {
-    return { id: c.id, name: c.name };
+  const companyList = companies.map(c => {
+    return { id: c.id!, name: c.name };
   });
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 w-[650px] md:py-10">

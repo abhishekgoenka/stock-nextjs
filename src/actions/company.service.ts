@@ -1,11 +1,12 @@
-import Company from "@/models/company.model";
+import Company, { CompanyType } from "@/models/company.model";
 import { BaseService, connectDB } from "./base.service";
 
-export async function getCompanies(): Promise<Company[]> {
+export async function getCompanies(): Promise<CompanyType[]> {
   await connectDB();
-  return await Company.findAll({
+  const result = await Company.findAll({
     order: [["name", "ASC"]],
   });
+  return JSON.parse(JSON.stringify(result));
 }
 
 export class CompanyService extends BaseService {

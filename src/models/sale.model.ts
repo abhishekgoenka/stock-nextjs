@@ -1,10 +1,4 @@
-import {
-  Model,
-  Column,
-  Table,
-  PrimaryKey,
-  AutoIncrement,
-} from "sequelize-typescript";
+import { Model, Column, Table, PrimaryKey, AutoIncrement } from "sequelize-typescript";
 
 @Table
 export default class Sale extends Model<Sale> {

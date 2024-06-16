@@ -3,64 +3,49 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "./data-table-column-header";
-import Company from "@/models/company.model";
 import { NumericFormat } from "react-number-format";
 import { DataTableRowActions } from "./data-table-row-actions";
-import StockInvestment from "@/models/stock-investment.model";
+import { StockInvestmentType } from "@/models/stock-investment.model";
 import { format } from "date-fns";
 
-export const Columns: ColumnDef<StockInvestment>[] = [
+export const Columns: ColumnDef<StockInvestmentType>[] = [
   {
     accessorKey: "company.name",
     id: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Compay" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Compay" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[250px] truncate font-medium">
-            {row.getValue("name")}
-          </span>
+          <span className="max-w-[250px] truncate font-medium">{row.getValue("name")}</span>
         </div>
       );
     },
   },
   {
     accessorKey: "purchaseDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Purchase Date" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Purchase Date" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[250px] truncate font-medium">
-            {format(row.getValue("purchaseDate"), "PP")}
-          </span>
+          <span className="max-w-[250px] truncate font-medium">{format(row.getValue("purchaseDate"), "PP")}</span>
         </div>
       );
     },
   },
   {
     accessorKey: "qty",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Quantity" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Quantity" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="w-11 text-center font-medium">
-            {row.getValue("qty")}
-          </span>
+          <span className="w-11 text-center font-medium">{row.getValue("qty")}</span>
         </div>
       );
     },
   },
   {
     accessorKey: "price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-1">
@@ -80,26 +65,13 @@ export const Columns: ColumnDef<StockInvestment>[] = [
   },
   {
     accessorKey: "netAmount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Net Amount" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Net Amount" />,
     cell: ({ row }) => {
-      const amount =
-        row.original.price * row.original.qty +
-        row.original.stt +
-        row.original.brokerage +
-        row.original.otherCharges;
+      const amount = row.original.price * row.original.qty + row.original.stt + row.original.brokerage + row.original.otherCharges;
       return (
         <div className="flex space-x-1">
           <span className="w-24 text-right font-medium">
-            <NumericFormat
-              displayType="text"
-              decimalScale={2}
-              fixedDecimalScale
-              thousandsGroupStyle="lakh"
-              thousandSeparator=","
-              value={amount}
-            />
+            <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={amount} />
           </span>
         </div>
       );
@@ -107,9 +79,7 @@ export const Columns: ColumnDef<StockInvestment>[] = [
   },
   {
     accessorKey: "broker",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Broker" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Broker" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">

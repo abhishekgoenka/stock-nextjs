@@ -1,27 +1,20 @@
 "use server";
 
 import Company from "../models/company.model";
-import StockInvestment, {
-  StockInvestmentType,
-} from "../models/stock-investment.model";
-import { BaseService, connectDB } from "./base.service";
+import StockInvestment, { StockInvestmentType } from "../models/stock-investment.model";
+import { connectDB } from "./base.service";
 
-export async function getStockInvestments(): Promise<StockInvestment[]> {
+export async function getStockInvestments(): Promise<StockInvestmentType[]> {
   await connectDB();
   return await StockInvestment.findAll({ include: Company });
 }
 
-export async function addStockInvestment(
-  investment: StockInvestmentType,
-): Promise<StockInvestmentType> {
+export async function addStockInvestment(investment: StockInvestmentType): Promise<StockInvestmentType> {
   let transaction;
   try {
     const sequelize = await connectDB();
     transaction = await sequelize.transaction();
-    const record: StockInvestmentType = await StockInvestment.create(
-      investment,
-      { transaction },
-    );
+    const record: StockInvestmentType = await StockInvestment.create(investment, { transaction });
     await transaction.commit();
     return JSON.parse(JSON.stringify(record));
   } catch (ex) {
