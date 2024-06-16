@@ -26,6 +26,26 @@ export async function addStockInvestment(investment: StockInvestmentType): Promi
   }
 }
 
+export async function deleteStockInvestment(id: number): Promise<number> {
+  let transaction;
+  try {
+    const sequelize = await connectDB();
+    transaction = await sequelize.transaction();
+    const record = await StockInvestment.destroy({
+      where: { id },
+      transaction,
+    });
+    await transaction.commit();
+    return record;
+  } catch (ex) {
+    if (transaction) {
+      await transaction.rollback();
+    }
+    console.error(ex);
+    throw "Failed to add stock investment";
+  }
+}
+
 // export class StockInvestmentService extends BaseService {
 //   constructor() {
 //     super();

@@ -15,10 +15,21 @@ import {
 
 import Link from "next/link";
 import StockInvestment from "@/models/stock-investment.model";
+import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
+import { deleteStockInvestment } from "@/actions/stock-investment.service";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
+
+const deleteHandler = async (id: number) => {
+  const result = await deleteStockInvestment(id);
+  if (result) {
+    toastDBDeleteSuccess();
+  } else {
+    toastDBSaveError();
+  }
+};
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const investment = row.original as StockInvestment;
@@ -38,7 +49,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => deleteHandler(investment?.id)}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

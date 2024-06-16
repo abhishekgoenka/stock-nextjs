@@ -8,6 +8,14 @@ export const toastDBSaveSuccess = () => {
   });
 };
 
+export const toastDBDeleteSuccess = () => {
+  toast({
+    title: "Success",
+    description: "The record has been saved and deleted.",
+    variant: "default",
+  });
+};
+
 export const toastDBSaveError = () => {
   toast({
     title: "Error",
