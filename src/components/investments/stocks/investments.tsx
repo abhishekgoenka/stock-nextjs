@@ -39,7 +39,7 @@ type AddInvestmentsProps = {
   id?: number;
 };
 
-export default function AddInvestments({ defaultValues, id }: AddInvestmentsProps) {
+export default function Investments({ defaultValues, id }: AddInvestmentsProps) {
   const router = useRouter();
   const [netAmount, setNetAmount] = useState(0);
   const [companies, setCompanies] = useState<{ id: number; name: string }[]>([]);
@@ -56,8 +56,10 @@ export default function AddInvestments({ defaultValues, id }: AddInvestmentsProp
         return { id: c.id!, name: c.name };
       });
       setCompanies(companyList);
+      calculateNetAmount();
     }
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function onSubmit(data: InvestmentFormValues) {
