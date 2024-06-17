@@ -13,11 +13,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
-import { addStockInvestment } from "@/actions/stock-investment.service";
+import { addStockInvestment, updateStockInvestment } from "@/actions/stock-investment.service";
 import { useRouter } from "next/navigation";
 import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-message";
+import { getCompanies } from "@/actions/company.service";
+import { StockInvestmentType } from "@/models/stock-investment.model";
 
 const investmentFormSchema = z.object({
   companyID: z.string(),
@@ -31,40 +33,62 @@ const investmentFormSchema = z.object({
   broker: z.string(),
 });
 
-type InvestmentFormValues = z.infer<typeof investmentFormSchema>;
+export type InvestmentFormValues = z.infer<typeof investmentFormSchema>;
 type AddInvestmentsProps = {
-  companies: Array<{ id: number; name: string }>;
-};
-const defaultValues: Partial<InvestmentFormValues> = {
-  price: 0,
-  qty: 0,
-  stt: 0,
-  otherCharges: 0,
-  brokerage: 0,
+  defaultValues: Partial<InvestmentFormValues>;
+  id?: number;
 };
 
-export default function AddInvestments({ companies }: AddInvestmentsProps) {
+export default function AddInvestments({ defaultValues, id }: AddInvestmentsProps) {
   const router = useRouter();
   const [netAmount, setNetAmount] = useState(0);
+  const [companies, setCompanies] = useState<{ id: number; name: string }[]>([]);
   const form = useForm<InvestmentFormValues>({
     resolver: zodResolver(investmentFormSchema),
     defaultValues,
     mode: "onChange",
   });
 
+  useEffect(() => {
+    async function fetchData() {
+      const companies = await getCompanies();
+      const companyList = companies.map(c => {
+        return { id: c.id!, name: c.name };
+      });
+      setCompanies(companyList);
+    }
+    fetchData();
+  }, []);
+
   async function onSubmit(data: InvestmentFormValues) {
     const { companyID, purchaseDate, qty, price, stt, brokerage, otherCharges, currency, broker } = data;
-    const result = await addStockInvestment({
-      companyID: +companyID,
-      purchaseDate: purchaseDate.toDateString(),
-      qty: +qty,
-      price: +price,
-      stt: +stt,
-      brokerage: +brokerage,
-      otherCharges: +otherCharges,
-      currency,
-      broker,
-    });
+    let result: number | StockInvestmentType;
+    if (id) {
+      result = await updateStockInvestment({
+        id: id,
+        companyID: +companyID,
+        purchaseDate: purchaseDate.toDateString(),
+        qty: +qty,
+        price: +price,
+        stt: +stt,
+        brokerage: +brokerage,
+        otherCharges: +otherCharges,
+        currency,
+        broker,
+      });
+    } else {
+      result = await addStockInvestment({
+        companyID: +companyID,
+        purchaseDate: purchaseDate.toDateString(),
+        qty: +qty,
+        price: +price,
+        stt: +stt,
+        brokerage: +brokerage,
+        otherCharges: +otherCharges,
+        currency,
+        broker,
+      });
+    }
     if (result) {
       toastDBSaveSuccess();
       router.push("/investments/stocks");
@@ -308,7 +332,7 @@ export default function AddInvestments({ companies }: AddInvestmentsProps) {
               )}
             />
           </div>
-          <Button type="submit">Add Investments</Button>
+          <Button type="submit">Save Investments</Button>
         </form>
       </Form>
     </>

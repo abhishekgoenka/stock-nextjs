@@ -42,7 +42,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit Investment</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link className="w-full" href={`/investments/stocks/edit/${investment?.id}`} rel="noopener noreferrer">
+            Edit Investment
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem>
           <Link className="w-full" href={investment?.company?.url} rel="noopener noreferrer" target="_blank">
             Show detail

@@ -26,6 +26,26 @@ export async function addStockInvestment(investment: StockInvestmentType): Promi
   }
 }
 
+export async function updateStockInvestment(investment: StockInvestmentType): Promise<number> {
+  let transaction;
+  try {
+    const sequelize = await connectDB();
+    transaction = await sequelize.transaction();
+    const record = await StockInvestment.update(investment, {
+      where: { id: investment.id },
+      transaction,
+    });
+    await transaction.commit();
+    return record[0];
+  } catch (ex) {
+    if (transaction) {
+      await transaction.rollback();
+    }
+    console.error(ex);
+    throw "Failed to update MF";
+  }
+}
+
 export async function deleteStockInvestment(id: number): Promise<number> {
   let transaction;
   try {
@@ -46,31 +66,15 @@ export async function deleteStockInvestment(id: number): Promise<number> {
   }
 }
 
+export async function getStockInvestmentByID(id: string): Promise<StockInvestmentType | null> {
+  await connectDB();
+  const si = await StockInvestment.findByPk(id);
+  return si;
+}
+
 // export class StockInvestmentService extends BaseService {
 //   constructor() {
 //     super();
-//   }
-
-//   // public async getStockInvestments(): Promise<any> {
-//   //   try {
-//   //     const si = await StockInvestment.findAll({ include: Company });
-//   //     return si;
-//   //   } catch (ex) {
-//   //     console.error(ex);
-//   //     throw "Failed to get all stock investments";
-//   //   }
-//   // }
-
-//   public async getStockInvestmentByID(
-//     id: string,
-//   ): Promise<StockInvestment | null> {
-//     try {
-//       const si = await StockInvestment.findByPk(id);
-//       return si;
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get stock investment";
-//     }
 //   }
 
 //   public async updateStockInvestment(
