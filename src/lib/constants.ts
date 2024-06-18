@@ -25,3 +25,8 @@ export const CURRENCY = [
   { label: "INR", value: "INR" },
   { label: "USD", value: "USD" },
 ];
+
+export const EXCHANGE = [
+  { label: "NSE", value: "NSE" },
+  { label: "NASDAQ", value: "NASDAQ" },
+];

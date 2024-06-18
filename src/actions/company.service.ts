@@ -1,7 +1,7 @@
 "use server";
 
 import Company, { CompanyType } from "@/models/company.model";
-import { BaseService, connectDB } from "./base.service";
+import { connectDB } from "./base.service";
 
 export async function getCompanies(): Promise<CompanyType[]> {
   await connectDB();
@@ -11,94 +11,67 @@ export async function getCompanies(): Promise<CompanyType[]> {
   return JSON.parse(JSON.stringify(result));
 }
 
+export async function getCompanyByID(id: string): Promise<CompanyType | null> {
+  await connectDB();
+  return await Company.findByPk(id);
+}
+
+export async function addCompany(company: CompanyType): Promise<CompanyType | null> {
+  let transaction;
+  try {
+    console.log(company);
+    const sequelize = await connectDB();
+    transaction = await sequelize.transaction();
+    const record = await Company.create(company, { transaction });
+    await transaction.commit();
+    return JSON.parse(JSON.stringify(record));
+  } catch (ex) {
+    if (transaction) {
+      await transaction.rollback();
+    }
+    console.error(ex);
+    return null;
+  }
+}
+
+export async function updateCompany(company: CompanyType): Promise<number | null> {
+  let transaction;
+  try {
+    const sequelize = await connectDB();
+    transaction = await sequelize.transaction();
+    const record = await Company.update(company, {
+      where: { id: company.id },
+      transaction,
+    });
+    await transaction.commit();
+    return record[0];
+  } catch (ex) {
+    if (transaction) {
+      await transaction.rollback();
+    }
+    console.error(ex);
+    return null;
+  }
+}
+
+export async function deleteCompany(id: number): Promise<number | null> {
+  let transaction;
+  try {
+    const sequelize = await connectDB();
+    transaction = await sequelize.transaction();
+    const record = await Company.destroy({ where: { id }, transaction });
+    await transaction.commit();
+    return record;
+  } catch (ex) {
+    if (transaction) {
+      await transaction.rollback();
+    }
+    console.error(ex);
+    return null;
+  }
+}
+
 // export class CompanyService extends BaseService {
-//   // public async getCompanies(): Promise<Company[]> {
-//   //   try {
-//   //     await this.connectDB();
-//   //     const companies = await Company.findAll({
-//   //       order: [["name", "ASC"]],
-//   //     });
-//   //     return companies;
-//   //   } catch (ex) {
-//   //     console.error(ex);
-//   //     throw "Failed to get all companies";
-//   //   }
-//   // }
-
-//   public async getCompanyByID(id: string): Promise<any> {
-//     try {
-//       const c = await Company.findByPk(id);
-//       return c;
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get company";
-//     }
-//   }
-
-//   public async updateCompany(
-//     id: number,
-//     name: string,
-//     sector: string,
-//     url: string,
-//     type: string,
-//     exchange: string,
-//     symbol: string,
-//     currentPrice: number,
-//   ): Promise<[affectedCount: number]> {
-//     let transaction;
-//     try {
-//       transaction = await this.sequelize.transaction();
-//       const record = await Company.update(
-//         {
-//           name,
-//           sector,
-//           url,
-//           type,
-//           exchange,
-//           symbol,
-//           currentPrice,
-//         },
-//         {
-//           where: { id: id },
-//           transaction,
-//         },
-//       );
-//       await transaction.commit();
-//       return record;
-//     } catch (ex) {
-//       if (transaction) {
-//         await transaction.rollback();
-//       }
-//       console.error(ex);
-//       throw "Failed to update company";
-//     }
-//   }
-
-//   // public async addCompany(
-//   //   name: string,
-//   //   sector: string,
-//   //   url: string,
-//   //   type: string,
-//   //   exchange: string,
-//   //   symbol: string,
-//   // ): Promise<Company> {
-//   //   let transaction;
-//   //   try {
-//   //     transaction = await this.sequelize.transaction();
-//   //     const record = await Company.create(
-//   //       { name, sector, url, type, exchange, symbol },
-//   //       { transaction },
-//   //     );
-//   //     await transaction.commit();
-//   //     return record;
-//   //   } catch (ex) {
-//   //     if (transaction) {
-//   //       await transaction.rollback();
-//   //     }
-//   //     console.error(ex);
-//   //     throw 'Failed to add company';
-//   //   }
-//   // }
 
 //   public async delete(id: string): Promise<any> {
 //     let transaction;

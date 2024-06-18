@@ -8,36 +8,59 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 
 import Company from "@/models/company.model";
 import Link from "next/link";
+import { deleteCompany } from "@/actions/company.service";
+import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
+import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
+import { useState } from "react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
-  // const company = taskSchema.parse(row.original);
+  const [showAlert, setShowAlert] = useState(false);
   const company: Company = row.original as Company;
+
+  const deleteHandler = async (id: number) => {
+    setShowAlert(false);
+    const result = await deleteCompany(id);
+    if (result) {
+      toastDBDeleteSuccess();
+    } else {
+      toastDBSaveError();
+    }
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
-          <DotsHorizontalIcon className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Purchase detail</DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link className="w-full" href={company?.url} rel="noopener noreferrer" target="_blank">
-            Show detail
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
+            <DotsHorizontalIcon className="h-4 w-4" />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuItem>
+            <Link className="w-full" href={`/companies/edit/${company?.id}`} rel="noopener noreferrer">
+              Edit
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem>Purchase detail</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link className="w-full" href={company?.url} rel="noopener noreferrer" target="_blank">
+              Show detail
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setShowAlert(true)}>
+            Delete
+            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DeleteConfirmation open={showAlert} onCancel={() => setShowAlert(false)} onContinue={() => deleteHandler(company?.id!)} />
+    </>
   );
 }

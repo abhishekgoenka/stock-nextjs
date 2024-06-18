@@ -17,7 +17,7 @@ export default class Company extends Model<CompanyType> {
   @AutoIncrement
   @PrimaryKey
   @Column
-  id!: number;
+  id?: number;
 
   @Column
   name!: string;

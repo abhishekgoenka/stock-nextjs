@@ -1,11 +1,12 @@
 "use client";
 
-import { Cross2Icon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import { Cross2Icon, PlusIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { DataTableViewOptions } from "./data-table-view-options";
+import Link from "next/link";
 
 const stockTypes = [
   {
@@ -63,6 +64,12 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           </Button>
         )}
       </div>
+      <Button variant="default" size="sm" className="hidden h-8 lg:flex ml-auto mr-2">
+        <PlusIcon className="mr-2 h-4 w-4" />
+        <Link className="w-full" href="/companies/create" rel="noopener noreferrer">
+          Add Company
+        </Link>
+      </Button>
       <DataTableViewOptions table={table} />
     </div>
   );

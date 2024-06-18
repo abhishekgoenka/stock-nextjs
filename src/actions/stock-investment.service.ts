@@ -9,7 +9,12 @@ export async function getStockInvestments(): Promise<StockInvestmentType[]> {
   return await StockInvestment.findAll({ include: Company });
 }
 
-export async function addStockInvestment(investment: StockInvestmentType): Promise<StockInvestmentType> {
+export async function getStockInvestmentByID(id: string): Promise<StockInvestmentType | null> {
+  await connectDB();
+  return await StockInvestment.findByPk(id);
+}
+
+export async function addStockInvestment(investment: StockInvestmentType): Promise<StockInvestmentType | null> {
   let transaction;
   try {
     const sequelize = await connectDB();
@@ -22,11 +27,11 @@ export async function addStockInvestment(investment: StockInvestmentType): Promi
       await transaction.rollback();
     }
     console.error(ex);
-    throw "Failed to add stock investment";
+    return null;
   }
 }
 
-export async function updateStockInvestment(investment: StockInvestmentType): Promise<number> {
+export async function updateStockInvestment(investment: StockInvestmentType): Promise<number | null> {
   let transaction;
   try {
     const sequelize = await connectDB();
@@ -42,11 +47,11 @@ export async function updateStockInvestment(investment: StockInvestmentType): Pr
       await transaction.rollback();
     }
     console.error(ex);
-    throw "Failed to update MF";
+    return null;
   }
 }
 
-export async function deleteStockInvestment(id: number): Promise<number> {
+export async function deleteStockInvestment(id: number): Promise<number | null> {
   let transaction;
   try {
     const sequelize = await connectDB();
@@ -62,14 +67,8 @@ export async function deleteStockInvestment(id: number): Promise<number> {
       await transaction.rollback();
     }
     console.error(ex);
-    throw "Failed to add stock investment";
+    return null;
   }
-}
-
-export async function getStockInvestmentByID(id: string): Promise<StockInvestmentType | null> {
-  await connectDB();
-  const si = await StockInvestment.findByPk(id);
-  return si;
 }
 
 // export class StockInvestmentService extends BaseService {
