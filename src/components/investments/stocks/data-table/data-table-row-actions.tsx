@@ -17,22 +17,26 @@ import Link from "next/link";
 import StockInvestment from "@/models/stock-investment.model";
 import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
 import { deleteStockInvestment } from "@/actions/stock-investment.service";
+import { useRouter } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-const deleteHandler = async (id: number) => {
-  const result = await deleteStockInvestment(id);
-  if (result) {
-    toastDBDeleteSuccess();
-  } else {
-    toastDBSaveError();
-  }
-};
-
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
+  const router = useRouter();
   const investment = row.original as StockInvestment;
+
+  const deleteHandler = async (id: number) => {
+    const result = await deleteStockInvestment(id);
+    if (result) {
+      toastDBDeleteSuccess();
+      router.refresh();
+    } else {
+      toastDBSaveError();
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -3,6 +3,9 @@
 import { Table } from "@tanstack/react-table";
 import { Input } from "../../ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -19,6 +22,12 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           className="h-8 w-[150px] lg:w-[250px]"
         />
       </div>
+      <Button variant="default" size="sm" className="hidden h-8 lg:flex ml-auto mr-2">
+        <PlusIcon className="mr-2 h-4 w-4" />
+        <Link className="w-full" href="/mutual-fund/create" rel="noopener noreferrer">
+          Add Mutual Fund
+        </Link>
+      </Button>
       <DataTableViewOptions table={table} />
     </div>
   );

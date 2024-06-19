@@ -4,7 +4,7 @@ import { Columns } from "@/components/mutual-fund/data-table/columns";
 import { DataTable } from "@/components/mutual-fund/data-table/data-table";
 
 export const metadata: Metadata = {
-  title: "StockSync : Mutual fund",
+  title: "StockSync : Mutual Fund",
 };
 
 export const dynamic = "force-dynamic";

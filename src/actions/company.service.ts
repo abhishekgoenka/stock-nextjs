@@ -19,7 +19,6 @@ export async function getCompanyByID(id: string): Promise<CompanyType | null> {
 export async function addCompany(company: CompanyType): Promise<CompanyType | null> {
   let transaction;
   try {
-    console.log(company);
     const sequelize = await connectDB();
     transaction = await sequelize.transaction();
     const record = await Company.create(company, { transaction });

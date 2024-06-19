@@ -6,12 +6,13 @@ import { Row } from "@tanstack/react-table";
 import { Button } from "../../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 
-import Company from "@/models/company.model";
+import { CompanyType } from "@/models/company.model";
 import Link from "next/link";
 import { deleteCompany } from "@/actions/company.service";
 import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
 import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -19,13 +20,15 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const [showAlert, setShowAlert] = useState(false);
-  const company: Company = row.original as Company;
+  const router = useRouter();
+  const company: CompanyType = row.original as CompanyType;
 
   const deleteHandler = async (id: number) => {
     setShowAlert(false);
     const result = await deleteCompany(id);
     if (result) {
       toastDBDeleteSuccess();
+      router.refresh();
     } else {
       toastDBSaveError();
     }
