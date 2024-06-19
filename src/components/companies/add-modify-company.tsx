@@ -217,7 +217,12 @@ export default function AddModifyCompany({ defaultValues, id }: AddModifyCompany
             )}
           />
 
-          <Button type="submit">Save</Button>
+          <div className="flex gap-3">
+            <Button type="submit">Save</Button>
+            <Button type="button" variant="destructive" onClick={() => router.push("/companies")}>
+              Cancel
+            </Button>
+          </div>
         </form>
       </Form>
     </>

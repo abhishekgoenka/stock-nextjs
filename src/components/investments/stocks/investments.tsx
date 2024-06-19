@@ -334,7 +334,12 @@ export default function Investments({ defaultValues, id }: AddInvestmentsProps) 
               )}
             />
           </div>
-          <Button type="submit">Save Investments</Button>
+          <div className="flex gap-3">
+            <Button type="submit">Save Investments</Button>
+            <Button type="button" variant="destructive" onClick={() => router.push("/investments/stocks")}>
+              Cancel
+            </Button>
+          </div>
         </form>
       </Form>
     </>

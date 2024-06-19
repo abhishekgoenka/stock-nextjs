@@ -9,8 +9,6 @@ import { EXCHANGE } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-message";
-import { addCompany, updateCompany } from "@/actions/company.service";
-import { CompanyType } from "@/models/company.model";
 import { addMF, updateMF } from "@/actions/mutual-fund.service";
 import { MutualFundType } from "@/models/mutual-fund.model";
 import { Switch } from "../ui/switch";
@@ -295,7 +293,12 @@ export default function AddModifyMutualFund({ defaultValues, id }: AddModifyMutu
             </TabsContent>
           </Tabs>
 
-          <Button type="submit">Save</Button>
+          <div className="flex gap-3">
+            <Button type="submit">Save</Button>
+            <Button type="button" variant="destructive" onClick={() => router.push("/mutual-fund")}>
+              Cancel
+            </Button>
+          </div>
         </form>
       </Form>
     </>
