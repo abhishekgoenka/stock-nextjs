@@ -64,7 +64,7 @@ export default function Investments({ defaultValues, id }: AddInvestmentsProps) 
 
   async function onSubmit(data: InvestmentFormValues) {
     const { companyID, purchaseDate, qty, price, stt, brokerage, otherCharges, currency, broker } = data;
-    let result: number | StockInvestmentType;
+    let result: number | StockInvestmentType | null;
     if (id) {
       result = await updateStockInvestment({
         id: id,
