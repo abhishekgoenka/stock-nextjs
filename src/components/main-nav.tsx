@@ -21,7 +21,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "Buy Mutual Fund",
-    href: "/docs/primitives/hover-card",
+    href: "/investments/mutual-fund",
     description: "This feature simplifies the process of purchasing mutual funds",
   },
   {

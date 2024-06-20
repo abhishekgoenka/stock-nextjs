@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function StockInvestmentPage() {
+export default async function MutualFundInvestmentPage() {
   const defaultValues: Partial<StockInvestmentFormValues> = {
     price: 0,
     qty: 0,

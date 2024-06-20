@@ -4,6 +4,8 @@ export const BROKERS = [
   { label: "WEBULL", value: "WEBULL", icon: QuestionMarkCircledIcon },
   { label: "GROWW", value: "GROWW", icon: QuestionMarkCircledIcon },
   { label: "DHANN", value: "DHANN", icon: QuestionMarkCircledIcon },
+  { label: "UPSTOX", value: "UPSTOX", icon: QuestionMarkCircledIcon },
+  { label: "ZERODHA", value: "ZERODHA", icon: QuestionMarkCircledIcon },
   {
     label: "Traditional",
     value: "FidilityTraditional",

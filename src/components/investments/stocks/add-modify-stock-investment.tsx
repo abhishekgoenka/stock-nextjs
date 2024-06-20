@@ -21,7 +21,7 @@ import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-
 import { getCompanies } from "@/actions/company.service";
 import { StockInvestmentType } from "@/models/stock-investment.model";
 
-const investmentFormSchema = z.object({
+const stockInvestmentFormSchema = z.object({
   companyID: z.string(),
   purchaseDate: z.date(),
   qty: z.coerce.number().min(1, { message: "Quantity should be greater than zero" }),
@@ -33,18 +33,18 @@ const investmentFormSchema = z.object({
   broker: z.string(),
 });
 
-export type InvestmentFormValues = z.infer<typeof investmentFormSchema>;
+export type StockInvestmentFormValues = z.infer<typeof stockInvestmentFormSchema>;
 type AddInvestmentsProps = {
-  defaultValues: Partial<InvestmentFormValues>;
+  defaultValues: Partial<StockInvestmentFormValues>;
   id?: number;
 };
 
-export default function Investments({ defaultValues, id }: AddInvestmentsProps) {
+export default function AddModifyStockInvestment({ defaultValues, id }: AddInvestmentsProps) {
   const router = useRouter();
   const [netAmount, setNetAmount] = useState(0);
   const [companies, setCompanies] = useState<{ id: number; name: string }[]>([]);
-  const form = useForm<InvestmentFormValues>({
-    resolver: zodResolver(investmentFormSchema),
+  const form = useForm<StockInvestmentFormValues>({
+    resolver: zodResolver(stockInvestmentFormSchema),
     defaultValues,
     mode: "onChange",
   });
@@ -62,7 +62,7 @@ export default function Investments({ defaultValues, id }: AddInvestmentsProps) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function onSubmit(data: InvestmentFormValues) {
+  async function onSubmit(data: StockInvestmentFormValues) {
     const { companyID, purchaseDate, qty, price, stt, brokerage, otherCharges, currency, broker } = data;
     let result: number | StockInvestmentType | null;
     if (id) {

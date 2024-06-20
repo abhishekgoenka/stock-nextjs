@@ -1,8 +1,22 @@
 import { Model, Column, Table, PrimaryKey, AutoIncrement, BelongsTo, ForeignKey } from "sequelize-typescript";
 import MutualFund from "./mutual-fund.model";
 
+export type MutualFundInvestmentType = {
+  id?: number;
+  mutualFundID: number;
+  purchaseDate: string;
+  qty: number;
+  price: number;
+  stt: number;
+  brokerage: number;
+  otherCharges: number;
+  currency: string;
+  broker: string;
+  mutualFund?: MutualFund;
+};
+
 @Table
-export default class MutualFundInvestment extends Model<MutualFundInvestment> {
+export default class MutualFundInvestment extends Model<MutualFundInvestmentType> {
   @AutoIncrement
   @PrimaryKey
   @Column
@@ -37,5 +51,5 @@ export default class MutualFundInvestment extends Model<MutualFundInvestment> {
   broker!: string;
 
   @BelongsTo(() => MutualFund)
-  mutualFund: MutualFund;
+  mutualFund: ReturnType<() => MutualFund>;
 }

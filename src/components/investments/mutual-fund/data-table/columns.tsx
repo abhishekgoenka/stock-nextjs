@@ -5,18 +5,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { NumericFormat } from "react-number-format";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { StockInvestmentType } from "@/models/stock-investment.model";
 import { format } from "date-fns";
+import { MutualFundInvestmentType } from "@/models/mutual-fund-investment.model";
+import { Badge } from "@/components/ui/badge";
 
-export const Columns: ColumnDef<StockInvestmentType>[] = [
+export const Columns: ColumnDef<MutualFundInvestmentType>[] = [
   {
-    accessorKey: "company.name",
+    accessorKey: "mutualFund.name",
     id: "name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Compay" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Mutual fund" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[250px] truncate font-medium">{row.getValue("name")}</span>
+          <span className="font-medium">{row.getValue("name")}</span>
         </div>
       );
     },
@@ -38,7 +39,7 @@ export const Columns: ColumnDef<StockInvestmentType>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="w-11 text-center font-medium">{row.getValue("qty")}</span>
+          <span className="w-16 text-right font-medium">{row.getValue("qty")}</span>
         </div>
       );
     },
@@ -72,6 +73,24 @@ export const Columns: ColumnDef<StockInvestmentType>[] = [
         <div className="flex space-x-1">
           <span className="w-24 text-right font-medium">
             <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={amount} />
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "profit",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Profit/Loss" />,
+    cell: ({ row }) => {
+      const purchaseValue = row.original.price * row.original.qty + row.original.stt + row.original.brokerage + row.original.otherCharges;
+      const currentValue = (row.original.mutualFund?.currentPrice ?? 0) * row.original.qty;
+      const pl = currentValue - purchaseValue;
+      const percentage = (pl * 100) / purchaseValue;
+      return (
+        <div className="space-x-1">
+          <span className="w-24 text-right font-medium">
+            <Badge className="mr-1">{Math.round(percentage)}%</Badge>
+            <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={pl} />
           </span>
         </div>
       );

@@ -14,12 +14,12 @@ import {
 } from "../../../ui/dropdown-menu";
 
 import Link from "next/link";
-import StockInvestment from "@/models/stock-investment.model";
 import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
 import { deleteStockInvestment } from "@/actions/stock-investment.service";
 import { useRouter } from "next/navigation";
-import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
+import { MutualFundInvestmentType } from "@/models/mutual-fund-investment.model";
 import { useState } from "react";
+import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -28,7 +28,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const [showAlert, setShowAlert] = useState(false);
   const router = useRouter();
-  const investment = row.original as StockInvestment;
+  const investment = row.original as MutualFundInvestmentType;
 
   const deleteHandler = async (id: number) => {
     const result = await deleteStockInvestment(id);
@@ -56,7 +56,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link className="w-full" href={investment?.company?.url} rel="noopener noreferrer" target="_blank">
+            <Link className="w-full" href={investment?.mutualFund?.url!} rel="noopener noreferrer" target="_blank">
               Show detail
             </Link>
           </DropdownMenuItem>

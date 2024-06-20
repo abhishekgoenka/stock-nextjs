@@ -2,7 +2,7 @@ import { getStockInvestmentByID } from "@/actions/stock-investment.service";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import { toDate } from "date-fns";
-import Investments, { InvestmentFormValues } from "@/components/investments/stocks/investments";
+import AddModifyStockInvestment, { StockInvestmentFormValues } from "@/components/investments/stocks/add-modify-stock-investment";
 
 export const metadata: Metadata = {
   title: "StockSync : Investments",
@@ -15,7 +15,7 @@ export default async function StockInvestmentPage({ params }: { params: { id: st
   if (!investment) {
     return <div>Not found</div>;
   }
-  const defaultValues: Partial<InvestmentFormValues> = {
+  const defaultValues: Partial<StockInvestmentFormValues> = {
     price: investment.price,
     qty: investment.qty,
     stt: investment.stt,
@@ -30,7 +30,7 @@ export default async function StockInvestmentPage({ params }: { params: { id: st
     <section className="container grid items-center gap-6 pb-8 pt-6 w-[650px] md:py-10">
       <h3 className="text-lg font-medium">Edit stock investments</h3>
       <Separator />
-      <Investments defaultValues={defaultValues} id={+params.id} />
+      <AddModifyStockInvestment defaultValues={defaultValues} id={+params.id} />
     </section>
   );
 }
