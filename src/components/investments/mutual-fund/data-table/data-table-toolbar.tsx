@@ -37,7 +37,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
       </div>
       <Button variant="default" size="sm" className="hidden h-8 lg:flex ml-auto mr-2">
         <PlusIcon className="mr-2 h-4 w-4" />
-        <Link className="w-full" href="/investments/stocks/create" rel="noopener noreferrer">
+        <Link className="w-full" href="/investments/mutual-fund/create" rel="noopener noreferrer">
           Buy Mutual Fund
         </Link>
       </Button>

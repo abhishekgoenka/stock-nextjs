@@ -15,11 +15,11 @@ import {
 
 import Link from "next/link";
 import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
-import { deleteStockInvestment } from "@/actions/stock-investment.service";
 import { useRouter } from "next/navigation";
-import { MutualFundInvestmentType } from "@/models/mutual-fund-investment.model";
+import MutualFundInvestment from "@/models/mutual-fund-investment.model";
 import { useState } from "react";
 import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
+import { deleteMutualFundInvestment } from "@/actions/mutual-fund-investment.service";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -28,10 +28,10 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const [showAlert, setShowAlert] = useState(false);
   const router = useRouter();
-  const investment = row.original as MutualFundInvestmentType;
+  const investment = row.original as MutualFundInvestment;
 
   const deleteHandler = async (id: number) => {
-    const result = await deleteStockInvestment(id);
+    const result = await deleteMutualFundInvestment(id);
     if (result) {
       toastDBDeleteSuccess();
       router.refresh();
@@ -51,7 +51,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem>
-            <Link className="w-full" href={`/investments/stocks/edit/${investment?.id}`} rel="noopener noreferrer">
+            <Link className="w-full" href={`/investments/mutual-fund/edit/${investment?.id}`} rel="noopener noreferrer">
               Edit Investment
             </Link>
           </DropdownMenuItem>

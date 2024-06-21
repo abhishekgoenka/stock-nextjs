@@ -12,7 +12,6 @@ export type MutualFundInvestmentType = {
   otherCharges: number;
   currency: string;
   broker: string;
-  mutualFund?: MutualFund;
 };
 
 @Table
