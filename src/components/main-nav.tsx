@@ -96,7 +96,7 @@ export function MainNav() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
+            <Link href="/reports" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>Reports</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

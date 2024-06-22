@@ -1,7 +1,7 @@
 import { NumberFormatBase } from "react-number-format";
 
 type NumberFormaterProps = {
-  value: string;
+  value: string | number;
   currency?: string;
 };
 
