@@ -6,10 +6,10 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { NumericFormat } from "react-number-format";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { format } from "date-fns";
-import { MutualFundInvestmentType } from "@/models/mutual-fund-investment.model";
+import MutualFundInvestment from "@/models/mutual-fund-investment.model";
 import { Badge } from "@/components/ui/badge";
 
-export const Columns: ColumnDef<MutualFundInvestmentType>[] = [
+export const Columns: ColumnDef<MutualFundInvestment>[] = [
   {
     accessorKey: "mutualFund.name",
     id: "name",
