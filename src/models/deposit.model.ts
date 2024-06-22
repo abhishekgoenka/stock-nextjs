@@ -1,7 +1,17 @@
 import { Model, Column, Table, PrimaryKey, AutoIncrement } from "sequelize-typescript";
 
+export type DepositType = {
+  id?: number;
+  date: string;
+  desc: string;
+  from: string;
+  to: string;
+  currency: string;
+  amount: number;
+};
+
 @Table
-export default class Deposit extends Model<Deposit> {
+export default class Deposit extends Model<DepositType> {
   @AutoIncrement
   @PrimaryKey
   @Column

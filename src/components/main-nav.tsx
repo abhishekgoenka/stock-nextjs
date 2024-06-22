@@ -26,7 +26,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "Fund Transfer",
-    href: "/docs/primitives/progress",
+    href: "/fund-transfer",
     description: "Enables seamless movement of funds between accounts.",
   },
   {

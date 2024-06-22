@@ -4,7 +4,7 @@ import MutualFundInvestment, { MutualFundInvestmentType } from "../models/mutual
 import MutualFund from "../models/mutual-fund.model";
 import { connectDB } from "./base.service";
 
-export async function getMutualFundInvestments(): Promise<MutualFundInvestmentType[]> {
+export async function getMutualFundInvestments(): Promise<MutualFundInvestment[]> {
   await connectDB();
   return await MutualFundInvestment.findAll({ include: MutualFund });
 }
