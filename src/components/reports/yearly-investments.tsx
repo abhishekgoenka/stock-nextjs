@@ -6,9 +6,12 @@ import { format } from "date-fns";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
 import { sumBy } from "lodash";
+import { useExchange } from "@/store/useExchange";
 
 export default function YearlyInvestment() {
   const [investments, setInvestments] = useState<YearlyInvestmentType[]>([]);
+  const exchange = useExchange(store => store.exchange);
+
   const [totalInvestments, setTotalInvestments] = useState(0);
   useEffect(() => {
     async function fetchData() {
@@ -25,6 +28,7 @@ export default function YearlyInvestment() {
         <div className="flex justify-between">
           Yearly investments
           <span className="text-right">
+            exchange: {exchange}
             Total : <NumberFormater value={totalInvestments} currency="INR" />
           </span>
         </div>

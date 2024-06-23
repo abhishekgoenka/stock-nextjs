@@ -28,6 +28,7 @@ export const CURRENCY = [
   { label: "USD", value: "USD" },
 ];
 
+export type EXCHANGE_TYPE = "NSE" | "NASDAQ";
 export const EXCHANGE = [
   { label: "NSE", value: "NSE" },
   { label: "NASDAQ", value: "NASDAQ" },
