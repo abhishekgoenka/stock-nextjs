@@ -11,16 +11,15 @@ import { useExchange } from "@/store/useExchange";
 export default function YearlyInvestment() {
   const [investments, setInvestments] = useState<YearlyInvestmentType[]>([]);
   const exchange = useExchange(store => store.exchange);
-
   const [totalInvestments, setTotalInvestments] = useState(0);
   useEffect(() => {
     async function fetchData() {
-      const yearlyInvestments = await getYearlyInvestments("NSE");
+      const yearlyInvestments = await getYearlyInvestments(exchange);
       setInvestments(yearlyInvestments);
       setTotalInvestments(sumBy(yearlyInvestments, "total"));
     }
     fetchData();
-  }, []);
+  }, [exchange]);
 
   return (
     <Table className="caption-top">
@@ -28,8 +27,7 @@ export default function YearlyInvestment() {
         <div className="flex justify-between">
           Yearly investments
           <span className="text-right">
-            exchange: {exchange}
-            Total : <NumberFormater value={totalInvestments} currency="INR" />
+            Total : <NumberFormater value={totalInvestments} exchange={exchange} />
           </span>
         </div>
       </TableCaption>
@@ -47,16 +45,16 @@ export default function YearlyInvestment() {
           <TableRow key={investment.year}>
             <TableCell className="font-bold">{investment.year}</TableCell>
             <TableCell>
-              <NumberFormater value={investment.stocks} currency="INR" />
+              <NumberFormater value={investment.stocks} exchange={exchange} />
             </TableCell>
             <TableCell>
-              <NumberFormater value={investment.etf} currency="INR" />
+              <NumberFormater value={investment.etf} exchange={exchange} />
             </TableCell>
             <TableCell className="text-right">
-              <NumberFormater value={investment.mutualFunds} currency="INR" />
+              <NumberFormater value={investment.mutualFunds} exchange={exchange} />
             </TableCell>
             <TableCell className="text-right">
-              <NumberFormater value={investment.total} currency="INR" />
+              <NumberFormater value={investment.total} exchange={exchange} />
             </TableCell>
           </TableRow>
         ))}

@@ -5,19 +5,18 @@ import { MonthlyInvestmentType, getMonthlyInvestments } from "@/actions/report.s
 import { format } from "date-fns";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
+import { useExchange } from "@/store/useExchange";
 
 export default function MonthlyInvestment() {
   const [investments, setInvestments] = useState<MonthlyInvestmentType[]>([]);
+  const exchange = useExchange(store => store.exchange);
   useEffect(() => {
     async function fetchData() {
-      const monthlyInvestments = await getMonthlyInvestments("NSE");
+      const monthlyInvestments = await getMonthlyInvestments(exchange);
       setInvestments(monthlyInvestments);
     }
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  // const monthlyInvestments = await getMonthlyInvestments("NSE");
-  // console.log("s", monthlyInvestments);
+  }, [exchange]);
 
   return (
     <Table className="caption-top">
@@ -38,16 +37,16 @@ export default function MonthlyInvestment() {
           <TableRow key={investment.month.toString()}>
             <TableCell className="font-medium">{format(investment.month, "MMM-yyyy")}</TableCell>
             <TableCell>
-              <NumberFormater value={investment.stocks} currency="INR" />
+              <NumberFormater value={investment.stocks} exchange={exchange} />
             </TableCell>
             <TableCell>
-              <NumberFormater value={investment.etf} currency="INR" />
+              <NumberFormater value={investment.etf} exchange={exchange} />
             </TableCell>
             <TableCell className="text-right">
-              <NumberFormater value={investment.mutualFunds} currency="INR" />
+              <NumberFormater value={investment.mutualFunds} exchange={exchange} />
             </TableCell>
             <TableCell className="text-right">
-              <NumberFormater value={investment.total} currency="INR" />
+              <NumberFormater value={investment.total} exchange={exchange} />
             </TableCell>
           </TableRow>
         ))}
