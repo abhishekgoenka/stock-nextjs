@@ -7,7 +7,6 @@ import { Button } from "../../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 
 import Link from "next/link";
-import { deleteCompany } from "@/actions/company.service";
 import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
 import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
 import { useState } from "react";

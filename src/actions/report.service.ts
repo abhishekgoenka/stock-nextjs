@@ -72,10 +72,6 @@ export async function getMonthlyInvestments(exchange: string): Promise<MonthlyIn
         etfs[etfIndex].isMerged = true;
         total += etf;
       }
-      // console.log("month", s.month);
-      // console.log("moment", moment(`01-${s.month}`, "DD-MM-YYYY"));
-      // console.log("date-fns", parse(`01-${s.month}`, "dd-MM-yyyy", new Date()));
-
       result.push({
         month: parse(`01-${s.month}`, "dd-MM-yyyy", new Date()),
         stocks: s.stocks,
@@ -129,104 +125,106 @@ export async function getMonthlyInvestments(exchange: string): Promise<MonthlyIn
   }
 }
 
+export type YearlyInvestmentType = {
+  year: number;
+  stocks: number;
+  etf: number;
+  mutualFunds: number;
+  total: number;
+};
+export async function getYearlyInvestments(exchange: string): Promise<YearlyInvestmentType[]> {
+  try {
+    const sequelize = await connectDB();
+    const stockSQL = `SELECT STRFTIME("%Y", purchaseDate) AS year,
+                        sum((qty*price)+stt+brokerage+otherCharges) AS stocks
+                        FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                        WHERE c.exchange = :exchange AND c.sector != 'ETF'
+                        GROUP By STRFTIME("%Y", purchaseDate) ORDER By purchaseDate`;
+    const stocks: Array<{ year; stocks }> = await sequelize.query(stockSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const stockETFSQL = `SELECT STRFTIME("%Y", purchaseDate) AS year,
+                        sum((qty*price)+stt+brokerage+otherCharges) AS etf
+                        FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                        WHERE c.exchange = :exchange AND c.sector = 'ETF'
+                        GROUP By STRFTIME("%Y", purchaseDate) ORDER By purchaseDate`;
+    const etfs: Array<{ year; etf; isMerged }> = await sequelize.query(stockETFSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const mfSQL = `SELECT STRFTIME("%Y", purchaseDate) AS year,
+                      sum((qty*price)+stt+brokerage+otherCharges) AS mutualFund
+                    FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
+                    WHERE exchange = :exchange
+                    GROUP By STRFTIME("%Y", purchaseDate) ORDER By purchaseDate`;
+    const mutualFunds: Array<{ year; mutualFund; isMerged }> = await sequelize.query(mfSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+    const result: YearlyInvestmentType[] = [];
+    stocks.forEach(s => {
+      const mfIndex = mutualFunds.findIndex(e => e.year === s.year);
+      const etfIndex = etfs.findIndex(e => e.year === s.year);
+      let total = s.stocks;
+      let mutualFund = 0;
+      let etf = 0;
+      if (mfIndex > -1) {
+        mutualFund = mutualFunds[mfIndex].mutualFund;
+        mutualFunds[mfIndex].isMerged = true;
+        total += mutualFund;
+      }
+      if (etfIndex > -1) {
+        etf = etfs[etfIndex].etf;
+        etfs[etfIndex].isMerged = true;
+        total += etf;
+      }
+      result.push({
+        year: s.year,
+        stocks: s.stocks,
+        etf: etf,
+        mutualFunds: mutualFund,
+        total,
+      });
+    });
+
+    mutualFunds.forEach(m => {
+      if (!m.isMerged) {
+        result.push({
+          year: m.year,
+          stocks: 0,
+          etf: 0,
+          mutualFunds: m.mutualFund,
+          total: m.mutualFund,
+        });
+      }
+    });
+
+    etfs.forEach(m => {
+      if (!m.isMerged) {
+        result.push({
+          year: m.year,
+          stocks: 0,
+          etf: m.etf,
+          mutualFunds: 0,
+          total: m.etf,
+        });
+      }
+    });
+
+    const sortedDate = sortBy(result, "year");
+    return sortedDate;
+  } catch (ex) {
+    console.error(ex);
+    return [];
+  }
+}
+
 // export class ReportService extends BaseService {
 //   constructor() {
 //     super();
-//   }
-
-//   public async getYearlyInvestments(exchange: string): Promise<any> {
-//     try {
-//       const stockSQL = `SELECT STRFTIME("%Y", purchaseDate) AS year,
-//                         sum((qty*price)+stt+brokerage+otherCharges) AS stocks
-//                         FROM StockInvestments s JOIN Companies c on s.companyID = c.id
-//                         WHERE c.exchange = :exchange AND c.sector != 'ETF'
-//                         GROUP By STRFTIME("%Y", purchaseDate) ORDER By purchaseDate`;
-//       const stocks: Array<{ year; stocks }> = await this.sequelize.query(stockSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const stockETFSQL = `SELECT STRFTIME("%Y", purchaseDate) AS year,
-//                         sum((qty*price)+stt+brokerage+otherCharges) AS etf
-//                         FROM StockInvestments s JOIN Companies c on s.companyID = c.id
-//                         WHERE c.exchange = :exchange AND c.sector = 'ETF'
-//                         GROUP By STRFTIME("%Y", purchaseDate) ORDER By purchaseDate`;
-//       const etfs: Array<{ year; etf; isMerged }> = await this.sequelize.query(stockETFSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const mfSQL = `SELECT STRFTIME("%Y", purchaseDate) AS year,
-//                       sum((qty*price)+stt+brokerage+otherCharges) AS mutualFund
-//                     FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
-//                     WHERE exchange = :exchange
-//                     GROUP By STRFTIME("%Y", purchaseDate) ORDER By purchaseDate`;
-//       const mutualFunds: Array<{ year; mutualFund; isMerged }> = await this.sequelize.query(mfSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-//       const result: Array<{
-//         year: number;
-//         stocks: number;
-//         etf: number;
-//         mutualFunds: number;
-//         total: number;
-//       }> = [];
-//       stocks.forEach((s) => {
-//         const mfIndex = mutualFunds.findIndex((e) => e.year === s.year);
-//         const etfIndex = etfs.findIndex((e) => e.year === s.year);
-//         let total = s.stocks;
-//         let mutualFund = 0;
-//         let etf = 0;
-//         if (mfIndex > -1) {
-//           mutualFund = mutualFunds[mfIndex].mutualFund;
-//           mutualFunds[mfIndex].isMerged = true;
-//           total += mutualFund;
-//         }
-//         if (etfIndex > -1) {
-//           etf = etfs[etfIndex].etf;
-//           etfs[etfIndex].isMerged = true;
-//           total += etf;
-//         }
-//         result.push({
-//           year: s.year,
-//           stocks: s.stocks,
-//           etf: etf,
-//           mutualFunds: mutualFund,
-//           total,
-//         });
-//       });
-
-//       mutualFunds.forEach((m) => {
-//         if (!m.isMerged) {
-//           result.push({
-//             year: m.year,
-//             stocks: 0,
-//             etf: 0,
-//             mutualFunds: m.mutualFund,
-//             total: m.mutualFund,
-//           });
-//         }
-//       });
-
-//       etfs.forEach((m) => {
-//         if (!m.isMerged) {
-//           result.push({
-//             year: m.year,
-//             stocks: 0,
-//             etf: m.etf,
-//             mutualFunds: 0,
-//             total: m.etf,
-//           });
-//         }
-//       });
-
-//       const sortedDate = _.sortBy(result, "year");
-//       return sortedDate;
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get all monthly INR investments";
-//     }
 //   }
 
 //   public async getBrokerInvestments(exchange: string): Promise<any> {

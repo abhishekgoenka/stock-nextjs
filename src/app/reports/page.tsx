@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import MonthlyInvestment from "@/components/reports/monthly-investments";
+import YearlyInvestment from "@/components/reports/yearly-investments";
 
 export const metadata: Metadata = {
   title: "StockSync : Report",
@@ -12,7 +13,7 @@ export default async function ReportPage() {
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex gap-10">
         <MonthlyInvestment />
-        <MonthlyInvestment />
+        <YearlyInvestment />
       </div>
       <div className="flex gap-10">
         <MonthlyInvestment />
