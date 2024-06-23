@@ -23,7 +23,7 @@ export async function addDeposit(deposit: DepositType): Promise<DepositType | nu
     transaction = await sequelize.transaction();
     const record = await Deposit.create(deposit, { transaction });
     await transaction.commit();
-    return record;
+    return JSON.parse(JSON.stringify(record));
   } catch (ex) {
     if (transaction) {
       await transaction.rollback();

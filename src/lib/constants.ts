@@ -32,3 +32,21 @@ export const EXCHANGE = [
   { label: "NSE", value: "NSE" },
   { label: "NASDAQ", value: "NASDAQ" },
 ];
+
+export const DEPOSIT_TYPE = [
+  {
+    value: "Fund Transfered",
+    label: "Transfered",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "Fund Refund",
+    label: "Refund",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "Divident Received",
+    label: "Divident",
+    icon: QuestionMarkCircledIcon,
+  },
+];

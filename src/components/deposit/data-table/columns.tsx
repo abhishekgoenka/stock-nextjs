@@ -3,8 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "./data-table-column-header";
-import { CompanyType } from "@/models/company.model";
-import { NumberFormatBase, NumericFormat } from "react-number-format";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { DepositType } from "@/models/deposit.model";
 import { format } from "date-fns";

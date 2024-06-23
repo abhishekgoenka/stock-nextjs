@@ -13,6 +13,7 @@ import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DepositType } from "@/models/deposit.model";
+import { deleteDeposit } from "@/actions/deposit.service";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -25,7 +26,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
 
   const deleteHandler = async (id: number) => {
     setShowAlert(false);
-    const result = await deleteCompany(id);
+    const result = await deleteDeposit(id);
     if (result) {
       toastDBDeleteSuccess();
       router.refresh();
@@ -45,7 +46,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem>
-            <Link className="w-full" href={`/companies/edit/${company?.id}`} rel="noopener noreferrer">
+            <Link className="w-full" href={`/fund-transfer/edit/${company?.id}`} rel="noopener noreferrer">
               Edit
             </Link>
           </DropdownMenuItem>
