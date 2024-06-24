@@ -7,7 +7,7 @@ import { Input } from "../../ui/input";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { DataTableViewOptions } from "./data-table-view-options";
 import Link from "next/link";
-import { DEPOSIT_TYPE } from "@/lib/constants";
+import { DEPOSIT, DEPOSIT_TYPE } from "@/lib/constants";
 
 const currency = [
   {
@@ -24,10 +24,26 @@ const currency = [
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  type: DEPOSIT;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({ table, type }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+
+  const CreateLink = () => {
+    if (type === "Dividend") {
+      return (
+        <Link className="w-full" href="/dividend/create" rel="noopener noreferrer">
+          Add Deposit
+        </Link>
+      );
+    }
+    return (
+      <Link className="w-full" href="/fund-transfer/create" rel="noopener noreferrer">
+        Add Deposit
+      </Link>
+    );
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -49,9 +65,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
       </div>
       <Button variant="default" size="sm" className="hidden h-8 lg:flex ml-auto mr-2">
         <PlusIcon className="mr-2 h-4 w-4" />
-        <Link className="w-full" href="/fund-transfer/create" rel="noopener noreferrer">
-          Add Deposit
-        </Link>
+        <CreateLink />
       </Button>
       <DataTableViewOptions table={table} />
     </div>

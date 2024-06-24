@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DepositType } from "@/models/deposit.model";
 import { deleteDeposit } from "@/actions/deposit.service";
+import { DEPOSIT, DEPOSIT_DIVIDEND_RECEIVED } from "@/lib/constants";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -21,7 +22,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const [showAlert, setShowAlert] = useState(false);
   const router = useRouter();
-  const company = row.original as DepositType;
+  const deposit = row.original as DepositType;
 
   const deleteHandler = async (id: number) => {
     setShowAlert(false);
@@ -32,6 +33,21 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     } else {
       toastDBSaveError();
     }
+  };
+
+  const EditLink = () => {
+    if (deposit.desc === DEPOSIT_DIVIDEND_RECEIVED) {
+      return (
+        <Link className="w-full" href={`/dividend/edit/${deposit?.id}`} rel="noopener noreferrer">
+          Edit
+        </Link>
+      );
+    }
+    return (
+      <Link className="w-full" href={`/fund-transfer/edit/${deposit?.id}`} rel="noopener noreferrer">
+        Edit
+      </Link>
+    );
   };
 
   return (
@@ -45,9 +61,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem>
-            <Link className="w-full" href={`/fund-transfer/edit/${company?.id}`} rel="noopener noreferrer">
-              Edit
-            </Link>
+            <EditLink />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setShowAlert(true)}>
@@ -56,7 +70,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <DeleteConfirmation open={showAlert} onCancel={() => setShowAlert(false)} onContinue={() => deleteHandler(company?.id!)} />
+      <DeleteConfirmation open={showAlert} onCancel={() => setShowAlert(false)} onContinue={() => deleteHandler(deposit?.id!)} />
     </>
   );
 }

@@ -5,7 +5,7 @@ import { toDate } from "date-fns";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "StockSync : Fund transfer",
+  title: "StockSync : Dividend",
 };
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export default async function FundTransferPage({ params }: { params: { id: strin
     <section className="container grid items-center gap-6 pb-8 pt-6 w-[650px] md:py-10">
       <h3 className="text-lg font-medium">Edit deposit</h3>
       <Separator />
-      <AddModifyDeposit defaultValues={defaultValues} type="Fund Transfer" id={+params.id} />
+      <AddModifyDeposit defaultValues={defaultValues} type="Dividend" id={+params.id} />
     </section>
   );
 }

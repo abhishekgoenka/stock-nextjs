@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CURRENCY, DEPOSIT_TYPE } from "@/lib/constants";
+import { CURRENCY, DEPOSIT, DEPOSIT_TYPE } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-message";
@@ -31,10 +31,11 @@ const depositFormSchema = z.object({
 export type DepositFormValues = z.infer<typeof depositFormSchema>;
 type AddModifyDepositProps = {
   defaultValues: Partial<DepositFormValues>;
+  type: DEPOSIT;
   id?: number;
 };
 
-export default function AddModifyDeposit({ defaultValues, id }: AddModifyDepositProps) {
+export default function AddModifyDeposit({ defaultValues, id, type }: AddModifyDepositProps) {
   const router = useRouter();
   const form = useForm<DepositFormValues>({
     resolver: zodResolver(depositFormSchema),
@@ -67,11 +68,19 @@ export default function AddModifyDeposit({ defaultValues, id }: AddModifyDeposit
     }
     if (result) {
       toastDBSaveSuccess();
-      router.push("/fund-transfer");
+      routeToRootPage();
     } else {
       toastDBSaveError();
     }
   }
+
+  const routeToRootPage = () => {
+    if (type === "Fund Transfer") {
+      router.push("/fund-transfer");
+    } else {
+      router.push("/dividend");
+    }
+  };
 
   return (
     <>
@@ -90,7 +99,15 @@ export default function AddModifyDeposit({ defaultValues, id }: AddModifyDeposit
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {DEPOSIT_TYPE.map(c => (
+                    {DEPOSIT_TYPE.filter(e => {
+                      if (type === "Dividend" && e.label === type) {
+                        return true;
+                      }
+                      if (type === "Fund Transfer" && e.label !== "Dividend") {
+                        return true;
+                      }
+                      return false;
+                    }).map(c => (
                       <SelectItem key={c.value} value={c.value}>
                         {c.label}
                       </SelectItem>
@@ -227,7 +244,7 @@ export default function AddModifyDeposit({ defaultValues, id }: AddModifyDeposit
 
           <div className="flex gap-3">
             <Button type="submit">Save</Button>
-            <Button type="button" variant="destructive" onClick={() => router.push("/mutual-fund")}>
+            <Button type="button" variant="destructive" onClick={routeToRootPage}>
               Cancel
             </Button>
           </div>

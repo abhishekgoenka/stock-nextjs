@@ -20,13 +20,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { DEPOSIT } from "@/lib/constants";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  type: DEPOSIT;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, type }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({ currency: false });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -55,7 +57,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} type={type} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

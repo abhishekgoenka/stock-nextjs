@@ -34,6 +34,8 @@ export const EXCHANGE = [
   { label: "NASDAQ", value: "NASDAQ" },
 ];
 
+export const DEPOSIT_DIVIDEND_RECEIVED = "Divident Received";
+export type DEPOSIT = "Fund Transfer" | "Dividend";
 export const DEPOSIT_TYPE = [
   {
     value: "Fund Transfered",
@@ -47,7 +49,7 @@ export const DEPOSIT_TYPE = [
   },
   {
     value: "Divident Received",
-    label: "Divident",
+    label: "Dividend",
     icon: QuestionMarkCircledIcon,
   },
 ];

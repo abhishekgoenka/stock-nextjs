@@ -31,7 +31,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "Dividend",
-    href: "/docs/primitives/scroll-area",
+    href: "/dividend",
     description: "Records dividends received from investments",
   },
 ];
