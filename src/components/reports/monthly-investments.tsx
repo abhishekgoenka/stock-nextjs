@@ -26,8 +26,8 @@ export default function MonthlyInvestment() {
       <TableHeader>
         <TableRow>
           <TableHead>Month</TableHead>
-          <TableHead>Stocks</TableHead>
-          <TableHead>ETF</TableHead>
+          <TableHead className="text-right">Stocks</TableHead>
+          <TableHead className="text-right">ETF</TableHead>
           <TableHead className="text-right">Mutual Funds</TableHead>
           <TableHead className="text-right">Total</TableHead>
         </TableRow>
@@ -36,10 +36,10 @@ export default function MonthlyInvestment() {
         {investments.map(investment => (
           <TableRow key={investment.month.toString()}>
             <TableCell className="font-medium">{format(investment.month, "MMM-yyyy")}</TableCell>
-            <TableCell>
+            <TableCell className="text-right">
               <NumberFormater value={investment.stocks} exchange={exchange} />
             </TableCell>
-            <TableCell>
+            <TableCell className="text-right">
               <NumberFormater value={investment.etf} exchange={exchange} />
             </TableCell>
             <TableCell className="text-right">

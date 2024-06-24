@@ -3,11 +3,12 @@
 import { Op, QueryTypes } from "sequelize";
 import { BaseService, connectDB } from "./base.service";
 // import * as _ from "lodash";
-import moment from "moment";
+// import moment from "moment";
 import { interest } from "capitaljs";
 import Deposit from "../models/deposit.model";
-import { lightFormat, parse } from "date-fns";
-import { round, slice, sortBy } from "lodash";
+import { differenceInDays, differenceInYears, lightFormat, parse } from "date-fns";
+import { round, slice, sortBy, sumBy } from "lodash";
+import { calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
 // import { Financial } from "../helpers/financial";
 // import Sale from "../models/sale.model";
 // import { Logger } from "../helpers/logger";
@@ -219,6 +220,312 @@ export async function getYearlyInvestments(exchange: string): Promise<YearlyInve
   } catch (ex) {
     console.error(ex);
     return [];
+  }
+}
+
+type ReturnType = {
+  broker: string;
+  percentage12: number;
+  percentage15: number;
+  actual: number;
+  isUsed?: boolean;
+};
+export type ExpectedReturnType = {
+  netWorth: number;
+  returns: ReturnType[];
+  total: ReturnType;
+};
+
+export async function expectedReturn(exchange: string): Promise<ExpectedReturnType | null> {
+  try {
+    const RATE_12 = 12;
+    const RATE_15 = 15;
+    const sequelize = await connectDB();
+    const stockSQL = `SELECT s.id, purchaseDate, ((qty*price)+stt+brokerage+otherCharges) AS purchasePrice, broker, (c.currentPrice * qty) AS currentAmount
+                        FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                        WHERE c.exchange = :exchange  `;
+    const stocks: Array<{
+      id;
+      purchaseDate;
+      purchasePrice;
+      broker;
+      currentAmount;
+    }> = await sequelize.query(stockSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const mutualFundSQL = `SELECT mi.id, purchaseDate, ((qty*price)+stt+brokerage+otherCharges) AS purchasePrice, broker, (mf.currentPrice * qty) AS currentAmount
+                              FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
+                              WHERE exchange = :exchange `;
+    const mutualFunds: Array<{
+      id: number;
+      purchaseDate: Date;
+      purchasePrice: number;
+      broker: string;
+      currentAmount: number;
+    }> = await sequelize.query(mutualFundSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const totalInvestmentsSQL = `SELECT sum((qty*price)+stt+brokerage+otherCharges) AS stocks   FROM StockInvestments s JOIN Companies c on s.companyID = c.id WHERE c.exchange = :exchange
+                            UNION ALL
+                            SELECT   sum((qty*price)+stt+brokerage+otherCharges)  as mutualFunds  FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID WHERE exchange = :exchange`;
+
+    const totalInvestments: Array<{
+      stocks;
+    }> = await sequelize.query(totalInvestmentsSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const growwStock = {
+      broker: "Stock GROWW",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const growwMF = {
+      broker: "Mutual Fund GROWW",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const dhannStock = {
+      broker: "Stock DHANN",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const fidilityRoth = {
+      broker: "Fidility Roth",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const WEBULL = {
+      broker: "WEBULL",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const fidilityTraditional = {
+      broker: "Fidility Traditional",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const fidilityIndividual = {
+      broker: "Fidility Individual",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const zerodha = {
+      broker: "ZERODHA",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+    const upstox = {
+      broker: "UPSTOX",
+      percentage12: 0,
+      percentage15: 0,
+      actual: 0,
+      isUsed: false,
+    };
+
+    stocks.forEach(s => {
+      const period = calculatePeriodYear(s.purchaseDate);
+      let interest12 = 0;
+      let interest15 = 0;
+      if (period > 0) {
+        const percentage12 = interest({
+          principal: s.purchasePrice,
+          rate: RATE_12,
+          periods: period,
+          compoundings: 1,
+        });
+        const percentage15 = interest({
+          principal: s.purchasePrice,
+          rate: RATE_15,
+          periods: period,
+          compoundings: 1,
+        });
+        interest12 = round(percentage12.interest, 2);
+        interest15 = round(percentage15.interest, 2);
+      } else {
+        let periodDays = calculatePeriodDays(s.purchaseDate);
+        periodDays = periodDays + 1;
+        interest12 = calculateSimpleInterest(s.purchasePrice, periodDays, 12);
+        interest15 = calculateSimpleInterest(s.purchasePrice, periodDays, 15);
+      }
+
+      if (s.broker === "GROWW") {
+        growwStock.percentage12 += interest12;
+        growwStock.percentage15 += interest15;
+        growwStock.actual += s.currentAmount - s.purchasePrice;
+        growwStock.isUsed = true;
+      } else if (s.broker === "DHANN") {
+        dhannStock.percentage12 += interest12;
+        dhannStock.percentage15 += interest15;
+        dhannStock.actual += s.currentAmount - s.purchasePrice;
+        dhannStock.isUsed = true;
+      } else if (s.broker === "ZERODHA") {
+        zerodha.percentage12 += interest12;
+        zerodha.percentage15 += interest15;
+        zerodha.actual += s.currentAmount - s.purchasePrice;
+        zerodha.isUsed = true;
+      } else if (s.broker === "UPSTOX") {
+        upstox.percentage12 += interest12;
+        upstox.percentage15 += interest15;
+        upstox.actual += s.currentAmount - s.purchasePrice;
+        upstox.isUsed = true;
+      } else if (s.broker === "WEBULL") {
+        WEBULL.percentage12 += interest12;
+        WEBULL.percentage15 += interest15;
+        WEBULL.actual += s.currentAmount - s.purchasePrice;
+        WEBULL.isUsed = true;
+      } else if (s.broker === "FidilityRoth") {
+        fidilityRoth.percentage12 += interest12;
+        fidilityRoth.percentage15 += interest15;
+        fidilityRoth.actual += s.currentAmount - s.purchasePrice;
+        fidilityRoth.isUsed = true;
+      } else if (s.broker === "FidilityTraditional") {
+        fidilityTraditional.percentage12 += interest12;
+        fidilityTraditional.percentage15 += interest15;
+        fidilityTraditional.actual += s.currentAmount - s.purchasePrice;
+        fidilityTraditional.isUsed = true;
+      } else if (s.broker === "FidilityIndividual") {
+        fidilityIndividual.percentage12 += interest12;
+        fidilityIndividual.percentage15 += interest15;
+        fidilityIndividual.actual += s.currentAmount - s.purchasePrice;
+        fidilityIndividual.isUsed = true;
+      }
+    });
+    mutualFunds.forEach(s => {
+      const period = calculatePeriodYear(s.purchaseDate);
+      let interest12 = 0;
+      let interest15 = 0;
+      if (period > 0) {
+        const percentage12 = interest({
+          principal: s.purchasePrice,
+          rate: RATE_12,
+          periods: period,
+          compoundings: 1,
+        });
+        const percentage15 = interest({
+          principal: s.purchasePrice,
+          rate: RATE_15,
+          periods: period,
+          compoundings: 1,
+        });
+        interest12 = round(percentage12.interest, 2);
+        interest15 = round(percentage15.interest, 2);
+      } else {
+        let periodDays = calculatePeriodDays(s.purchaseDate);
+
+        periodDays = periodDays + 1;
+        interest12 = (s.purchasePrice * RATE_12 * periodDays) / 36525;
+        interest15 = (s.purchasePrice * RATE_15 * periodDays) / 36525;
+      }
+
+      if (s.broker === "GROWW") {
+        growwMF.percentage12 += interest12;
+        growwMF.percentage15 += interest15;
+        growwMF.actual += s.currentAmount - s.purchasePrice;
+        growwMF.isUsed = true;
+      } else if (s.broker === "ZERODHA") {
+        zerodha.percentage12 += interest12;
+        zerodha.percentage15 += interest15;
+        zerodha.actual += s.currentAmount - s.purchasePrice;
+        zerodha.isUsed = true;
+      } else if (s.broker === "UPSTOX") {
+        upstox.percentage12 += interest12;
+        upstox.percentage15 += interest15;
+        upstox.actual += s.currentAmount - s.purchasePrice;
+        upstox.isUsed = true;
+      }
+    });
+
+    const total: ReturnType = {
+      broker: "Total",
+      percentage12:
+        growwStock.percentage12 +
+        growwMF.percentage12 +
+        dhannStock.percentage12 +
+        zerodha.percentage12 +
+        upstox.percentage12 +
+        WEBULL.percentage12 +
+        fidilityIndividual.percentage12 +
+        fidilityRoth.percentage12 +
+        fidilityTraditional.percentage12,
+      percentage15:
+        growwStock.percentage15 +
+        growwMF.percentage15 +
+        dhannStock.percentage15 +
+        zerodha.percentage15 +
+        upstox.percentage15 +
+        WEBULL.percentage15 +
+        fidilityIndividual.percentage15 +
+        fidilityRoth.percentage15 +
+        fidilityTraditional.percentage15,
+      actual:
+        growwStock.actual +
+        dhannStock.actual +
+        growwMF.actual +
+        zerodha.actual +
+        upstox.actual +
+        WEBULL.actual +
+        fidilityIndividual.actual +
+        fidilityRoth.actual +
+        fidilityTraditional.actual,
+    };
+    const ret: ReturnType[] = [];
+
+    if (growwStock.isUsed) {
+      ret.push(growwStock);
+    }
+    if (dhannStock.isUsed) {
+      ret.push(dhannStock);
+    }
+    if (growwMF.isUsed) {
+      ret.push(growwMF);
+    }
+    if (zerodha.isUsed) {
+      ret.push(zerodha);
+    }
+    if (upstox.isUsed) {
+      ret.push(upstox);
+    }
+
+    if (WEBULL.isUsed) {
+      ret.push(WEBULL);
+    }
+    if (fidilityIndividual.isUsed) {
+      ret.push(fidilityIndividual);
+    }
+    if (fidilityRoth.isUsed) {
+      ret.push(fidilityRoth);
+    }
+    if (fidilityTraditional.isUsed) {
+      ret.push(fidilityTraditional);
+    }
+
+    const netWorth = sumBy(totalInvestments, "stocks") + total.actual;
+    return { netWorth: netWorth, returns: ret, total };
+  } catch (ex) {
+    console.error(ex);
+    return null;
   }
 }
 
@@ -436,274 +743,6 @@ export async function getYearlyInvestments(exchange: string): Promise<YearlyInve
 //       ret.push(total);
 
 //       return ret;
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get all monthly INR investments";
-//     }
-//   }
-
-//   public async expectedReturn(exchange: string): Promise<any> {
-//     try {
-//       const RATE_12 = 12;
-//       const RATE_15 = 15;
-//       const stockSQL = `SELECT s.id, purchaseDate, ((qty*price)+stt+brokerage+otherCharges) AS purchasePrice, broker, (c.currentPrice * qty) AS currentAmount
-//                         FROM StockInvestments s JOIN Companies c on s.companyID = c.id
-//                         WHERE c.exchange = :exchange  `;
-//       const stocks: Array<{
-//         id;
-//         purchaseDate;
-//         purchasePrice;
-//         broker;
-//         currentAmount;
-//       }> = await this.sequelize.query(stockSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const mutualFundSQL = `SELECT mi.id, purchaseDate, ((qty*price)+stt+brokerage+otherCharges) AS purchasePrice, broker, (mf.currentPrice * qty) AS currentAmount
-//                               FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
-//                               WHERE exchange = :exchange `;
-//       const mutualFunds: Array<{
-//         id;
-//         purchaseDate;
-//         purchasePrice;
-//         broker;
-//         currentAmount;
-//       }> = await this.sequelize.query(mutualFundSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const totalInvestmentsSQL = `SELECT sum((qty*price)+stt+brokerage+otherCharges) AS stocks   FROM StockInvestments s JOIN Companies c on s.companyID = c.id WHERE c.exchange = :exchange
-//                             UNION ALL
-//                             SELECT   sum((qty*price)+stt+brokerage+otherCharges)  as mutualFunds  FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID WHERE exchange = :exchange`;
-
-//       const totalInvestments: Array<{
-//         stocks;
-//       }> = await this.sequelize.query(totalInvestmentsSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const growwStock = {
-//         broker: "Stock GROWW",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const growwMF = {
-//         broker: "Mutual Fund GROWW",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const dhannStock = {
-//         broker: "Stock DHANN",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const fidilityRoth = {
-//         broker: "Fidility Roth",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const WEBULL = {
-//         broker: "WEBULL",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const fidilityTraditional = {
-//         broker: "Fidility Traditional",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const fidilityIndividual = {
-//         broker: "Fidility Individual",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const zerodha = {
-//         broker: "ZERODHA",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-//       const upstox = {
-//         broker: "UPSTOX",
-//         percentage12: 0,
-//         percentage15: 0,
-//         actual: 0,
-//         isUsed: false,
-//       };
-
-//       stocks.forEach((s) => {
-//         const period = Financial.calculatePeriodYear(s.purchaseDate);
-//         let interest12 = 0;
-//         let interest15 = 0;
-//         if (period > 0) {
-//           const percentage12 = interest({
-//             principal: s.purchasePrice,
-//             rate: RATE_12,
-//             periods: period,
-//             compoundings: 1,
-//           });
-//           const percentage15 = interest({
-//             principal: s.purchasePrice,
-//             rate: RATE_15,
-//             periods: period,
-//             compoundings: 1,
-//           });
-//           interest12 = _.round(percentage12.interest, 2);
-//           interest15 = _.round(percentage15.interest, 2);
-//         } else {
-//           let periodDays = Financial.calculatePeriodDays(s.purchaseDate);
-//           periodDays = periodDays + 1;
-//           interest12 = Financial.calculateSimpleInterest(s.purchasePrice, periodDays, 12);
-//           interest15 = Financial.calculateSimpleInterest(s.purchasePrice, periodDays, 15);
-//         }
-
-//         if (s.broker === "GROWW") {
-//           growwStock.percentage12 += interest12;
-//           growwStock.percentage15 += interest15;
-//           growwStock.actual += s.currentAmount - s.purchasePrice;
-//           growwStock.isUsed = true;
-//         } else if (s.broker === "DHANN") {
-//           dhannStock.percentage12 += interest12;
-//           dhannStock.percentage15 += interest15;
-//           dhannStock.actual += s.currentAmount - s.purchasePrice;
-//           dhannStock.isUsed = true;
-//         } else if (s.broker === "ZERODHA") {
-//           zerodha.percentage12 += interest12;
-//           zerodha.percentage15 += interest15;
-//           zerodha.actual += s.currentAmount - s.purchasePrice;
-//           zerodha.isUsed = true;
-//         } else if (s.broker === "UPSTOX") {
-//           upstox.percentage12 += interest12;
-//           upstox.percentage15 += interest15;
-//           upstox.actual += s.currentAmount - s.purchasePrice;
-//           upstox.isUsed = true;
-//         } else if (s.broker === "WEBULL") {
-//           WEBULL.percentage12 += interest12;
-//           WEBULL.percentage15 += interest15;
-//           WEBULL.actual += s.currentAmount - s.purchasePrice;
-//           WEBULL.isUsed = true;
-//         } else if (s.broker === "FidilityRoth") {
-//           fidilityRoth.percentage12 += interest12;
-//           fidilityRoth.percentage15 += interest15;
-//           fidilityRoth.actual += s.currentAmount - s.purchasePrice;
-//           fidilityRoth.isUsed = true;
-//         } else if (s.broker === "FidilityTraditional") {
-//           fidilityTraditional.percentage12 += interest12;
-//           fidilityTraditional.percentage15 += interest15;
-//           fidilityTraditional.actual += s.currentAmount - s.purchasePrice;
-//           fidilityTraditional.isUsed = true;
-//         } else if (s.broker === "FidilityIndividual") {
-//           fidilityIndividual.percentage12 += interest12;
-//           fidilityIndividual.percentage15 += interest15;
-//           fidilityIndividual.actual += s.currentAmount - s.purchasePrice;
-//           fidilityIndividual.isUsed = true;
-//         }
-//       });
-//       mutualFunds.forEach((s) => {
-//         const period = moment().diff(moment(s.purchaseDate, "YYYY-MM-DD"), "years");
-//         let interest12 = 0;
-//         let interest15 = 0;
-//         if (period > 0) {
-//           const percentage12 = interest({
-//             principal: s.purchasePrice,
-//             rate: RATE_12,
-//             periods: period,
-//             compoundings: 1,
-//           });
-//           const percentage15 = interest({
-//             principal: s.purchasePrice,
-//             rate: RATE_15,
-//             periods: period,
-//             compoundings: 1,
-//           });
-//           interest12 = _.round(percentage12.interest, 2);
-//           interest15 = _.round(percentage15.interest, 2);
-//         } else {
-//           let periodDays = moment().diff(moment(s.purchaseDate, "YYYY-MM-DD"), "days");
-//           periodDays = periodDays + 1;
-//           interest12 = (s.purchasePrice * RATE_12 * periodDays) / 36525;
-//           interest15 = (s.purchasePrice * RATE_15 * periodDays) / 36525;
-//         }
-
-//         if (s.broker === "GROWW") {
-//           growwMF.percentage12 += interest12;
-//           growwMF.percentage15 += interest15;
-//           growwMF.actual += s.currentAmount - s.purchasePrice;
-//           growwMF.isUsed = true;
-//         } else if (s.broker === "ZERODHA") {
-//           zerodha.percentage12 += interest12;
-//           zerodha.percentage15 += interest15;
-//           zerodha.actual += s.currentAmount - s.purchasePrice;
-//           zerodha.isUsed = true;
-//         } else if (s.broker === "UPSTOX") {
-//           upstox.percentage12 += interest12;
-//           upstox.percentage15 += interest15;
-//           upstox.actual += s.currentAmount - s.purchasePrice;
-//           upstox.isUsed = true;
-//         }
-//       });
-
-//       const total = {
-//         broker: "Total",
-//         percentage12: growwStock.percentage12 + growwMF.percentage12 + dhannStock.percentage12 + zerodha.percentage12 + upstox.percentage12  + WEBULL.percentage12 + fidilityIndividual.percentage12 + fidilityRoth.percentage12 + fidilityTraditional.percentage12,
-//         percentage15: growwStock.percentage15 + growwMF.percentage15 + dhannStock.percentage15 + zerodha.percentage15 + upstox.percentage15 + WEBULL.percentage15 + fidilityIndividual.percentage15 + fidilityRoth.percentage15 + fidilityTraditional.percentage15,
-//         actual: growwStock.actual + dhannStock.actual + growwMF.actual + zerodha.actual + upstox.actual + WEBULL.actual + fidilityIndividual.actual + fidilityRoth.actual + fidilityTraditional.actual,
-//       };
-//       const ret = [];
-
-//       if (growwStock.isUsed) {
-//         ret.push(growwStock);
-//       }
-//       if (dhannStock.isUsed) {
-//         ret.push(dhannStock);
-//       }
-//       if (growwMF.isUsed) {
-//         ret.push(growwMF);
-//       }
-//       if (zerodha.isUsed) {
-//         ret.push(zerodha);
-//       }
-//       if (upstox.isUsed) {
-//         ret.push(upstox);
-//       }
-
-//       if (WEBULL.isUsed) {
-//         ret.push(WEBULL);
-//       }
-//       if (fidilityIndividual.isUsed) {
-//         ret.push(fidilityIndividual);
-//       }
-//       if (fidilityRoth.isUsed) {
-//         ret.push(fidilityRoth);
-//       }
-//       if (fidilityTraditional.isUsed) {
-//         ret.push(fidilityTraditional);
-//       }
-
-//       ret.push(total);
-
-//       const netWorth = _.sumBy(totalInvestments, "stocks") + total.actual
-
-//       // return ret;
-//       return { netWorth: netWorth, returns: ret };
 //     } catch (ex) {
 //       console.error(ex);
 //       throw "Failed to get all monthly INR investments";
