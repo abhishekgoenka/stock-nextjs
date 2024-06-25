@@ -1,20 +1,8 @@
 "use client";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "../ui/badge";
-import {
-  ExpectedReturnType,
-  InvestmentByBrokerType,
-  MonthlyInvestmentType,
-  YearlyInvestmentType,
-  expectedReturn,
-  getInvestmentByBroker,
-  getMonthlyInvestments,
-  getYearlyInvestments,
-} from "@/actions/report.service";
-import { format } from "date-fns";
+import { InvestmentByBrokerType, getInvestmentByBroker } from "@/actions/report.service";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { sumBy } from "lodash";
 import { useExchange } from "@/store/useExchange";
 import { Switch } from "../ui/switch";
 

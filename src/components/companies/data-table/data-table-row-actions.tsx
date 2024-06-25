@@ -50,7 +50,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem>Purchase detail</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link className="w-full" href={`/reports/purchase-detail/stock/${company?.id}`} rel="noopener noreferrer">
+              Purchase detail
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Link className="w-full" href={company?.url} rel="noopener noreferrer" target="_blank">
               Show detail

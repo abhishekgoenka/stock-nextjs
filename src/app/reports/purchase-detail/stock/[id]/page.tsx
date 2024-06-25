@@ -1,3 +1,4 @@
+import StockPurchaseDetail from "@/components/reports/purchase-detail/stock-purchase-detail";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function PurchaseDetailStockPage() {
-  return <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">Hello world</section>;
+  return (
+    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
+      <StockPurchaseDetail />
+    </section>
+  );
 }

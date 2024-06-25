@@ -2,7 +2,7 @@
 import { interest, compoundAnnualGrowthRate, returnOnInvestment } from "capitaljs";
 import { differenceInDays, differenceInYears } from "date-fns";
 import * as _ from "lodash";
-// import moment from "moment";
+import moment from "moment";
 var xirr = require("xirr");
 
 /**
@@ -48,16 +48,16 @@ export function calculateInterest(amount: number, rate: number, period: number):
   return _.round(r.interest, 2);
 }
 
-// export function calculateXIRR(val: Array<{ amount: number; when: moment.Moment }>): number {
-//   try {
-//     console.log(val);
-//     return xirr(val);
-//   } catch (error) {
-//     console.error(error);
-//     console.log(val);
-//     return 0;
-//   }
-// }
+export function calculateXIRR(val: Array<{ amount: number; when: moment.Moment }>): number {
+  try {
+    console.log(val);
+    return xirr(val);
+  } catch (error) {
+    console.error(error);
+    console.log(val);
+    return 0;
+  }
+}
 
 export function getCompountedInterest(principal: number, rate: number, periods: number): { interest: number; total: number } {
   return interest({
