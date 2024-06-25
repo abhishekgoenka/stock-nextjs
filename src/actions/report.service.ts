@@ -529,116 +529,137 @@ export async function expectedReturn(exchange: string): Promise<ExpectedReturnTy
   }
 }
 
+type BrokerInvestmentType = {
+  broker: string;
+  stock: number;
+  etf: number;
+  mf: number;
+  total: number;
+};
+export type InvestmentByBrokerType = {
+  total: BrokerInvestmentType;
+  brokers: BrokerInvestmentType[];
+};
+export async function getInvestmentByBroker(exchange: string, includeBokerage: boolean): Promise<InvestmentByBrokerType | null> {
+  try {
+    const sequelize = await connectDB();
+
+    const stockSQL = `SELECT broker, sum((qty*price)) AS stocks
+                      FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                      WHERE c.exchange = :exchange AND c.sector != 'ETF' GROUP BY broker`;
+    const stockSQLWithBrokerage = `SELECT broker, sum((qty*price)+stt+brokerage+otherCharges) AS stocks
+                      FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                      WHERE c.exchange = :exchange AND c.sector != 'ETF' GROUP BY broker`;
+    const stocks: Array<{ broker; stocks }> = await sequelize.query(includeBokerage ? stockSQLWithBrokerage : stockSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const stockETFSQL = `SELECT broker, sum((qty*price)) AS etf
+                      FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                      WHERE c.exchange = :exchange AND c.sector = 'ETF' GROUP BY broker`;
+    const stockETFSQLWithBrokerage = `SELECT broker, sum((qty*price)+stt+brokerage+otherCharges) AS etf
+                      FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                      WHERE c.exchange = :exchange AND c.sector = 'ETF' GROUP BY broker`;
+    const etfs: Array<{ broker; etf; isMerged }> = await sequelize.query(includeBokerage ? stockETFSQLWithBrokerage : stockETFSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const mfSQL = `SELECT  broker, sum((qty*price))  as mutualFunds
+                  FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
+                  WHERE exchange = :exchange  GROUP BY broker`;
+    const mfSQLWithBrokerage = `SELECT  broker, sum((qty*price)+stt+brokerage+otherCharges)  as mutualFunds
+                  FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
+                  WHERE exchange = :exchange  GROUP BY broker`;
+    const mfs: Array<{ broker; mutualFunds; isMerged }> = await sequelize.query(includeBokerage ? mfSQLWithBrokerage : mfSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const ret: BrokerInvestmentType[] = [];
+
+    stocks.forEach(e => {
+      const mf = mfs.find(m => m.broker === e.broker);
+      const etfIndex = etfs.find(m => e.broker === m.broker);
+      const item = {
+        broker: e.broker,
+        stock: e.stocks,
+        etf: 0,
+        mf: 0,
+        total: e.stocks,
+      };
+      if (mf) {
+        item.mf = mf.mutualFunds;
+        item.total += mf.mutualFunds;
+        mf.isMerged = true;
+      }
+      if (etfIndex) {
+        item.etf = etfIndex.etf;
+        item.total += etfIndex.etf;
+        etfIndex.isMerged = true;
+      }
+      ret.push(item);
+    });
+
+    etfs.forEach(e => {
+      if (!e.isMerged) {
+        const mf = mfs.find(m => m.broker === e.broker);
+        const item = {
+          broker: e.broker,
+          stock: 0,
+          etf: e.etf,
+          mf: 0,
+          total: e.etf,
+        };
+        if (mf && !mf.isMerged) {
+          item.mf = mf.mutualFunds;
+          item.total += mf.mutualFunds;
+          mf.isMerged = true;
+        }
+
+        ret.push(item);
+      }
+    });
+
+    mfs.forEach(e => {
+      if (!e.isMerged) {
+        const item = {
+          broker: e.broker,
+          stock: 0,
+          etf: 0,
+          mf: e.mutualFunds,
+          total: e.mutualFunds,
+        };
+        ret.push(item);
+      }
+    });
+
+    const total = {
+      broker: "Total",
+      stock: 0,
+      etf: 0,
+      mf: 0,
+      total: 0,
+    };
+
+    ret.forEach(e => {
+      total.stock += e.stock;
+      total.etf += e.etf;
+      total.mf += e.mf;
+      total.total += e.total;
+    });
+
+    return { brokers: ret, total };
+  } catch (ex) {
+    console.error(ex);
+    return null;
+  }
+}
+
 // export class ReportService extends BaseService {
 //   constructor() {
 //     super();
-//   }
-
-//   public async getBrokerInvestments(exchange: string): Promise<any> {
-//     try {
-//       const stockSQL = `SELECT broker, sum((qty*price)+stt+brokerage+otherCharges) AS stocks
-//                         FROM StockInvestments s JOIN Companies c on s.companyID = c.id
-//                         WHERE c.exchange = :exchange AND c.sector != 'ETF' GROUP BY broker`;
-//       const stocks: Array<{ broker; stocks }> = await this.sequelize.query(stockSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const stockETFSQL = `SELECT broker, sum((qty*price)+stt+brokerage+otherCharges) AS etf
-//                         FROM StockInvestments s JOIN Companies c on s.companyID = c.id
-//                         WHERE c.exchange = :exchange AND c.sector = 'ETF' GROUP BY broker`;
-//       const etfs: Array<{ broker; etf; isMerged }> = await this.sequelize.query(stockETFSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const mfSQL = `SELECT  broker, sum((qty*price)+stt+brokerage+otherCharges)  as mutualFunds
-//                     FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
-//                     WHERE exchange = :exchange  GROUP BY broker`;
-//       const mfs: Array<{ broker; mutualFunds; isMerged }> = await this.sequelize.query(mfSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const ret = [];
-
-//       stocks.forEach((e) => {
-//         const mf = mfs.find((m) => m.broker === e.broker);
-//         const etfIndex = etfs.find((m) => e.broker === m.broker);
-//         const item = {
-//           broker: e.broker,
-//           stock: e.stocks,
-//           etf: 0,
-//           mf: 0,
-//           total: e.stocks,
-//         };
-//         if (mf) {
-//           item.mf = mf.mutualFunds;
-//           item.total += mf.mutualFunds;
-//           mf.isMerged = true;
-//         }
-//         if (etfIndex) {
-//           item.etf = etfIndex.etf;
-//           item.total += etfIndex.etf;
-//           etfIndex.isMerged = true;
-//         }
-//         ret.push(item);
-//       });
-
-//       etfs.forEach((e) => {
-//         if (!e.isMerged) {
-//           const mf = mfs.find((m) => m.broker === e.broker);
-//           const item = {
-//             broker: e.broker,
-//             stock: 0,
-//             etf: e.etf,
-//             mf: 0,
-//             total: e.etf,
-//           };
-//           if (mf && !mf.isMerged) {
-//             item.mf = mf.mutualFunds;
-//             item.total += mf.mutualFunds;
-//             mf.isMerged = true;
-//           }
-
-//           ret.push(item);
-//         }
-//       });
-
-//       mfs.forEach((e) => {
-//         if (!e.isMerged) {
-//           const item = {
-//             broker: e.broker,
-//             stock: 0,
-//             etf: 0,
-//             mf: e.mutualFunds,
-//             total: e.mutualFunds,
-//           };
-//           ret.push(item);
-//         }
-//       });
-
-//       const total = {
-//         broker: "Total",
-//         stock: 0,
-//         etf: 0,
-//         mf: 0,
-//         total: 0,
-//       };
-
-//       ret.forEach((e) => {
-//         total.stock += e.stock;
-//         total.etf += e.etf;
-//         total.mf += e.mf;
-//         total.total += e.total;
-//       });
-
-//       ret.push(total);
-//       return ret;
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get all monthly INR investments";
-//     }
 //   }
 
 //   public async getBrokerInvestmentsWithoutBrokerage(exchange: string): Promise<any> {

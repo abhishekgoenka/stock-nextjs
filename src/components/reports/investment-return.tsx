@@ -1,29 +1,17 @@
 "use client";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "../ui/badge";
-import {
-  ExpectedReturnType,
-  MonthlyInvestmentType,
-  YearlyInvestmentType,
-  expectedReturn,
-  getMonthlyInvestments,
-  getYearlyInvestments,
-} from "@/actions/report.service";
-import { format } from "date-fns";
+import { ExpectedReturnType, expectedReturn } from "@/actions/report.service";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { sumBy } from "lodash";
 import { useExchange } from "@/store/useExchange";
 
 export default function InvestmentReturn() {
   const [expected, setExpected] = useState<ExpectedReturnType | null>(null);
   const exchange = useExchange(store => store.exchange);
-  // const [expectedReturn, setTotalInvestments] = useState(0);
   useEffect(() => {
     async function fetchData() {
       const returns = await expectedReturn(exchange);
       setExpected(returns);
-      // setTotalInvestments(sumBy(returns, "total"));
     }
     fetchData();
   }, [exchange]);
