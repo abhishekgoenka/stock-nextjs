@@ -69,7 +69,7 @@ export default function AddModifyStockInvestment({ defaultValues, id }: AddInves
       result = await updateStockInvestment({
         id: id,
         companyID: +companyID,
-        purchaseDate: purchaseDate.toDateString(),
+        purchaseDate: purchaseDate.toISOString(),
         qty: +qty,
         price: +price,
         stt: +stt,
@@ -81,7 +81,7 @@ export default function AddModifyStockInvestment({ defaultValues, id }: AddInves
     } else {
       result = await addStockInvestment({
         companyID: +companyID,
-        purchaseDate: purchaseDate.toDateString(),
+        purchaseDate: purchaseDate.toISOString(),
         qty: +qty,
         price: +price,
         stt: +stt,

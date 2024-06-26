@@ -49,7 +49,7 @@ export default function AddModifyDeposit({ defaultValues, id, type }: AddModifyD
     if (id) {
       result = await updateDeposit({
         id: id,
-        date: date.toDateString(),
+        date: date.toISOString(),
         desc,
         from,
         to,
@@ -58,7 +58,7 @@ export default function AddModifyDeposit({ defaultValues, id, type }: AddModifyD
       });
     } else {
       result = await addDeposit({
-        date: date.toDateString(),
+        date: date.toISOString(),
         desc,
         from,
         to,

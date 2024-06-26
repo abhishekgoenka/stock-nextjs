@@ -69,7 +69,7 @@ export default function AddModifyMFInvestment({ defaultValues, id }: AddInvestme
       result = await updateMutualFundInvestment({
         id: id,
         mutualFundID: +mutualFundID,
-        purchaseDate: purchaseDate.toDateString(),
+        purchaseDate: purchaseDate.toISOString(),
         qty: +qty,
         price: +price,
         stt: +stt,
@@ -81,7 +81,7 @@ export default function AddModifyMFInvestment({ defaultValues, id }: AddInvestme
     } else {
       result = await addMutualFundInvestment({
         mutualFundID: +mutualFundID,
-        purchaseDate: purchaseDate.toDateString(),
+        purchaseDate: purchaseDate.toISOString(),
         qty: +qty,
         price: +price,
         stt: +stt,
