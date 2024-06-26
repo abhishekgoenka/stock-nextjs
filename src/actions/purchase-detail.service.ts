@@ -5,6 +5,7 @@ import { connectDB } from "./base.service";
 import moment from "moment";
 import { calculateCAGR, calculateInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest, calculateXIRR } from "@/lib/financial";
 import { round } from "lodash";
+import { parse, parseISO } from "date-fns";
 
 type InvestmentGrouthRate = {
   percentage10: number;
@@ -16,7 +17,7 @@ type InvestmentGrouthRate = {
 type InvestmentDetailType = {
   id: number;
   name: string;
-  purchaseDate: Date;
+  purchaseDate: string;
   qty: number;
   price: number;
   currentPrice: number;
@@ -63,7 +64,7 @@ export async function getPurchaseDetail(type: string, id: number): Promise<Purch
     let qty = 0;
     const totalXIRRData: {
       amount: number;
-      when: moment.Moment;
+      when: Date;
     }[] = [];
     const growthRate: InvestmentGrouthRate = {
       percentage10: 0,
@@ -76,22 +77,21 @@ export async function getPurchaseDetail(type: string, id: number): Promise<Purch
       currentPrice = e.currentPrice;
       investedValue += e.netAmount;
       qty += e.qty;
-      const investmentDT = moment(e.purchaseDate, "YYYY-MM-DD");
-
+      const investmentDT = parseISO(e.purchaseDate);
       let rate = 0;
       if (e.netAmount !== 0) {
         rate = calculateXIRR([
           { amount: e.netAmount * -1, when: investmentDT },
-          { amount: e.currentAmount, when: moment() },
+          { amount: e.currentAmount, when: new Date() },
         ]);
       }
 
       totalXIRRData.push({ amount: e.netAmount * -1, when: investmentDT });
       e.XIRR = rate * 100;
-      e.CAGR = calculateCAGR(e.purchaseDate, e.price, e.currentPrice);
+      e.CAGR = calculateCAGR(investmentDT, e.price, e.currentPrice);
 
       // calculate growth rate
-      const period = calculatePeriodYear(e.purchaseDate);
+      const period = calculatePeriodYear(investmentDT);
       if (period > 0) {
         growthRate.percentage10 += calculateInterest(e.netAmount, 10, period);
         growthRate.percentage12 += calculateInterest(e.netAmount, 12, period);
@@ -99,7 +99,7 @@ export async function getPurchaseDetail(type: string, id: number): Promise<Purch
         growthRate.percentage18 += calculateInterest(e.netAmount, 18, period);
         growthRate.percentage24 += calculateInterest(e.netAmount, 24, period);
       } else {
-        let periodDays = calculatePeriodDays(e.purchaseDate);
+        let periodDays = calculatePeriodDays(investmentDT);
         periodDays = periodDays + 1;
         growthRate.percentage10 += calculateSimpleInterest(e.netAmount, periodDays, 10);
         growthRate.percentage12 += calculateSimpleInterest(e.netAmount, periodDays, 12);
@@ -108,7 +108,7 @@ export async function getPurchaseDetail(type: string, id: number): Promise<Purch
         growthRate.percentage24 += calculateSimpleInterest(e.netAmount, periodDays, 24);
       }
     });
-    totalXIRRData.push({ amount: qty * currentPrice, when: moment() });
+    totalXIRRData.push({ amount: qty * currentPrice, when: new Date() });
     const returns = qty * currentPrice - investedValue;
     const avgPrice = investedValue / qty;
     const totalXIRR = calculateXIRR(totalXIRRData) * 100;

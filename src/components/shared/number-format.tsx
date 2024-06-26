@@ -5,6 +5,7 @@ type NumberFormaterProps = {
   value: string | number;
   currency?: string;
   exchange?: EXCHANGE_TYPE;
+  className?: string;
 };
 
 export default function NumberFormater(props: NumberFormaterProps) {

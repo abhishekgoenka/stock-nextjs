@@ -1,8 +1,7 @@
 // import moment = require("moment");
 import { interest, compoundAnnualGrowthRate, returnOnInvestment } from "capitaljs";
 import { differenceInDays, differenceInYears } from "date-fns";
-import * as _ from "lodash";
-import moment from "moment";
+import { round } from "lodash";
 var xirr = require("xirr");
 
 /**
@@ -45,12 +44,11 @@ export function calculateInterest(amount: number, rate: number, period: number):
     periods: period,
     compoundings: 1,
   });
-  return _.round(r.interest, 2);
+  return round(r.interest, 2);
 }
 
-export function calculateXIRR(val: Array<{ amount: number; when: moment.Moment }>): number {
+export function calculateXIRR(val: Array<{ amount: number; when: Date }>): number {
   try {
-    console.log(val);
     return xirr(val);
   } catch (error) {
     console.error(error);
