@@ -657,205 +657,216 @@ export async function getInvestmentByBroker(exchange: string, includeBokerage: b
   }
 }
 
+type BrokerBalanceInvestmentType = {
+  broker: string;
+  balance: number;
+  stocks: number;
+  isUsed: boolean;
+};
+export type BrokerBalanceType = {
+  data: BrokerBalanceInvestmentType[];
+  total: BrokerBalanceInvestmentType;
+};
+export async function getBrokerBalance(exchange: string): Promise<BrokerBalanceType | null> {
+  try {
+    const sequelize = await connectDB();
+    const currency = exchange === "NSE" ? "INR" : "USD";
+    const depositsSQL = `SELECT [from], [to], [desc], sum(amount) AS amount FROM Deposits WHERE currency = :currency
+                        GROUP BY [from], [to], [desc]`;
+    const deposits: Array<{ from; to; desc; amount }> = await sequelize.query(depositsSQL, {
+      replacements: { currency: currency },
+      type: QueryTypes.SELECT,
+    });
+
+    let stocksSQL = `SELECT broker, sum((qty*price)+stt+brokerage+otherCharges) AS stocks
+                        FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                        WHERE c.exchange = :exchange `;
+    if (exchange === "NSE") {
+      stocksSQL += ` AND purchaseDate > '2022-12-01' GROUP BY broker`;
+    } else {
+      stocksSQL += ` GROUP BY broker`;
+    }
+    const stocks: Array<{ broker; stocks }> = await sequelize.query(stocksSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const stocksQtySQL = `SELECT broker, sum(qty) AS qty
+                            FROM StockInvestments s JOIN Companies c on s.companyID = c.id
+                            WHERE c.exchange = :exchange  GROUP BY broker`;
+    const stockQty: Array<{ broker; qty }> = await sequelize.query(stocksQtySQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    const groww = {
+      broker: "GROWW",
+      balance: 0,
+      stocks: 0,
+      isUsed: false,
+    };
+
+    const dhann = {
+      broker: "DHAN",
+      balance: 0,
+      stocks: 0,
+      isUsed: false,
+    };
+
+    const fidilityRoth = {
+      broker: "Fidility Roth",
+      balance: 0,
+      stocks: 0,
+      isUsed: false,
+    };
+    const WEBULL = {
+      broker: "WEBULL",
+      balance: 0,
+      stocks: 0,
+      isUsed: false,
+    };
+    const fidilityTraditional = {
+      broker: "Fidility Traditional",
+      balance: 0,
+      stocks: 0,
+      isUsed: false,
+    };
+    const fidilityIndividual = {
+      broker: "Fidility Individual",
+      balance: 0,
+      stocks: 0,
+      isUsed: false,
+    };
+    const total = {
+      broker: "Total",
+      balance: 0,
+      stocks: 0,
+      isUsed: true,
+    };
+
+    deposits.forEach(d => {
+      if (d.from === "Bank" && d.to === "DHAN") {
+        dhann.balance += d.amount;
+        dhann.isUsed = true;
+      } else if (d.from === "Bank" && d.to === "GROWW") {
+        groww.balance += d.amount;
+        groww.isUsed = true;
+      } else if (d.from === "GROWW" && d.to === "Bank") {
+        groww.balance -= d.amount;
+        groww.isUsed = true;
+      } else if (d.from === "DHAN" && d.to === "Bank") {
+        dhann.balance -= d.amount;
+        dhann.isUsed = true;
+      } else if (d.from === "Bank" && d.to === "WEBULL") {
+        WEBULL.balance += d.amount;
+        WEBULL.isUsed = true;
+      } else if (d.from === "WEBULL" && d.to === "Bank") {
+        WEBULL.balance -= d.amount;
+        WEBULL.isUsed = true;
+      } else if (d.from === "WEBULL" && d.to === "WEBULL" && d.desc === "Divident Received") {
+        WEBULL.balance += d.amount;
+        WEBULL.isUsed = true;
+      } else if (d.from === "Bank" && d.to === "Fidility - Roth") {
+        fidilityRoth.balance += d.amount;
+        fidilityRoth.isUsed = true;
+      } else if (d.from === "Fidility - Roth" && d.to === "Fidility - Roth" && d.desc === "Divident Received") {
+        fidilityRoth.balance += d.amount;
+        fidilityRoth.isUsed = true;
+      } else if (d.from === "Bank" && d.to === "Fidility - Traditional") {
+        fidilityTraditional.balance += d.amount;
+        fidilityTraditional.isUsed = true;
+      } else if (d.from === "Fidility - Traditional" && d.to === "Fidility - Traditional" && d.desc === "Divident Received") {
+        fidilityTraditional.balance += d.amount;
+        fidilityTraditional.isUsed = true;
+      } else if (d.from === "Bank" && d.to === "Fidility - Individual") {
+        fidilityIndividual.balance += d.amount;
+        fidilityIndividual.isUsed = true;
+      } else if (d.from === "Fidility - Individual" && d.to === "Fidility - Individual" && d.desc === "Divident Received") {
+        fidilityIndividual.balance += d.amount;
+        fidilityIndividual.isUsed = true;
+      }
+    });
+
+    stocks.forEach(s => {
+      if (s.broker === "GROWW") {
+        groww.balance -= s.stocks;
+        groww.isUsed = true;
+      } else if (s.broker === "DHANN") {
+        dhann.balance -= s.stocks;
+        dhann.isUsed = true;
+      } else if (s.broker === "WEBULL") {
+        WEBULL.balance -= s.stocks;
+        WEBULL.isUsed = true;
+      } else if (s.broker === "FidilityRoth") {
+        fidilityRoth.balance -= s.stocks;
+        fidilityRoth.isUsed = true;
+      } else if (s.broker === "FidilityTraditional") {
+        fidilityTraditional.balance -= s.stocks;
+        fidilityTraditional.isUsed = true;
+      } else if (s.broker === "FidilityIndividual") {
+        fidilityIndividual.balance -= s.stocks;
+        fidilityIndividual.isUsed = true;
+      }
+    });
+
+    stockQty.forEach(s => {
+      if (s.broker === "GROWW") {
+        groww.stocks = s.qty;
+        groww.isUsed = true;
+      } else if (s.broker === "DHANN") {
+        dhann.stocks = s.qty;
+        dhann.isUsed = true;
+      } else if (s.broker === "WEBULL") {
+        WEBULL.stocks = s.qty;
+        WEBULL.isUsed = true;
+      } else if (s.broker === "FidilityRoth") {
+        fidilityRoth.stocks = s.qty;
+        fidilityRoth.isUsed = true;
+      } else if (s.broker === "FidilityTraditional") {
+        fidilityTraditional.stocks = s.qty;
+        fidilityTraditional.isUsed = true;
+      } else if (s.broker === "FidilityIndividual") {
+        fidilityIndividual.stocks = s.qty;
+        fidilityIndividual.isUsed = true;
+      }
+    });
+
+    const ret: BrokerBalanceInvestmentType[] = [];
+
+    if (groww.isUsed) {
+      ret.push(groww);
+    }
+    if (dhann.isUsed) {
+      ret.push(dhann);
+    }
+    if (WEBULL.isUsed) {
+      ret.push(WEBULL);
+    }
+    if (fidilityRoth.isUsed) {
+      ret.push(fidilityRoth);
+    }
+    if (fidilityTraditional.isUsed) {
+      ret.push(fidilityTraditional);
+    }
+    if (fidilityIndividual.isUsed) {
+      ret.push(fidilityIndividual);
+    }
+    ret.forEach(e => {
+      total.balance += e.balance;
+      total.stocks += e.stocks;
+    });
+    // ret.push(total);
+
+    return { data: ret, total };
+  } catch (ex) {
+    console.error(ex);
+    return null;
+  }
+}
+
 // export class ReportService extends BaseService {
 //   constructor() {
 //     super();
-//   }
-
-//   public async getBrokerBalance(exchange: string): Promise<any> {
-//     try {
-//       const currency = exchange === "NSE" ? "INR" : "USD";
-//       const depositsSQL = `SELECT [from], [to], [desc], sum(amount) AS amount FROM Deposits WHERE currency = :currency
-//                         GROUP BY [from], [to], [desc]`;
-//       const deposits: Array<{ from; to; desc; amount }> = await this.sequelize.query(depositsSQL, {
-//         replacements: { currency: currency },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       let stocksSQL = `SELECT broker, sum((qty*price)+stt+brokerage+otherCharges) AS stocks
-//                         FROM StockInvestments s JOIN Companies c on s.companyID = c.id
-//                         WHERE c.exchange = :exchange `;
-//       if (exchange === "NSE") {
-//         stocksSQL += ` AND purchaseDate > '2022-12-01' GROUP BY broker`;
-//       } else {
-//         stocksSQL += ` GROUP BY broker`;
-//       }
-//       const stocks: Array<{ broker; stocks }> = await this.sequelize.query(stocksSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const stocksQtySQL = `SELECT broker, sum(qty) AS qty
-//                             FROM StockInvestments s JOIN Companies c on s.companyID = c.id
-//                             WHERE c.exchange = :exchange  GROUP BY broker`;
-//       const stockQty: Array<{ broker; qty }> = await this.sequelize.query(stocksQtySQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const groww = {
-//         broker: "GROWW",
-//         balance: 0,
-//         stocks: 0,
-//         isUsed: false,
-//       };
-
-//       const dhann = {
-//         broker: "DHAN",
-//         balance: 0,
-//         stocks: 0,
-//         isUsed: false,
-//       };
-
-//       const fidilityRoth = {
-//         broker: "Fidility Roth",
-//         balance: 0,
-//         stocks: 0,
-//         isUsed: false,
-//       };
-//       const WEBULL = {
-//         broker: "WEBULL",
-//         balance: 0,
-//         stocks: 0,
-//         isUsed: false,
-//       };
-//       const fidilityTraditional = {
-//         broker: "Fidility Traditional",
-//         balance: 0,
-//         stocks: 0,
-//         isUsed: false,
-//       };
-//       const fidilityIndividual = {
-//         broker: "Fidility Individual",
-//         balance: 0,
-//         stocks: 0,
-//         isUsed: false,
-//       };
-//       const total = {
-//         broker: "Total",
-//         balance: 0,
-//         stocks: 0,
-//         isUsed: true,
-//       };
-
-//       deposits.forEach((d) => {
-//         if (d.from === "Bank" && d.to === "DHAN") {
-//           dhann.balance += d.amount;
-//           dhann.isUsed = true;
-//         } else if (d.from === "Bank" && d.to === "GROWW") {
-//           groww.balance += d.amount;
-//           groww.isUsed = true;
-//         } else if (d.from === "GROWW" && d.to === "Bank") {
-//           groww.balance -= d.amount;
-//           groww.isUsed = true;
-//         } else if (d.from === "DHAN" && d.to === "Bank") {
-//           dhann.balance -= d.amount;
-//           dhann.isUsed = true;
-//         } else if (d.from === "Bank" && d.to === "WEBULL") {
-//           WEBULL.balance += d.amount;
-//           WEBULL.isUsed = true;
-//         } else if (d.from === "WEBULL" && d.to === "Bank") {
-//           WEBULL.balance -= d.amount;
-//           WEBULL.isUsed = true;
-//         } else if (d.from === "WEBULL" && d.to === "WEBULL" && d.desc === "Divident Received") {
-//           WEBULL.balance += d.amount;
-//           WEBULL.isUsed = true;
-//         } else if (d.from === "Bank" && d.to === "Fidility - Roth") {
-//           fidilityRoth.balance += d.amount;
-//           fidilityRoth.isUsed = true;
-//         } else if (d.from === "Fidility - Roth" && d.to === "Fidility - Roth" && d.desc === "Divident Received") {
-//           fidilityRoth.balance += d.amount;
-//           fidilityRoth.isUsed = true;
-//         } else if (d.from === "Bank" && d.to === "Fidility - Traditional") {
-//           fidilityTraditional.balance += d.amount;
-//           fidilityTraditional.isUsed = true;
-//         } else if (d.from === "Fidility - Traditional" && d.to === "Fidility - Traditional" && d.desc === "Divident Received") {
-//           fidilityTraditional.balance += d.amount;
-//           fidilityTraditional.isUsed = true;
-//         } else if (d.from === "Bank" && d.to === "Fidility - Individual") {
-//           fidilityIndividual.balance += d.amount;
-//           fidilityIndividual.isUsed = true;
-//         } else if (d.from === "Fidility - Individual" && d.to === "Fidility - Individual" && d.desc === "Divident Received") {
-//           fidilityIndividual.balance += d.amount;
-//           fidilityIndividual.isUsed = true;
-//         }
-//       });
-
-//       stocks.forEach((s) => {
-//         if (s.broker === "GROWW") {
-//           groww.balance -= s.stocks;
-//           groww.isUsed = true;
-//         } else if (s.broker === "DHANN") {
-//           dhann.balance -= s.stocks;
-//           dhann.isUsed = true;
-//         } else if (s.broker === "WEBULL") {
-//           WEBULL.balance -= s.stocks;
-//           WEBULL.isUsed = true;
-//         } else if (s.broker === "FidilityRoth") {
-//           fidilityRoth.balance -= s.stocks;
-//           fidilityRoth.isUsed = true;
-//         } else if (s.broker === "FidilityTraditional") {
-//           fidilityTraditional.balance -= s.stocks;
-//           fidilityTraditional.isUsed = true;
-//         } else if (s.broker === "FidilityIndividual") {
-//           fidilityIndividual.balance -= s.stocks;
-//           fidilityIndividual.isUsed = true;
-//         }
-//       });
-
-//       stockQty.forEach((s) => {
-//         if (s.broker === "GROWW") {
-//           groww.stocks = s.qty;
-//           groww.isUsed = true;
-//         } else if (s.broker === "DHANN") {
-//           dhann.stocks = s.qty;
-//           dhann.isUsed = true;
-//         } else if (s.broker === "WEBULL") {
-//           WEBULL.stocks = s.qty;
-//           WEBULL.isUsed = true;
-//         } else if (s.broker === "FidilityRoth") {
-//           fidilityRoth.stocks = s.qty;
-//           fidilityRoth.isUsed = true;
-//         } else if (s.broker === "FidilityTraditional") {
-//           fidilityTraditional.stocks = s.qty;
-//           fidilityTraditional.isUsed = true;
-//         } else if (s.broker === "FidilityIndividual") {
-//           fidilityIndividual.stocks = s.qty;
-//           fidilityIndividual.isUsed = true;
-//         }
-//       });
-
-//       const ret = [];
-
-//       if (groww.isUsed) {
-//         ret.push(groww);
-//       }
-//       if (dhann.isUsed) {
-//         ret.push(dhann);
-//       }
-//       if (WEBULL.isUsed) {
-//         ret.push(WEBULL);
-//       }
-//       if (fidilityRoth.isUsed) {
-//         ret.push(fidilityRoth);
-//       }
-//       if (fidilityTraditional.isUsed) {
-//         ret.push(fidilityTraditional);
-//       }
-//       if (fidilityIndividual.isUsed) {
-//         ret.push(fidilityIndividual);
-//       }
-//       ret.forEach((e) => {
-//         total.balance += e.balance;
-//         total.stocks += e.stocks;
-//       });
-//       ret.push(total);
-
-//       return ret;
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get data";
-//     }
 //   }
 
 //   public async getYearlyDividend(exchange: string): Promise<any> {
