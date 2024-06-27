@@ -14,12 +14,12 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import { NumericFormat } from "react-number-format";
 import { useRouter } from "next/navigation";
 import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-message";
 import { addMutualFundInvestment, updateMutualFundInvestment } from "@/actions/mutual-fund-investment.service";
 import { MutualFundInvestmentType } from "@/models/mutual-fund-investment.model";
 import { getMFs } from "@/actions/mutual-fund.service";
+import { CustomNumericFormat } from "@/components/shared/number-format";
 
 const mutualFundInvestmentFormSchema = z.object({
   mutualFundID: z.string(),
@@ -262,8 +262,7 @@ export default function AddModifyMFInvestment({ defaultValues, id }: AddInvestme
               <FormLabel>Net Amount</FormLabel>
               <FormControl className="mt-5">
                 <Label className="block !mt-5">
-                  {" "}
-                  <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={netAmount} />
+                  <CustomNumericFormat value={netAmount} />
                 </Label>
               </FormControl>
               <FormMessage />

@@ -1,12 +1,10 @@
 "use client";
 
 import { PurchaseDetailType, getPurchaseDetail } from "@/actions/purchase-detail.service";
-import NumberFormater from "@/components/shared/number-format";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useExchange } from "@/store/useExchange";
+import NumberFormater, { CustomNumericFormat } from "@/components/shared/number-format";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { NumericFormat } from "react-number-format";
 
 type StockPurchaseDetailProps = {
   id: number;
@@ -26,6 +24,8 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
   if (!data) {
     return <div>not found!!!</div>;
   }
+
+  const currency = data?.data[0]?.currency;
   return (
     <>
       <Table className="caption-top">
@@ -33,13 +33,13 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
           <h1 className="my-4 text-xl">Purchase Detail</h1>
           <div className="flex justify-between">
             <div>
-              Current price : <NumberFormater className="text-black" value={data.currentPrice} currency={data?.data[0]?.currency} />
+              Current price : <NumberFormater className="text-black" value={data.currentPrice} currency={currency} />
             </div>
             <div>
-              XIRR : <NumericFormat className="text-black" displayType="text" decimalScale={2} fixedDecimalScale value={data.totalXIRR} />
+              XIRR : <CustomNumericFormat className="text-black" value={data.totalXIRR} />
             </div>
             <div>
-              Profit/Loss : <NumberFormater className="text-black" value={data.returns} currency={data?.data[0]?.currency} />
+              Profit/Loss : <NumberFormater className="text-black" value={data.returns} currency={currency} />
             </div>
           </div>
           <div className="flex justify-between">
@@ -47,7 +47,7 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
               Average Price : <NumberFormater className="text-black" value={data.avgPrice} currency={data?.data[0]?.currency} />
             </div>
             <div>
-              Qty : <NumericFormat className="text-black" displayType="text" decimalScale={2} fixedDecimalScale value={data.qty} />
+              Qty : <CustomNumericFormat className="text-black" value={data.qty} />
             </div>
             <div>
               Invested : <NumberFormater className="text-black" value={data.investedValue} currency={data?.data[0]?.currency} />
@@ -66,19 +66,19 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
         <TableBody>
           <TableRow>
             <TableCell className="text-center">
-              <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale value={data.growthRate.percentage10} />
+              <NumberFormater className="text-black" value={data.growthRate.percentage10} currency={currency} />
             </TableCell>
             <TableCell className="text-center">
-              <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale value={data.growthRate.percentage12} />
+              <NumberFormater className="text-black" value={data.growthRate.percentage12} currency={currency} />
             </TableCell>
             <TableCell className="text-center">
-              <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale value={data.growthRate.percentage15} />
+              <NumberFormater className="text-black" value={data.growthRate.percentage15} currency={currency} />
             </TableCell>
             <TableCell className="text-center">
-              <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale value={data.growthRate.percentage18} />
+              <NumberFormater className="text-black" value={data.growthRate.percentage18} currency={currency} />
             </TableCell>
             <TableCell className="text-center">
-              <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale value={data.growthRate.percentage24} />
+              <NumberFormater className="text-black" value={data.growthRate.percentage24} currency={currency} />
             </TableCell>
           </TableRow>
         </TableBody>
@@ -107,10 +107,10 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
               </TableCell>
               <TableCell>{r.broker}</TableCell>
               <TableCell className="text-right">
-                <NumericFormat displayType="text" decimalScale={2} value={r.XIRR} />
+                <CustomNumericFormat value={r.XIRR} />
               </TableCell>
               <TableCell className="text-right">
-                <NumericFormat displayType="text" decimalScale={2} value={r.CAGR} />
+                <CustomNumericFormat value={r.CAGR} />
               </TableCell>
               <TableCell className="text-right text-primary">
                 <NumberFormater value={r.currentAmount - r.netAmount} currency={r.currency} />

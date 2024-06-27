@@ -3,10 +3,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "./data-table-column-header";
-import { NumericFormat } from "react-number-format";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { StockInvestmentType } from "@/models/stock-investment.model";
 import { format } from "date-fns";
+import { CustomNumericFormat } from "@/components/shared/number-format";
 
 export const Columns: ColumnDef<StockInvestmentType>[] = [
   {
@@ -50,14 +50,7 @@ export const Columns: ColumnDef<StockInvestmentType>[] = [
       return (
         <div className="flex space-x-1">
           <span className="w-16 text-right font-medium">
-            <NumericFormat
-              displayType="text"
-              decimalScale={2}
-              fixedDecimalScale
-              thousandsGroupStyle="lakh"
-              thousandSeparator=","
-              value={row.getValue("price")}
-            />
+            <CustomNumericFormat value={row.getValue("price")} />
           </span>
         </div>
       );
@@ -71,7 +64,7 @@ export const Columns: ColumnDef<StockInvestmentType>[] = [
       return (
         <div className="flex space-x-1">
           <span className="w-24 text-right font-medium">
-            <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={amount} />
+            <CustomNumericFormat value={amount} />
           </span>
         </div>
       );

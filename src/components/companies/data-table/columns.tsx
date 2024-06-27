@@ -4,8 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { CompanyType } from "@/models/company.model";
-import { NumericFormat } from "react-number-format";
 import { DataTableRowActions } from "./data-table-row-actions";
+import NumberFormater from "@/components/shared/number-format";
+import { convertToExchangeType } from "@/lib/utils";
 
 export const Columns: ColumnDef<CompanyType>[] = [
   {
@@ -65,14 +66,7 @@ export const Columns: ColumnDef<CompanyType>[] = [
       return (
         <div className="flex space-x-2 w-20 flex-row-reverse">
           <span className="font-medium text-center">
-            <NumericFormat
-              displayType="text"
-              decimalScale={2}
-              fixedDecimalScale
-              thousandsGroupStyle="lakh"
-              thousandSeparator=","
-              value={row.getValue("currentPrice")}
-            />
+            <NumberFormater value={row.getValue("currentPrice")} exchange={convertToExchangeType(row.original.exchange)} />
           </span>
         </div>
       );

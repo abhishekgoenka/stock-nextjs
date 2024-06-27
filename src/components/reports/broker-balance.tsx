@@ -1,10 +1,9 @@
 "use client";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BrokerBalanceType, getBrokerBalance } from "@/actions/report.service";
-import NumberFormater from "../shared/number-format";
+import NumberFormater, { CustomNumericFormat } from "../shared/number-format";
 import { useEffect, useState } from "react";
 import { useExchange } from "@/store/useExchange";
-import { NumericFormat } from "react-number-format";
 
 export default function BrokerBalance() {
   const [balance, setBalance] = useState<BrokerBalanceType | null>(null);
@@ -41,7 +40,7 @@ export default function BrokerBalance() {
               <NumberFormater value={r.balance} exchange={exchange} />
             </TableCell>
             <TableCell className="text-right">
-              <NumericFormat displayType="text" decimalScale={2} value={r.stocks} />
+              <CustomNumericFormat value={r.stocks} />
             </TableCell>
           </TableRow>
         ))}
@@ -53,7 +52,7 @@ export default function BrokerBalance() {
             <NumberFormater value={balance?.total.balance!} exchange={exchange} />
           </TableCell>
           <TableCell className="text-right font-bold">
-            <NumericFormat displayType="text" decimalScale={2} value={balance.total.stocks} />
+            <CustomNumericFormat value={balance.total.stocks} />
           </TableCell>
         </TableRow>
       </TableFooter>

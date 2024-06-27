@@ -4,8 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "../../companies/data-table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { NumericFormat } from "react-number-format";
 import { MutualFundType } from "@/models/mutual-fund.model";
+import { CustomNumericFormat } from "@/components/shared/number-format";
 
 export const Columns: ColumnDef<MutualFundType>[] = [
   {
@@ -25,7 +25,7 @@ export const Columns: ColumnDef<MutualFundType>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <NumericFormat className="font-medium" displayType="text" decimalScale={2} fixedDecimalScale suffix={"%"} value={row.getValue("equity")} />
+          <CustomNumericFormat className="font-medium" suffix={"%"} value={row.getValue("equity")} />
         </div>
       );
     },
@@ -36,7 +36,7 @@ export const Columns: ColumnDef<MutualFundType>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <NumericFormat className="font-medium" displayType="text" decimalScale={2} fixedDecimalScale suffix={"%"} value={row.getValue("debt")} />
+          <CustomNumericFormat className="font-medium" suffix={"%"} value={row.getValue("debt")} />
         </div>
       );
     },
@@ -47,7 +47,7 @@ export const Columns: ColumnDef<MutualFundType>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <NumericFormat className="font-medium" displayType="text" decimalScale={2} fixedDecimalScale suffix={"%"} value={row.getValue("others")} />
+          <CustomNumericFormat className="font-medium" suffix={"%"} value={row.getValue("others")} />
         </div>
       );
     },
@@ -73,14 +73,7 @@ export const Columns: ColumnDef<MutualFundType>[] = [
       return (
         <div className="flex space-x-2 w-20 flex-row-reverse">
           <span className="font-medium text-center">
-            <NumericFormat
-              displayType="text"
-              decimalScale={2}
-              fixedDecimalScale
-              thousandsGroupStyle="lakh"
-              thousandSeparator=","
-              value={row.getValue("currentPrice")}
-            />
+            <CustomNumericFormat value={row.getValue("currentPrice")} />
           </span>
         </div>
       );

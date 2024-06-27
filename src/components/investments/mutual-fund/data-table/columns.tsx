@@ -3,11 +3,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "./data-table-column-header";
-import { NumericFormat } from "react-number-format";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { format } from "date-fns";
 import MutualFundInvestment from "@/models/mutual-fund-investment.model";
 import { Badge } from "@/components/ui/badge";
+import NumberFormater from "@/components/shared/number-format";
 
 export const Columns: ColumnDef<MutualFundInvestment>[] = [
   {
@@ -51,14 +51,7 @@ export const Columns: ColumnDef<MutualFundInvestment>[] = [
       return (
         <div className="flex space-x-1">
           <span className="w-16 text-right font-medium">
-            <NumericFormat
-              displayType="text"
-              decimalScale={2}
-              fixedDecimalScale
-              thousandsGroupStyle="lakh"
-              thousandSeparator=","
-              value={row.getValue("price")}
-            />
+            <NumberFormater value={row.getValue("price")} currency={row.original.currency} />
           </span>
         </div>
       );
@@ -72,7 +65,7 @@ export const Columns: ColumnDef<MutualFundInvestment>[] = [
       return (
         <div className="flex space-x-1">
           <span className="w-24 text-right font-medium">
-            <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={amount} />
+            <NumberFormater value={amount} currency={row.original.currency} />
           </span>
         </div>
       );
@@ -90,7 +83,7 @@ export const Columns: ColumnDef<MutualFundInvestment>[] = [
         <div className="space-x-1">
           <span className="w-24 text-right font-medium">
             <Badge className="mr-1">{Math.round(percentage)}%</Badge>
-            <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={pl} />
+            <NumberFormater value={pl} currency={row.original.currency} />
           </span>
         </div>
       );

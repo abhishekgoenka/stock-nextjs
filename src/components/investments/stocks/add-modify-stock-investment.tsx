@@ -14,12 +14,12 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import { NumericFormat } from "react-number-format";
 import { addStockInvestment, updateStockInvestment } from "@/actions/stock-investment.service";
 import { useRouter } from "next/navigation";
 import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-message";
 import { getCompanies } from "@/actions/company.service";
 import { StockInvestmentType } from "@/models/stock-investment.model";
+import { CustomNumericFormat } from "@/components/shared/number-format";
 
 const stockInvestmentFormSchema = z.object({
   companyID: z.string(),
@@ -262,8 +262,7 @@ export default function AddModifyStockInvestment({ defaultValues, id }: AddInves
               <FormLabel>Net Amount</FormLabel>
               <FormControl className="mt-5">
                 <Label className="block !mt-5">
-                  {" "}
-                  <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale thousandsGroupStyle="lakh" thousandSeparator="," value={netAmount} />
+                  <CustomNumericFormat value={netAmount} />
                 </Label>
               </FormControl>
               <FormMessage />

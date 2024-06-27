@@ -1,5 +1,5 @@
 import { EXCHANGE_TYPE } from "@/lib/constants";
-import { NumberFormatBase } from "react-number-format";
+import { NumberFormatBase, NumericFormat } from "react-number-format";
 
 type NumberFormaterProps = {
   value: string | number;
@@ -28,4 +28,14 @@ export default function NumberFormater(props: NumberFormaterProps) {
   };
 
   return <NumberFormatBase displayType="text" {...props} format={format} />;
+}
+
+type CustomNumericFormatProps = {
+  value: string | number;
+  className?: string;
+  suffix?: string;
+};
+
+export function CustomNumericFormat({ value, className, suffix }: CustomNumericFormatProps) {
+  return <NumericFormat displayType="text" decimalScale={2} fixedDecimalScale value={value} className={className} suffix={suffix} />;
 }
