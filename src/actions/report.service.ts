@@ -864,6 +864,26 @@ export async function getBrokerBalance(exchange: string): Promise<BrokerBalanceT
   }
 }
 
+export type YearlyDividendType = { year: number; amount: number };
+export async function getYearlyDividend(exchange: string): Promise<YearlyDividendType[]> {
+  try {
+    const sequelize = await connectDB();
+    const currency = exchange === "NSE" ? "INR" : "USD";
+    const depositSQL = ` SELECT STRFTIME("%Y", [date]) as year, SUM(amount) as amount FROM Deposits WHERE currency = :currency
+                          GROUP BY STRFTIME("%Y", [date]),  [desc]   HAVING [desc] = 'Divident Received' ORDER By [date]`;
+    const dividends: YearlyDividendType[] = await sequelize.query(depositSQL, {
+      replacements: { currency: currency },
+      type: QueryTypes.SELECT,
+    });
+
+    const sortedDate = sortBy(dividends, "year");
+    return sortedDate;
+  } catch (ex) {
+    console.error(ex);
+    return [];
+  }
+}
+
 // export class ReportService extends BaseService {
 //   constructor() {
 //     super();
