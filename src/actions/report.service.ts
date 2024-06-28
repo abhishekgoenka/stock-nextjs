@@ -884,27 +884,34 @@ export async function getYearlyDividend(exchange: string): Promise<YearlyDividen
   }
 }
 
+type SaleByYear = {
+  year: number;
+  sales: number;
+};
+export type TotalSaleByYear = {
+  sales: SaleByYear[];
+  total: number;
+};
+export async function getTotalSales(exchange: string): Promise<TotalSaleByYear | null> {
+  try {
+    const sequelize = await connectDB();
+    const salesSQL = ` SELECT STRFTIME("%Y", [saleDate]) as "year", sum((qty*salePrice)+charges) as "sales" FROM sales
+                          WHERE exchange = :exchange GROUP BY STRFTIME("%Y", [saleDate])`;
+    const result: SaleByYear[] = await sequelize.query(salesSQL, {
+      replacements: { exchange: exchange },
+      type: QueryTypes.SELECT,
+    });
+
+    return { total: sumBy(result, "sales"), sales: result };
+  } catch (ex) {
+    console.error(ex);
+    return null;
+  }
+}
+
 // export class ReportService extends BaseService {
 //   constructor() {
 //     super();
-//   }
-
-//   public async getYearlyDividend(exchange: string): Promise<any> {
-//     try {
-//       const currency = exchange === "NSE" ? "INR" : "USD";
-//       const depositSQL = ` SELECT STRFTIME("%Y", [date]) as year, SUM(amount) as amount FROM Deposits WHERE currency = :currency
-//                           GROUP BY STRFTIME("%Y", [date]),  [desc]   HAVING [desc] = 'Divident Received' ORDER By [date]`;
-//       const dividends: Array<{ year; amount }> = await this.sequelize.query(depositSQL, {
-//         replacements: { currency: currency },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       const sortedDate = _.sortBy(dividends, "year");
-//       return sortedDate;
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get all monthly INR investments";
-//     }
 //   }
 
 //   public async getBrokerStatement(broker: string): Promise<any> {
@@ -941,22 +948,4 @@ export async function getYearlyDividend(exchange: string): Promise<YearlyDividen
 //     }
 //   }
 
-//   public async getTotalSales(exchange: string): Promise<any> {
-//     try {
-//       const salesSQL = ` SELECT STRFTIME("%Y", [saleDate]) as "year", sum((qty*salePrice)+charges) as "sales" FROM sales
-//                           WHERE exchange = :exchange GROUP BY STRFTIME("%Y", [saleDate])`;
-//       const result: Array<{
-//         year;
-//         sales;
-//       }> = await this.sequelize.query(salesSQL, {
-//         replacements: { exchange: exchange },
-//         type: QueryTypes.SELECT,
-//       });
-
-//       return { total: _.sumBy(result, "sales"), sales: result };
-//     } catch (ex) {
-//       console.error(ex);
-//       throw "Failed to get detail";
-//     }
-//   }
 // }
