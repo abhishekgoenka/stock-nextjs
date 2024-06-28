@@ -1,9 +1,9 @@
 "use client";
-import { getCompanies, getCompanyByID, updateCompany } from "@/actions/company.service";
+import { getCompanies, updateCompany } from "@/actions/company.service";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Progress } from "../ui/progress";
-import { forEach, result, round } from "lodash";
+import { round } from "lodash";
 import { useState } from "react";
 import { syncStockPrice } from "@/actions/setting.service";
 import { getMFs, updateMF } from "@/actions/mutual-fund.service";
