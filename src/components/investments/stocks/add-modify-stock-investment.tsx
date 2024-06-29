@@ -106,25 +106,49 @@ export default function AddModifyStockInvestment({ defaultValues, id }: AddInves
   };
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="companyID"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Company</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a company" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {companies.map(c => (
+                    <SelectItem key={c.name} value={c.id.toString()}>
+                      {c.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex justify-between">
           <FormField
             control={form.control}
-            name="companyID"
+            name="broker"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company</FormLabel>
+              <FormItem className="w-40">
+                <FormLabel>Broker</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a company" />
+                      <SelectValue placeholder="Select a broker" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {companies.map(c => (
-                      <SelectItem key={c.name} value={c.id.toString()}>
-                        {c.name}
+                    {BROKERS.map(b => (
+                      <SelectItem key={b.value} value={b.value}>
+                        {b.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -133,214 +157,188 @@ export default function AddModifyStockInvestment({ defaultValues, id }: AddInves
               </FormItem>
             )}
           />
-          <div className="flex justify-between">
-            <FormField
-              control={form.control}
-              name="broker"
-              render={({ field }) => (
-                <FormItem className="w-40">
-                  <FormLabel>Broker</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+
+          <FormField
+            control={form.control}
+            name="currency"
+            render={({ field }) => (
+              <FormItem className="w-36">
+                <FormLabel>Currency</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a currency" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {CURRENCY.map(b => (
+                      <SelectItem key={b.value} value={b.value}>
+                        {b.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="purchaseDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col mt-2">
+                <FormLabel>Purchase Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a broker" />
-                      </SelectTrigger>
+                      <Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
                     </FormControl>
-                    <SelectContent>
-                      {BROKERS.map(b => (
-                        <SelectItem key={b.value} value={b.value}>
-                          {b.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="currency"
-              render={({ field }) => (
-                <FormItem className="w-36">
-                  <FormLabel>Currency</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a currency" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {CURRENCY.map(b => (
-                        <SelectItem key={b.value} value={b.value}>
-                          {b.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="purchaseDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col mt-2">
-                  <FormLabel>Purchase Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={date => date > new Date() || date < new Date("1900-01-01")}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="flex justify-between gap-3">
-            <FormField
-              control={form.control}
-              name="qty"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Qty</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Qty"
-                      {...field}
-                      onChange={e => {
-                        field.onChange(e), calculateNetAmount();
-                      }}
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={date => date > new Date() || date < new Date("1900-01-01")}
+                      initialFocus
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Price"
-                      {...field}
-                      onChange={e => {
-                        field.onChange(e), calculateNetAmount();
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className="flex justify-between gap-3">
+          <FormField
+            control={form.control}
+            name="qty"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Qty</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Qty"
+                    {...field}
+                    onChange={e => {
+                      field.onChange(e), calculateNetAmount();
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormItem className="w-44">
-              <FormLabel>Net Amount</FormLabel>
-              <FormControl className="mt-5">
-                <Label className="block !mt-5">
-                  <CustomNumericFormat value={netAmount} />
-                </Label>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </div>
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Price"
+                    {...field}
+                    onChange={e => {
+                      field.onChange(e), calculateNetAmount();
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="flex justify-between gap-3">
-            <FormField
-              control={form.control}
-              name="stt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>STT</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="STT"
-                      {...field}
-                      onChange={e => {
-                        field.onChange(e), calculateNetAmount();
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormItem className="w-44">
+            <FormLabel>Net Amount</FormLabel>
+            <FormControl className="mt-5">
+              <Label className="block !mt-5">
+                <CustomNumericFormat value={netAmount} />
+              </Label>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </div>
 
-            <FormField
-              control={form.control}
-              name="brokerage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Brokerage</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Brokerage"
-                      {...field}
-                      onChange={e => {
-                        field.onChange(e), calculateNetAmount();
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className="flex justify-between gap-3">
+          <FormField
+            control={form.control}
+            name="stt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>STT</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="STT"
+                    {...field}
+                    onChange={e => {
+                      field.onChange(e), calculateNetAmount();
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="otherCharges"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Other Charges</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Other Charges"
-                      {...field}
-                      onChange={e => {
-                        field.onChange(e), calculateNetAmount();
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="flex gap-3">
-            <Button type="submit">Save Investments</Button>
-            <Button type="button" variant="destructive" onClick={() => router.push("/investments/stocks")}>
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </>
+          <FormField
+            control={form.control}
+            name="brokerage"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Brokerage</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Brokerage"
+                    {...field}
+                    onChange={e => {
+                      field.onChange(e), calculateNetAmount();
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="otherCharges"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Other Charges</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Other Charges"
+                    {...field}
+                    onChange={e => {
+                      field.onChange(e), calculateNetAmount();
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="flex gap-3">
+          <Button type="submit">Save Investments</Button>
+          <Button type="button" variant="destructive" onClick={() => router.push("/investments/stocks")}>
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

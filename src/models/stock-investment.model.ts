@@ -12,6 +12,7 @@ export type StockInvestmentType = {
   otherCharges: number;
   currency: string;
   broker: string;
+  company?: Company;
 };
 
 @Table

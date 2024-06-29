@@ -11,7 +11,14 @@ export async function getStockInvestments(): Promise<StockInvestmentType[]> {
 
 export async function getStockInvestmentByID(id: string): Promise<StockInvestmentType | null> {
   await connectDB();
-  return await StockInvestment.findByPk(id);
+  return await StockInvestment.findByPk(id, {
+    include: [
+      {
+        model: Company,
+        required: true,
+      },
+    ],
+  });
 }
 
 export async function addStockInvestment(investment: StockInvestmentType): Promise<StockInvestmentType | null> {

@@ -6,6 +6,7 @@ import moment from "moment";
 import { calculateCAGR, calculateInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest, calculateXIRR } from "@/lib/financial";
 import { round } from "lodash";
 import { parse, parseISO } from "date-fns";
+import { StockOrMutualFundType } from "@/lib/constants";
 
 type InvestmentGrouthRate = {
   percentage10: number;
@@ -39,7 +40,7 @@ export type PurchaseDetailType = {
   growthRate: InvestmentGrouthRate;
   data: InvestmentDetailType[];
 };
-export async function getPurchaseDetail(type: string, id: number): Promise<PurchaseDetailType | null> {
+export async function getPurchaseDetail(type: StockOrMutualFundType, id: number): Promise<PurchaseDetailType | null> {
   try {
     const sequelize = await connectDB();
     let query = ` SELECT STRFTIME("%Y", [date]) as year, SUM(amount) as amount FROM Deposits WHERE currency = :currency

@@ -53,3 +53,5 @@ export const DEPOSIT_TYPE = [
     icon: QuestionMarkCircledIcon,
   },
 ];
+
+export type StockOrMutualFundType = "stock" | "mf";

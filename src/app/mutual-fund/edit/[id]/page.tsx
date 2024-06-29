@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function StockInvestmentPage({ params }: { params: { id: string } }) {
+export default async function MutualFundInvestmentPage({ params }: { params: { id: string } }) {
   const mutualFund = await getMFByID(params.id);
   if (!mutualFund) {
     return <div>Not found</div>;

@@ -2,13 +2,16 @@
 
 import { PurchaseDetailType, getPurchaseDetail } from "@/actions/purchase-detail.service";
 import NumberFormater, { CustomNumericFormat } from "@/components/shared/number-format";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { StockOrMutualFundType } from "@/lib/constants";
 import { format } from "date-fns";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type StockPurchaseDetailProps = {
   id: number;
-  type: "stock" | "mf";
+  type: StockOrMutualFundType;
 };
 
 export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailProps) {
@@ -94,6 +97,7 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
             <TableHead className="text-right">XIRR</TableHead>
             <TableHead className="text-right">CAGR</TableHead>
             <TableHead className="text-right">Profit/Loss</TableHead>
+            <TableHead className="text-right"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -114,6 +118,13 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
               </TableCell>
               <TableCell className="text-right text-primary">
                 <NumberFormater value={r.currentAmount - r.netAmount} currency={r.currency} />
+              </TableCell>
+              <TableCell className="text-center ">
+                <Button variant={"link"}>
+                  <Link className="w-full" href={`/sales/stock/${r?.id}`} rel="noopener noreferrer">
+                    Sales
+                  </Link>
+                </Button>
               </TableCell>
             </TableRow>
           ))}
