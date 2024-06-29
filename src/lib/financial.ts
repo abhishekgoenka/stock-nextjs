@@ -49,6 +49,9 @@ export function calculateInterest(amount: number, rate: number, period: number):
 
 export function calculateXIRR(val: Array<{ amount: number; when: Date }>): number {
   try {
+    if (val.length < 2) {
+      return 0;
+    }
     return xirr(val);
   } catch (error) {
     console.error(error);
