@@ -31,7 +31,7 @@ export default async function StockSalesPage({ params }: { params: { id: string 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 w-[650px] md:py-10">
       <h3 className="text-lg font-medium">Sale Stock</h3>
-      <InvestmentSales defaultValues={defaultValues} type="stock" investmentID={+params.id} />
+      <InvestmentSales defaultValues={defaultValues} type="stock" companyID={investment.companyID} investmentID={+params.id} />
     </section>
   );
 }

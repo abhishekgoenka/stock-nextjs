@@ -38,10 +38,11 @@ export type SalesFormValues = z.infer<typeof salesFormSchema>;
 type SalesProps = {
   defaultValues: Partial<SalesFormValues>;
   type: StockOrMutualFundType;
+  companyID: number;
   investmentID: number;
 };
 
-export default function InvestmentSales({ defaultValues, type, investmentID }: SalesProps) {
+export default function InvestmentSales({ defaultValues, type, companyID, investmentID }: SalesProps) {
   const router = useRouter();
   const [netAmount, setNetAmount] = useState(0);
   const form = useForm<SalesFormValues>({
@@ -71,7 +72,9 @@ export default function InvestmentSales({ defaultValues, type, investmentID }: S
 
     if (result) {
       toastDBSaveSuccess();
-      router.push(`/reports/purchase-detail/stock/${investmentID}`);
+      if (type === "stock") {
+        router.push(`/reports/purchase-detail/stock/${companyID}`);
+      }
     } else {
       toastDBSaveError();
     }

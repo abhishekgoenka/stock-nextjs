@@ -5,6 +5,7 @@ import { deleteStockInvestment, getStockInvestmentByID, updateStockInvestment } 
 import { connectDB } from "./base.service";
 import { StockOrMutualFundType } from "@/lib/constants";
 import { deleteMutualFundInvestment } from "./mutual-fund-investment.service";
+import StockInvestment from "@/models/stock-investment.model";
 
 export async function addSales(sale: SaleType, type: StockOrMutualFundType, investmentID: number): Promise<SaleType | null> {
   let transaction;
@@ -12,21 +13,27 @@ export async function addSales(sale: SaleType, type: StockOrMutualFundType, inve
     const sequelize = await connectDB();
     transaction = await sequelize.transaction();
     const record = await Sale.create(sale, { transaction });
-    await transaction.commit();
+
     if (type === "stock") {
-      // const investment = new StockInvestmentService();
       const currentInvestment = await getStockInvestmentByID(investmentID.toString());
       if (currentInvestment) {
         if (currentInvestment.qty === sale.qty) {
-          await deleteStockInvestment(investmentID);
+          await StockInvestment.destroy({
+            where: { id: currentInvestment.id },
+            transaction,
+          });
         } else {
           currentInvestment.qty -= sale.qty;
-          await updateStockInvestment(currentInvestment);
+          await StockInvestment.update(currentInvestment, {
+            where: { id: currentInvestment.id },
+            transaction,
+          });
         }
       }
     } else {
       await deleteMutualFundInvestment(investmentID);
     }
+    await transaction.commit();
     return JSON.parse(JSON.stringify(record));
   } catch (ex) {
     if (transaction) {
