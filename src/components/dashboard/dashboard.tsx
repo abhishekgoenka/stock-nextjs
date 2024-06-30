@@ -24,7 +24,7 @@ export function Dashboard({ data }: DashboardProps) {
           <Overview />
         </TabsContent>
         <TabsContent value="forecast" className="space-y-4">
-          <Forecast data={data} />
+          <Forecast />
         </TabsContent>
         <TabsContent value="stocks" className="space-y-4">
           <Stocks data={data} />

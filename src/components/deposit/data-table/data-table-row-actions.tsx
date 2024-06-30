@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DepositType } from "@/models/deposit.model";
 import { deleteDeposit } from "@/actions/deposit.service";
-import { DEPOSIT, DEPOSIT_DIVIDEND_RECEIVED } from "@/lib/constants";
+import { DEPOSIT_DIVIDEND_RECEIVED } from "@/lib/constants";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;

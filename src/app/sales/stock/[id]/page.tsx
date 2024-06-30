@@ -1,8 +1,5 @@
-import { getMFByID } from "@/actions/mutual-fund.service";
 import { getStockInvestmentByID } from "@/actions/stock-investment.service";
-import AddModifyMutualFund, { MutualFundFormValues } from "@/components/mutual-fund/add-modify-mutualfund";
 import InvestmentSales, { SalesFormValues } from "@/components/sales/investment-sales";
-import { Separator } from "@/components/ui/separator";
 import { toDate } from "date-fns";
 import { Metadata } from "next";
 

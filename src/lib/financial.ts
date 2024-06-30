@@ -1,5 +1,5 @@
 // import moment = require("moment");
-import { interest, compoundAnnualGrowthRate, returnOnInvestment } from "capitaljs";
+import { interest, compoundAnnualGrowthRate } from "capitaljs";
 import { differenceInDays, differenceInYears } from "date-fns";
 import { round } from "lodash";
 var xirr = require("xirr");

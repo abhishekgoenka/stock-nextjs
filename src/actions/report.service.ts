@@ -1,12 +1,11 @@
 "use server";
 
-import { Op, QueryTypes } from "sequelize";
-import { BaseService, connectDB } from "./base.service";
+import { QueryTypes } from "sequelize";
+import { connectDB } from "./base.service";
 // import * as _ from "lodash";
 // import moment from "moment";
 import { interest } from "capitaljs";
-import Deposit from "../models/deposit.model";
-import { differenceInDays, differenceInYears, lightFormat, parse } from "date-fns";
+import { parse } from "date-fns";
 import { round, slice, sortBy, sumBy } from "lodash";
 import { calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
 // import { Financial } from "../helpers/financial";

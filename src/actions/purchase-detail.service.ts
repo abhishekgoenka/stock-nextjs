@@ -2,10 +2,9 @@
 
 import { QueryTypes } from "sequelize";
 import { connectDB } from "./base.service";
-import moment from "moment";
 import { calculateCAGR, calculateInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest, calculateXIRR } from "@/lib/financial";
 import { round } from "lodash";
-import { parse, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 import { StockOrMutualFundType } from "@/lib/constants";
 
 type InvestmentGrouthRate = {
