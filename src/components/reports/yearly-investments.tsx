@@ -1,16 +1,15 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "../ui/badge";
-import { MonthlyInvestmentType, YearlyInvestmentType, getMonthlyInvestments, getYearlyInvestments } from "@/actions/report.service";
-import { format } from "date-fns";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { YearlyInvestmentType, getYearlyInvestments } from "@/actions/report.service";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
 import { sumBy } from "lodash";
-import { useExchange } from "@/store/useExchange";
+import { useStockSyncStore } from "@/store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function YearlyInvestment() {
   const [investments, setInvestments] = useState<YearlyInvestmentType[]>([]);
-  const exchange = useExchange(store => store.exchange);
+  const exchange = useStockSyncStore(useShallow(store => store.exchange));
   const [totalInvestments, setTotalInvestments] = useState(0);
   useEffect(() => {
     async function fetchData() {

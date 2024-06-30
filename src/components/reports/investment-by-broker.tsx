@@ -3,13 +3,14 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { InvestmentByBrokerType, getInvestmentByBroker } from "@/actions/report.service";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useExchange } from "@/store/useExchange";
 import { Switch } from "../ui/switch";
+import { useStockSyncStore } from "@/store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function InvestmentByBroker() {
   const [data, setData] = useState<InvestmentByBrokerType | null>(null);
   const [includeBrokerage, setIncludeBrokerage] = useState(false);
-  const exchange = useExchange(store => store.exchange);
+  const exchange = useStockSyncStore(useShallow(store => store.exchange));
   useEffect(() => {
     async function fetchData() {
       const returns = await getInvestmentByBroker(exchange, includeBrokerage);

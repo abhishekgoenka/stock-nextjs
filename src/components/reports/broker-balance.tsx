@@ -3,11 +3,12 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { BrokerBalanceType, getBrokerBalance } from "@/actions/report.service";
 import NumberFormater, { CustomNumericFormat } from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useExchange } from "@/store/useExchange";
+import { useStockSyncStore } from "@/store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function BrokerBalance() {
   const [balance, setBalance] = useState<BrokerBalanceType | null>(null);
-  const exchange = useExchange(store => store.exchange);
+  const exchange = useStockSyncStore(useShallow(store => store.exchange));
   useEffect(() => {
     async function fetchData() {
       const returns = await getBrokerBalance(exchange);

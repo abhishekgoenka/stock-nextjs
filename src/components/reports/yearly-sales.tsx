@@ -3,11 +3,12 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { TotalSaleByYear, getTotalSales } from "@/actions/report.service";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useExchange } from "@/store/useExchange";
+import { useStockSyncStore } from "@/store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function YearlySales() {
   const [sales, setSales] = useState<TotalSaleByYear | null>(null);
-  const exchange = useExchange(store => store.exchange);
+  const exchange = useStockSyncStore(useShallow(store => store.exchange));
   useEffect(() => {
     async function fetchData() {
       const data = await getTotalSales(exchange);

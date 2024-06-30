@@ -1,15 +1,16 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "../ui/badge";
 import { MonthlyInvestmentType, getMonthlyInvestments } from "@/actions/report.service";
 import { format } from "date-fns";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useExchange } from "@/store/useExchange";
+import { useShallow } from "zustand/react/shallow";
+import { useStockSyncStore } from "@/store/store";
 
 export default function MonthlyInvestment() {
   const [investments, setInvestments] = useState<MonthlyInvestmentType[]>([]);
-  const exchange = useExchange(store => store.exchange);
+  const exchange = useStockSyncStore(useShallow(store => store.exchange));
   useEffect(() => {
     async function fetchData() {
       const monthlyInvestments = await getMonthlyInvestments(exchange);

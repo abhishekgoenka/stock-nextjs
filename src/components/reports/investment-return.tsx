@@ -3,11 +3,12 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { ExpectedReturnType, expectedReturn } from "@/actions/report.service";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useExchange } from "@/store/useExchange";
+import { useStockSyncStore } from "@/store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function InvestmentReturn() {
   const [expected, setExpected] = useState<ExpectedReturnType | null>(null);
-  const exchange = useExchange(store => store.exchange);
+  const exchange = useStockSyncStore(useShallow(store => store.exchange));
   useEffect(() => {
     async function fetchData() {
       const returns = await expectedReturn(exchange);

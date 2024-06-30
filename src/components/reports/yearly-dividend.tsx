@@ -3,13 +3,14 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { YearlyDividendType, getYearlyDividend } from "@/actions/report.service";
 import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useExchange } from "@/store/useExchange";
 import { sumBy } from "lodash";
+import { useShallow } from "zustand/react/shallow";
+import { useStockSyncStore } from "@/store/store";
 
 export default function YearlyDividend() {
   const [dividend, setDividend] = useState<YearlyDividendType[]>([]);
   const [total, setTotal] = useState(0);
-  const exchange = useExchange(store => store.exchange);
+  const exchange = useStockSyncStore(useShallow(store => store.exchange));
   useEffect(() => {
     async function fetchData() {
       const dividends = await getYearlyDividend(exchange);
