@@ -90,7 +90,7 @@ export function Forecast() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+            <CardTitle className="text-sm font-medium">Estimated returns at 15%</CardTitle>
             <FontAwesomeIcon icon={faDollarSign} />
           </CardHeader>
           <CardContent>
