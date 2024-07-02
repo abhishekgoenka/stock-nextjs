@@ -7,6 +7,7 @@ import { useShallow } from "zustand/react/shallow";
 import { AnnualReturnType } from "@/models/annual-return.model";
 import { getAnnualReturn } from "@/actions/annual-return.service";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function AnnualReturn() {
   const [annualReturns, setAnnualReturns] = useState<AnnualReturnType[]>([]);
@@ -29,7 +30,11 @@ export default function AnnualReturn() {
         <div className="flex justify-between">
           Annual Returns
           <span className="text-right">
-            <Button>Add Annual Return</Button>
+            <Button>
+              <Link className="w-full" href="/re/create" rel="noopener noreferrer">
+                Add Annual Return
+              </Link>
+            </Button>
           </span>
         </div>
       </TableCaption>
