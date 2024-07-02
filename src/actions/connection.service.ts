@@ -5,6 +5,7 @@ import MutualFundInvestment from "@/models/mutual-fund-investment.model";
 import MutualFund from "@/models/mutual-fund.model";
 import Deposit from "@/models/deposit.model";
 import Sale from "@/models/sale.model";
+import AnnualReturn from "@/models/annual-return.model";
 
 export class ConnectionService {
   static sequelize: Sequelize;
@@ -17,7 +18,7 @@ export class ConnectionService {
         logging: false,
         dialect: "sqlite",
         storage: "portfolio.sqlite",
-        models: [Company, StockInvestment, MutualFund, MutualFundInvestment, Deposit, Sale],
+        models: [Company, StockInvestment, MutualFund, MutualFundInvestment, Deposit, Sale, AnnualReturn],
       });
       await ConnectionService.sequelize.authenticate();
     } catch (ex) {

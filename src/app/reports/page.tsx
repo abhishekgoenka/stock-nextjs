@@ -7,6 +7,7 @@ import InvestmentByBroker from "@/components/reports/investment-by-broker";
 import BrokerBalance from "@/components/reports/broker-balance";
 import YearlyDividend from "@/components/reports/yearly-dividend";
 import YearlySales from "@/components/reports/yearly-sales";
+import AnnualReturn from "@/components/reports/annual-return";
 
 export const metadata: Metadata = {
   title: "StockSync : Report",
@@ -37,19 +38,12 @@ export default async function ReportPage() {
         </div>
       </div>
       <div className="flex gap-10">
-        {/* <div className="flex">
-          <InvestmentByBroker />
-        </div> */}
         <YearlyDividend />
         <YearlySales />
-        {/* <BrokerBalance /> */}
       </div>
-      {/* <div className="flex gap-10">
-        <InvestmentReturn />
-        <MonthlyInvestment />
-      </div> */}
-
-      {/* <MonthlyInvestment /> */}
+      <div className="flex gap-10">
+        <AnnualReturn />
+      </div>
     </section>
   );
 }
