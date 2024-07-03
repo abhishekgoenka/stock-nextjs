@@ -2,17 +2,10 @@
 
 import { QueryTypes } from "sequelize";
 import { connectDB } from "./base.service";
-// import * as _ from "lodash";
-// import moment from "moment";
 import { interest } from "capitaljs";
 import { parse } from "date-fns";
 import { round, slice, sortBy, sumBy } from "lodash";
 import { calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
-// import { Financial } from "../helpers/financial";
-// import Sale from "../models/sale.model";
-// import { Logger } from "../helpers/logger";
-// var xirr = require("xirr");
-// const logger = Logger.getLogger("index");
 export type MonthlyInvestmentType = {
   month: Date;
   stocks: number;
