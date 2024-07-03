@@ -1,6 +1,6 @@
 "use client";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import NumberFormater from "../shared/number-format";
+import NumberFormater, { CustomNumericFormat } from "../shared/number-format";
 import { useEffect, useState } from "react";
 import { useStockSyncStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
@@ -29,13 +29,18 @@ export default function AnnualReturn() {
       <TableCaption>
         <div className="flex justify-between">
           Annual Returns
-          <span className="text-right">
+          <div className="flex gap-4 flex-row-reverse">
             <Button>
               <Link className="w-full" href="/reports/annual-return/create" rel="noopener noreferrer">
                 Add Annual Return
               </Link>
             </Button>
-          </span>
+            <Button variant={"secondary"}>
+              <Link className="w-full" href="/reports/annual-return/create" rel="noopener noreferrer">
+                Update current year return
+              </Link>
+            </Button>
+          </div>
         </div>
       </TableCaption>
       <TableHeader>
@@ -62,10 +67,10 @@ export default function AnnualReturn() {
               <NumberFormater value={r.actualReturn} exchange={exchange} />
             </TableCell>
             <TableCell className="text-right">
-              <NumberFormater value={r.actualReturnPercentage} exchange={exchange} />
+              <CustomNumericFormat suffix={"%"} value={r.actualReturnPercentage} />
             </TableCell>
             <TableCell className="text-right">
-              <NumberFormater value={r.indexReturn} exchange={exchange} />
+              <CustomNumericFormat suffix={"%"} value={r.indexReturn} />
             </TableCell>
           </TableRow>
         ))}

@@ -5,15 +5,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CURRENCY, DEPOSIT, DEPOSIT_TYPE, EXCHANGE } from "@/lib/constants";
+import { EXCHANGE } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toastDBSaveError, toastDBSaveSuccess } from "@/components/shared/toast-message";
-import { addDeposit, updateDeposit } from "@/actions/deposit.service";
-import { DepositType } from "@/models/deposit.model";
-import { format } from "date-fns";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { cn } from "@/lib/utils";
 import { AnnualReturnType } from "@/models/annual-return.model";
 import { addAnnualReturn, updateAnnualReturn } from "@/actions/annual-return.service";
 
