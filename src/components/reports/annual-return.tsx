@@ -31,7 +31,7 @@ export default function AnnualReturn() {
           Annual Returns
           <span className="text-right">
             <Button>
-              <Link className="w-full" href="/re/create" rel="noopener noreferrer">
+              <Link className="w-full" href="/reports/annual-return/create" rel="noopener noreferrer">
                 Add Annual Return
               </Link>
             </Button>
