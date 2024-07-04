@@ -3,7 +3,7 @@
 import { QueryTypes } from "sequelize";
 import { connectDB } from "./base.service";
 import { calculateCAGR, calculateCompoundingInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest, calculateXIRR } from "@/lib/financial";
-import { round } from "lodash";
+import { orderBy, round } from "lodash";
 import { parseISO } from "date-fns";
 import { StockOrMutualFundType } from "@/lib/constants";
 
@@ -137,96 +137,79 @@ export async function getPurchaseDetail(type: StockOrMutualFundType, id: number)
   }
 }
 
-// public async getPurchaseDetailByBroker(broker: string): Promise<any> {
-//   try {
-//     if (broker === "DHAN") {
-//       broker = "DHANN";
-//     } else if (broker === "Fidility Roth") {
-//       broker = "FidilityRoth";
-//     } else if (broker === "Fidility Traditional") {
-//       broker = "FidilityTraditional";
-//     } else if (broker === "Fidility Individual") {
-//       broker = "FidilityIndividual";
-//     }
-//     const queryStock = `SELECT s.id, c.id as companyID,  c.name, purchaseDate, qty, price,  currentPrice, (qty*price) as grossAmount, ((qty*price)+stt+brokerage+otherCharges) AS netAmount, broker  , ((c.currentPrice * qty)+stt+brokerage+otherCharges) AS currentAmount, currency, 'stock' as type
-//     FROM StockInvestments s JOIN Companies c on s.companyID = c.id WHERE s.broker = :broker  ORDER BY purchaseDate desc`;
+export type PurchaseDetailByBrokerType = {
+  totalProfit: number;
+  broker: string;
+  investedValue: number;
+  data: PurchaseDetailByBrokerResultType[];
+};
+type PurchaseDetailByBrokerResultType = {
+  id: number;
+  companyID: number;
+  name: string;
+  purchaseDate: string;
+  qty: number;
+  price: number;
+  currentPrice: number;
+  grossAmount: number;
+  netAmount: number;
+  broker: string;
+  currentAmount: number;
+  currency: string;
+  XIRR: number;
+  CAGR: number;
+  type: string;
+};
+export async function getPurchaseDetailByBroker(broker: string): Promise<any> {
+  const sequelize = await connectDB();
+  if (broker === "Fidility Roth") {
+    broker = "FidilityRoth";
+  } else if (broker === "Fidility Traditional") {
+    broker = "FidilityTraditional";
+  } else if (broker === "Fidility Individual") {
+    broker = "FidilityIndividual";
+  }
+  const queryStock = `SELECT s.id, c.id as companyID,  c.name, purchaseDate, qty, price,  currentPrice, (qty*price) as grossAmount, ((qty*price)+stt+brokerage+otherCharges) AS netAmount, broker  , ((c.currentPrice * qty)+stt+brokerage+otherCharges) AS currentAmount, currency, 'stock' as type
+  FROM StockInvestments s JOIN Companies c on s.companyID = c.id WHERE s.broker = :broker  ORDER BY purchaseDate desc`;
 
-//     const queryMF = `SELECT mi.id, mf.id as companyID, mf.name, purchaseDate, qty, price, mf.currentPrice, (qty*price) as grossAmount, ((qty*price)+stt+brokerage+otherCharges) AS netAmount, broker  , (mf.currentPrice * qty) AS currentAmount, currency, 'mf' as type
-//               FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
-//               WHERE mi.broker = :broker  ORDER BY purchaseDate desc`;
+  const queryMF = `SELECT mi.id, mf.id as companyID, mf.name, purchaseDate, qty, price, mf.currentPrice, (qty*price) as grossAmount, ((qty*price)+stt+brokerage+otherCharges) AS netAmount, broker  , (mf.currentPrice * qty) AS currentAmount, currency, 'mf' as type
+            FROM MutualFundInvestments mi JOIN MutualFunds mf on mf.id = mi.mutualFundID
+            WHERE mi.broker = :broker  ORDER BY purchaseDate desc`;
 
-//     let result: Array<{
-//       id;
-//       companyID;
-//       name;
-//       purchaseDate;
-//       qty;
-//       price;
-//       currentPrice;
-//       grossAmount;
-//       netAmount;
-//       broker;
-//       currentAmount;
-//       currency;
-//       XIRR;
-//       CAGR;
-//       type;
-//     }> = await this.sequelize.query(queryStock, {
-//       replacements: { broker: broker },
-//       type: QueryTypes.SELECT,
-//     });
-//     const resultMF: Array<{
-//       id;
-//       companyID;
-//       name;
-//       purchaseDate;
-//       qty;
-//       price;
-//       currentPrice;
-//       grossAmount;
-//       netAmount;
-//       broker;
-//       currentAmount;
-//       currency;
-//       XIRR;
-//       CAGR;
-//       type;
-//     }> = await this.sequelize.query(queryMF, {
-//       replacements: { broker: broker },
-//       type: QueryTypes.SELECT,
-//     });
+  let result: PurchaseDetailByBrokerResultType[] = await sequelize.query(queryStock, {
+    replacements: { broker: broker },
+    type: QueryTypes.SELECT,
+  });
+  const resultMF: PurchaseDetailByBrokerResultType[] = await sequelize.query(queryMF, {
+    replacements: { broker: broker },
+    type: QueryTypes.SELECT,
+  });
 
-//     result.push(...resultMF);
+  result.push(...resultMF);
 
-//     result = _.orderBy(result, "purchaseDate", "desc");
+  result = orderBy(result, "purchaseDate", "desc");
 
-//     let investedValue = 0;
-//     let qty = 0;
-//     let totalProfit = 0;
-//     result.forEach((e) => {
-//       investedValue += e.netAmount;
-//       qty += e.qty;
-//       const investmentDT = moment(e.purchaseDate, "YYYY-MM-DD");
+  let investedValue = 0;
+  let qty = 0;
+  let totalProfit = 0;
+  result.forEach(e => {
+    investedValue += e.netAmount;
+    qty += e.qty;
+    const investmentDT = parseISO(e.purchaseDate);
 
-//       let na = e.netAmount * -1;
-//       let rate = 0;
-//       if (e.netAmount !== 0) {
-//         rate = Financial.calculateXIRR([
-//           { amount: na, when: investmentDT },
-//           { amount: e.currentAmount, when: moment() },
-//         ]);
-//       }
+    let na = e.netAmount * -1;
+    let rate = 0;
+    if (e.netAmount !== 0) {
+      rate = calculateXIRR([
+        { amount: na, when: investmentDT },
+        { amount: e.currentAmount, when: new Date() },
+      ]);
+    }
 
-//       e.XIRR = rate * 100;
-//       e.CAGR = Financial.calculateCAGR(e.purchaseDate, e.price, e.currentPrice);
-//       totalProfit += e.currentAmount - e.netAmount;
-//     });
+    e.XIRR = rate * 100;
+    e.CAGR = calculateCAGR(investmentDT, e.price, e.currentPrice);
+    totalProfit += e.currentAmount - e.netAmount;
+  });
 
-//     return { totalProfit, broker, investedValue, data: result };
-
-//     // return result;
-//   } catch (ex) {
-//     console.error(ex);
-//     throw "Failed to get detail";
-//   }
-// }
+  return { totalProfit, broker, investedValue, data: result };
+}
