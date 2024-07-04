@@ -35,11 +35,6 @@ export default function AnnualReturn() {
                 Add Annual Return
               </Link>
             </Button>
-            <Button variant={"secondary"}>
-              <Link className="w-full" href="/reports/annual-return/create" rel="noopener noreferrer">
-                Update current year return
-              </Link>
-            </Button>
           </div>
         </div>
       </TableCaption>

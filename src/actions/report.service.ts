@@ -2,17 +2,10 @@
 
 import { QueryTypes } from "sequelize";
 import { connectDB } from "./base.service";
-// import * as _ from "lodash";
-// import moment from "moment";
 import { interest } from "capitaljs";
 import { parse } from "date-fns";
 import { round, slice, sortBy, sumBy } from "lodash";
-import { calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
-// import { Financial } from "../helpers/financial";
-// import Sale from "../models/sale.model";
-// import { Logger } from "../helpers/logger";
-// var xirr = require("xirr");
-// const logger = Logger.getLogger("index");
+import { calculateInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
 export type MonthlyInvestmentType = {
   month: Date;
   stocks: number;
@@ -344,30 +337,8 @@ export async function expectedReturn(exchange: string): Promise<ExpectedReturnTy
     };
 
     stocks.forEach(s => {
-      const period = calculatePeriodYear(s.purchaseDate);
-      let interest12 = 0;
-      let interest15 = 0;
-      if (period > 0) {
-        const percentage12 = interest({
-          principal: s.purchasePrice,
-          rate: RATE_12,
-          periods: period,
-          compoundings: 1,
-        });
-        const percentage15 = interest({
-          principal: s.purchasePrice,
-          rate: RATE_15,
-          periods: period,
-          compoundings: 1,
-        });
-        interest12 = round(percentage12.interest, 2);
-        interest15 = round(percentage15.interest, 2);
-      } else {
-        let periodDays = calculatePeriodDays(s.purchaseDate);
-        periodDays = periodDays + 1;
-        interest12 = calculateSimpleInterest(s.purchasePrice, periodDays, 12);
-        interest15 = calculateSimpleInterest(s.purchasePrice, periodDays, 15);
-      }
+      const interest12 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_12);
+      const interest15 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_15);
 
       if (s.broker === "GROWW") {
         growwStock.percentage12 += interest12;
@@ -412,31 +383,8 @@ export async function expectedReturn(exchange: string): Promise<ExpectedReturnTy
       }
     });
     mutualFunds.forEach(s => {
-      const period = calculatePeriodYear(s.purchaseDate);
-      let interest12 = 0;
-      let interest15 = 0;
-      if (period > 0) {
-        const percentage12 = interest({
-          principal: s.purchasePrice,
-          rate: RATE_12,
-          periods: period,
-          compoundings: 1,
-        });
-        const percentage15 = interest({
-          principal: s.purchasePrice,
-          rate: RATE_15,
-          periods: period,
-          compoundings: 1,
-        });
-        interest12 = round(percentage12.interest, 2);
-        interest15 = round(percentage15.interest, 2);
-      } else {
-        let periodDays = calculatePeriodDays(s.purchaseDate);
-
-        periodDays = periodDays + 1;
-        interest12 = (s.purchasePrice * RATE_12 * periodDays) / 36525;
-        interest15 = (s.purchasePrice * RATE_15 * periodDays) / 36525;
-      }
+      const interest12 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_12);
+      const interest15 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_15);
 
       if (s.broker === "GROWW") {
         growwMF.percentage12 += interest12;
