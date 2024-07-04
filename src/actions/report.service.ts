@@ -5,7 +5,7 @@ import { connectDB } from "./base.service";
 import { interest } from "capitaljs";
 import { parse } from "date-fns";
 import { round, slice, sortBy, sumBy } from "lodash";
-import { calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
+import { calculateInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
 export type MonthlyInvestmentType = {
   month: Date;
   stocks: number;
@@ -338,8 +338,8 @@ export async function expectedReturn(exchange: string): Promise<ExpectedReturnTy
 
     stocks.forEach(s => {
       const period = calculatePeriodYear(s.purchaseDate);
-      let interest12 = 0;
-      let interest15 = 0;
+      let interest12 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_12);
+      let interest15 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_15);
       if (period > 0) {
         const percentage12 = interest({
           principal: s.purchasePrice,
@@ -406,6 +406,8 @@ export async function expectedReturn(exchange: string): Promise<ExpectedReturnTy
     });
     mutualFunds.forEach(s => {
       const period = calculatePeriodYear(s.purchaseDate);
+      // let interest12 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_12);
+      // let interest15 = calculateInterest(s.purchaseDate, s.purchasePrice, RATE_15);
       let interest12 = 0;
       let interest15 = 0;
       if (period > 0) {
@@ -430,6 +432,8 @@ export async function expectedReturn(exchange: string): Promise<ExpectedReturnTy
         interest12 = (s.purchasePrice * RATE_12 * periodDays) / 36525;
         interest15 = (s.purchasePrice * RATE_15 * periodDays) / 36525;
       }
+
+      // console.log(`interest12 : ${interest12}, interest12Temp: ${interest12Temp}`);
 
       if (s.broker === "GROWW") {
         growwMF.percentage12 += interest12;

@@ -2,7 +2,7 @@
 
 import { QueryTypes } from "sequelize";
 import { connectDB } from "./base.service";
-import { calculateCAGR, calculateInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest, calculateXIRR } from "@/lib/financial";
+import { calculateCAGR, calculateCompoundingInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest, calculateXIRR } from "@/lib/financial";
 import { round } from "lodash";
 import { parseISO } from "date-fns";
 import { StockOrMutualFundType } from "@/lib/constants";
@@ -93,11 +93,11 @@ export async function getPurchaseDetail(type: StockOrMutualFundType, id: number)
       // calculate growth rate
       const period = calculatePeriodYear(investmentDT);
       if (period > 0) {
-        growthRate.percentage10 += calculateInterest(e.netAmount, 10, period);
-        growthRate.percentage12 += calculateInterest(e.netAmount, 12, period);
-        growthRate.percentage15 += calculateInterest(e.netAmount, 15, period);
-        growthRate.percentage18 += calculateInterest(e.netAmount, 18, period);
-        growthRate.percentage24 += calculateInterest(e.netAmount, 24, period);
+        growthRate.percentage10 += calculateCompoundingInterest(e.netAmount, 10, period);
+        growthRate.percentage12 += calculateCompoundingInterest(e.netAmount, 12, period);
+        growthRate.percentage15 += calculateCompoundingInterest(e.netAmount, 15, period);
+        growthRate.percentage18 += calculateCompoundingInterest(e.netAmount, 18, period);
+        growthRate.percentage24 += calculateCompoundingInterest(e.netAmount, 24, period);
       } else {
         let periodDays = calculatePeriodDays(investmentDT);
         periodDays = periodDays + 1;
