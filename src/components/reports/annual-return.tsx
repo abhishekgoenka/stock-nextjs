@@ -5,10 +5,9 @@ import { useEffect, useState } from "react";
 import { useStockSyncStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
 import { AnnualReturnType } from "@/models/annual-return.model";
-import { getAnnualReturn, updateCurrentYearReturn } from "@/actions/annual-return.service";
+import { getAnnualReturn } from "@/actions/annual-return.service";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { toastDBSaveSuccess } from "../shared/toast-message";
 
 export default function AnnualReturn() {
   const [annualReturns, setAnnualReturns] = useState<AnnualReturnType[]>([]);
@@ -25,11 +24,6 @@ export default function AnnualReturn() {
     return <div>Not found!!!</div>;
   }
 
-  const updateCurrentYearReturnHandler = async () => {
-    await updateCurrentYearReturn(exchange);
-    toastDBSaveSuccess();
-  };
-
   return (
     <Table className="caption-top">
       <TableCaption>
@@ -40,9 +34,6 @@ export default function AnnualReturn() {
               <Link className="w-full" href="/reports/annual-return/create" rel="noopener noreferrer">
                 Add Annual Return
               </Link>
-            </Button>
-            <Button variant={"secondary"} onClick={updateCurrentYearReturnHandler}>
-              Update current year return
             </Button>
           </div>
         </div>

@@ -38,19 +38,18 @@ export function calculateInterest(purchaseDate: Date, principal: number, rate: n
   let interestValue = 0;
   if (periods > 0) {
     // more then 1 year. Calculate CAGR
-    const compoundInterest = interest({
+    interestValue = interest({
       principal,
       rate,
       periods,
       compoundings: 1,
     }).interest;
-    interestValue = round(compoundInterest, 2);
   } else {
     let periodDays = calculatePeriodDays(purchaseDate);
     periodDays++;
     interestValue = (principal * rate * periodDays) / 36525;
   }
-  return interestValue;
+  return round(interestValue, 2);
 }
 
 export function calculateSimpleInterest(purchasePrice: number, periodDays: number, rate: number): number {
