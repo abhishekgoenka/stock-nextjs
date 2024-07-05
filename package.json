@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
+    "test:ci": "vitest run",
     "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage",
     "update:yahoo": "npm i yahoo-finance2",

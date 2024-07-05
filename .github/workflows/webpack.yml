@@ -34,5 +34,8 @@ jobs:
       - name: "Check lint errors"
         run: npm run lint
 
+      - name: "Run unit test"
+        run: npm run test:ci
+
       - name: "Build code"
         run: npm run build
