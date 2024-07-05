@@ -13,6 +13,9 @@ import { addMF, updateMF } from "@/actions/mutual-fund.service";
 import { MutualFundType } from "@/models/mutual-fund.model";
 import { Switch } from "../ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const mutualFundFormSchema = z.object({
   name: z.string().min(1),
@@ -152,7 +155,12 @@ export default function AddModifyMutualFund({ defaultValues, id }: AddModifyMutu
               name="symbol"
               render={({ field }) => (
                 <FormItem className="w-1/3">
-                  <FormLabel>Symbol</FormLabel>
+                  <FormLabel>
+                    Symbol{" "}
+                    <Link className="w-full" href="https://www.mfapi.in/" rel="noopener noreferrer" target="_blank">
+                      <FontAwesomeIcon icon={faCircleInfo} />
+                    </Link>
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Symbol" {...field} />
                   </FormControl>
