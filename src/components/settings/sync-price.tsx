@@ -5,8 +5,10 @@ import { Label } from "../ui/label";
 import { Progress } from "../ui/progress";
 import { round } from "lodash";
 import { useState } from "react";
-import { syncStockPrice } from "@/actions/setting.service";
+import { getUSAStockPrice, syncStockPrice } from "@/actions/setting.service";
 import { getMFs, updateMF } from "@/actions/mutual-fund.service";
+import yahooFinance from "yahoo-finance2";
+import { toast } from "../ui/use-toast";
 
 type FetchStatus = {
   isLoading: boolean;
@@ -63,12 +65,43 @@ export default function SyncPrices() {
     setFetchStatus(prev => ({ ...prev, isLoading: false, name: "" }));
   };
 
+  const handleSyncUSAStockPrice = async () => {
+    setFetchStatus(prev => ({ ...prev, isLoading: true }));
+    const companies = await getCompanies();
+    const nscCompanies = companies.filter(e => e.exchange === "NASDAQ");
+    let index = 1;
+    for (const company of nscCompanies) {
+      const percentage = round((index * 100) / nscCompanies.length, 0);
+      setFetchStatus(prev => ({ ...prev, name: company.name, percentage }));
+
+      //get price
+      const quote = await getUSAStockPrice(company.symbol);
+      if (quote) {
+        //update price
+        company.currentPrice = quote;
+        await updateCompany(company);
+      } else {
+        toast({
+          title: "Error",
+          description: "The yahooFinance package encountered an error.",
+          variant: "destructive",
+        });
+        break;
+      }
+      index++;
+    }
+
+    setFetchStatus(prev => ({ ...prev, isLoading: false, name: "" }));
+  };
+
   return (
     <div>
       <div className="flex gap-4">
         <Button onClick={handleSyncStockPrice}>Sync Stock Price</Button>
         <Button onClick={handleSyncMutualFundPrice}>Sync Mutual Fund Price</Button>
-        <Button variant="secondary">Sync USA Stock Price</Button>
+        <Button variant="secondary" onClick={handleSyncUSAStockPrice}>
+          Sync USA Stock Price
+        </Button>
       </div>
       {fetchStatus.isLoading && (
         <div className="mt-4">

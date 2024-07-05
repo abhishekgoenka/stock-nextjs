@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "update:yahoo": "npm i yahoo-finance2",
     "prettier:format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "prettier:check": "prettier --check \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "prepare": "husky"
@@ -59,6 +60,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "xirr": "^1.1.0",
+    "yahoo-finance2": "^2.11.3",
     "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },

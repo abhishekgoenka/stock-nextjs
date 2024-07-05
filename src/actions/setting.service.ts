@@ -6,12 +6,18 @@
 // import axios from "axios";
 import { NseIndia } from "stock-nse-india";
 import { EquityDetails } from "stock-nse-india/build/interface";
+import yahooFinance from "yahoo-finance2";
 // import Company from "../models/company.model";
 // import { CompanyService } from "./company.service";
 // import MutualFund from "../models/mutual-fund.model";
 // import { MutualFundService } from "./mutual-fund.service";
 // import yahooFinance from "yahoo-finance2";
 // import { Logger } from "../helpers/logger";
+
+export async function getUSAStockPrice(symbol: string): Promise<number | undefined> {
+  const quote = await yahooFinance.quoteSummary(symbol);
+  return quote?.price?.regularMarketPrice;
+}
 
 export async function syncStockPrice(symbol: string): Promise<EquityDetails> {
   const nseIndia = new NseIndia();
