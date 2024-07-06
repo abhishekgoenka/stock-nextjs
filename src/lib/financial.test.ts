@@ -1,6 +1,6 @@
 import { cleanup } from "@testing-library/react";
 import { describe, it, expect, afterEach } from "vitest";
-import { calculateCAGR, calculateInterest, customDifferenceInDays, customDifferenceInYears } from "./financial";
+import { calculateCAGR, calculateInterest, calculateXIRR, customDifferenceInDays, customDifferenceInYears } from "./financial";
 import { differenceInDays, sub } from "date-fns";
 import { round } from "lodash";
 
@@ -67,5 +67,35 @@ describe("Financial Methods", () => {
     // 365 days
     interest = calculateInterest(sub(new Date(), { days: 365 }), 5000, 12);
     expect(interest).toBe(round(5601.23 - 5000, 2));
+  });
+
+  it("should calculate XIRR", async () => {
+    // 1 month of investment
+    let value = [
+      { amount: -5000, when: new Date(2024, 5, 1) },
+      { amount: 6000, when: new Date(2024, 6, 5) },
+    ];
+    let interest = calculateXIRR(value);
+    expect(interest).toBe(6.080011529539937);
+
+    // 1 year of investment
+    value = [
+      { amount: -5000, when: new Date(2024, 5, 1) },
+      { amount: 6000, when: new Date(2025, 7, 1) },
+    ];
+    interest = calculateXIRR(value);
+    expect(interest).toBe(0.16907691913316417);
+
+    // when only 1 value is passed in array
+    value = [{ amount: -5000, when: new Date(2024, 5, 1) }];
+    interest = calculateXIRR(value);
+    expect(interest).toBe(0);
+
+    // when negative value is not passed
+    value = [
+      { amount: 5000, when: new Date(2024, 5, 1) },
+      { amount: 6000, when: new Date(2025, 7, 1) },
+    ];
+    expect(() => calculateXIRR(value)).toThrowError("Transactions must not all be nonnegative");
   });
 });
