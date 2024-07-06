@@ -1,6 +1,6 @@
 // import moment = require("moment");
 import { interest, compoundAnnualGrowthRate } from "capitaljs";
-import { differenceInDays, differenceInYears, interval } from "date-fns";
+import { differenceInDays, differenceInYears } from "date-fns";
 import { round } from "lodash";
 var xirr = require("xirr");
 
@@ -12,10 +12,9 @@ var xirr = require("xirr");
  * @returns CAGR percentage
  */
 export function calculateCAGR(purchaseDate: Date, startValue: number, endValue: number): number {
-  // const period = moment().diff(moment(purchaseDate, "YYYY-MM-DD"), "years");
   const period = differenceInYears(new Date(), purchaseDate);
   let rate = 0;
-  if (period > 0 && endValue > 0) {
+  if (period > 0) {
     rate = compoundAnnualGrowthRate({
       startValue,
       endValue,
@@ -25,45 +24,26 @@ export function calculateCAGR(purchaseDate: Date, startValue: number, endValue: 
   return rate;
 }
 
-export function calculatePeriodYear(purchaseDate: Date): number {
+export function customDifferenceInYears(purchaseDate: Date): number {
   return differenceInYears(new Date(), purchaseDate);
 }
 
-export function calculatePeriodDays(purchaseDate: Date): number {
+export function customDifferenceInDays(purchaseDate: Date): number {
   return differenceInDays(new Date(), purchaseDate);
 }
 
 export function calculateInterest(purchaseDate: Date, principal: number, rate: number): number {
-  const periods = calculatePeriodYear(purchaseDate);
+  const periods = customDifferenceInYears(purchaseDate);
   let interestValue = 0;
   if (periods > 0) {
     // more then 1 year. Calculate CAGR
-    interestValue = interest({
-      principal,
-      rate,
-      periods,
-      compoundings: 1,
-    }).interest;
+    interestValue = getCompountedInterest(principal, rate, periods).interest;
   } else {
-    let periodDays = calculatePeriodDays(purchaseDate);
+    let periodDays = customDifferenceInDays(purchaseDate);
     periodDays++;
     interestValue = (principal * rate * periodDays) / 36525;
   }
   return round(interestValue, 2);
-}
-
-export function calculateSimpleInterest(purchasePrice: number, periodDays: number, rate: number): number {
-  return (purchasePrice * rate * periodDays) / 36525;
-}
-
-export function calculateCompoundingInterest(amount: number, rate: number, period: number): number {
-  const r = interest({
-    principal: amount,
-    rate,
-    periods: period,
-    compoundings: 1,
-  });
-  return round(r.interest, 2);
 }
 
 export function calculateXIRR(val: Array<{ amount: number; when: Date }>): number {
