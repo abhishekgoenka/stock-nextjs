@@ -7,7 +7,6 @@ import { round } from "lodash";
 import { useState } from "react";
 import { getUSAStockPrice, syncStockPrice } from "@/actions/setting.service";
 import { getMFs, updateMF } from "@/actions/mutual-fund.service";
-import yahooFinance from "yahoo-finance2";
 import { toast } from "../ui/use-toast";
 
 type FetchStatus = {
