@@ -1,7 +1,7 @@
 import { cleanup } from "@testing-library/react";
 import { describe, it, expect, afterEach } from "vitest";
 import { calculateCAGR, calculateInterest, calculateXIRR, customDifferenceInDays, customDifferenceInYears } from "./financial";
-import { differenceInDays, sub } from "date-fns";
+import { sub } from "date-fns";
 import { round } from "lodash";
 
 describe("Financial Methods", () => {
