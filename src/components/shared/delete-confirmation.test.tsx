@@ -3,7 +3,7 @@ import { describe, it, expect, afterEach, vi } from "vitest";
 import { DeleteConfirmation } from "./delete-confirmation";
 import userEvent from "@testing-library/user-event";
 
-describe("NumberFormater", () => {
+describe("DeleteConfirmation", () => {
   afterEach(() => {
     cleanup();
   });

@@ -2,10 +2,9 @@
 
 import { QueryTypes } from "sequelize";
 import { connectDB } from "./base.service";
-import { interest } from "capitaljs";
 import { parse } from "date-fns";
 import { round, slice, sortBy, sumBy } from "lodash";
-import { calculateInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest } from "@/lib/financial";
+import { calculateInterest } from "@/lib/financial";
 export type MonthlyInvestmentType = {
   month: Date;
   stocks: number;

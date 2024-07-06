@@ -2,7 +2,7 @@
 
 import { QueryTypes } from "sequelize";
 import { connectDB } from "./base.service";
-import { calculateCAGR, calculateCompoundingInterest, calculatePeriodDays, calculatePeriodYear, calculateSimpleInterest, calculateXIRR } from "@/lib/financial";
+import { calculateCAGR, calculateInterest, calculateXIRR } from "@/lib/financial";
 import { orderBy, round } from "lodash";
 import { parseISO } from "date-fns";
 import { StockOrMutualFundType } from "@/lib/constants";
@@ -90,24 +90,13 @@ export async function getPurchaseDetail(type: StockOrMutualFundType, id: number)
       e.XIRR = rate * 100;
       e.CAGR = calculateCAGR(investmentDT, e.price, e.currentPrice);
 
-      // calculate growth rate
-      const period = calculatePeriodYear(investmentDT);
-      if (period > 0) {
-        growthRate.percentage10 += calculateCompoundingInterest(e.netAmount, 10, period);
-        growthRate.percentage12 += calculateCompoundingInterest(e.netAmount, 12, period);
-        growthRate.percentage15 += calculateCompoundingInterest(e.netAmount, 15, period);
-        growthRate.percentage18 += calculateCompoundingInterest(e.netAmount, 18, period);
-        growthRate.percentage24 += calculateCompoundingInterest(e.netAmount, 24, period);
-      } else {
-        let periodDays = calculatePeriodDays(investmentDT);
-        periodDays = periodDays + 1;
-        growthRate.percentage10 += calculateSimpleInterest(e.netAmount, periodDays, 10);
-        growthRate.percentage12 += calculateSimpleInterest(e.netAmount, periodDays, 12);
-        growthRate.percentage15 += calculateSimpleInterest(e.netAmount, periodDays, 15);
-        growthRate.percentage18 += calculateSimpleInterest(e.netAmount, periodDays, 18);
-        growthRate.percentage24 += calculateSimpleInterest(e.netAmount, periodDays, 24);
-      }
+      growthRate.percentage10 += calculateInterest(investmentDT, e.netAmount, 10);
+      growthRate.percentage12 += calculateInterest(investmentDT, e.netAmount, 12);
+      growthRate.percentage15 += calculateInterest(investmentDT, e.netAmount, 15);
+      growthRate.percentage18 += calculateInterest(investmentDT, e.netAmount, 18);
+      growthRate.percentage24 += calculateInterest(investmentDT, e.netAmount, 24);
     });
+
     totalXIRRData.push({ amount: qty * currentPrice, when: new Date() });
     const returns = qty * currentPrice - investedValue;
     const avgPrice = investedValue / qty;
