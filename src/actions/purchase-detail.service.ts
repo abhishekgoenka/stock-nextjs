@@ -179,11 +179,9 @@ export async function getPurchaseDetailByBroker(broker: string): Promise<any> {
   result = orderBy(result, "purchaseDate", "desc");
 
   let investedValue = 0;
-  let qty = 0;
   let totalProfit = 0;
   result.forEach(e => {
     investedValue += e.netAmount;
-    qty += e.qty;
     const investmentDT = parseISO(e.purchaseDate);
 
     let na = e.netAmount * -1;

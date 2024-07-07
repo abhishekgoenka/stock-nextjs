@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "next lint",
     "test": "vitest",
-    "test:ci": "vitest run",
-    "test:ui": "vitest --ui",
+    "test:unit:ci": "vitest run",
+    "test:unit:ui": "vitest --ui",
+    "test:integration": "playwright test",
+    "test:integration:ui": "playwright test --ui",
     "coverage": "vitest run --coverage",
     "update:yahoo": "npm i yahoo-finance2",
     "prettier:format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
@@ -69,6 +71,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.45.1",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",

@@ -2,10 +2,6 @@
 
 import AnualReturn, { AnnualReturnType } from "@/models/annual-return.model";
 import { connectDB } from "./base.service";
-import { EXCHANGE_TYPE } from "@/lib/constants";
-import { getYear } from "date-fns";
-import { QueryTypes } from "sequelize";
-import { calculateInterest } from "@/lib/financial";
 
 export async function getAnnualReturn(exchange: string): Promise<AnnualReturnType[]> {
   await connectDB();

@@ -24,7 +24,7 @@ jobs:
         name: "Checkout repository"
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -35,7 +35,7 @@ jobs:
         run: npm run lint
 
       - name: "Run unit test"
-        run: npm run test:ci
+        run: npm run test:unit:ci
 
       - name: "Build code"
         run: npm run build
