@@ -8,6 +8,7 @@ export default defineConfig({
   test: {
     // 👋 add the line below to add jsdom to vite
     environment: "jsdom",
+    exclude: ["**/e2e/**", "**/tests-examples/**", "**/node_modules/**"],
   },
   resolve: {
     alias: [{ find: "@", replacement: resolve(__dirname, "./src") }],
