@@ -2,24 +2,19 @@ import { test, expect } from "@playwright/test";
 
 const companyName = "Dummy company";
 
-test("has title", async ({ page }) => {
+test.beforeEach(async ({ page }) => {
+  // Runs before each test and signs in each page.
   await page.goto("http://localhost:3001/");
-
   await page.getByText("Profile Management").hover();
-
   await page.getByText("Company Information").click();
+});
 
+test("has title", async ({ page }) => {
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/StockSync : Companies/);
 });
 
 test("add new company", async ({ page }) => {
-  await page.goto("http://localhost:3001/");
-
-  await page.getByText("Profile Management").hover();
-
-  await page.getByText("Company Information").click();
-
   // should have add company button
   await expect(page.getByRole("button", { name: "Add Company" })).toBeVisible();
 
