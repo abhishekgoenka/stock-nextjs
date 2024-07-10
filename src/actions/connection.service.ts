@@ -6,6 +6,7 @@ import MutualFund from "@/models/mutual-fund.model";
 import Deposit from "@/models/deposit.model";
 import Sale from "@/models/sale.model";
 import AnnualReturn from "@/models/annual-return.model";
+import path from "node:path";
 
 export class ConnectionService {
   static sequelize: Sequelize;
@@ -14,10 +15,15 @@ export class ConnectionService {
 
   static async generateConnection() {
     try {
+      // console.log("path", process.env.PATH);
+      // console.log("__dirname", __dirname);
+      // console.log("cwd", process.cwd());
+      const dbPath = path.join(process.cwd(), "portfolio.test.sqlite");
       ConnectionService.sequelize = new Sequelize({
         logging: false,
         dialect: "sqlite",
-        storage: "portfolio.sqlite",
+        // storage: "portfolio.sqlite",
+        storage: dbPath,
         models: [Company, StockInvestment, MutualFund, MutualFundInvestment, Deposit, Sale, AnnualReturn],
       });
       await ConnectionService.sequelize.authenticate();
