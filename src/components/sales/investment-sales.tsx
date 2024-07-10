@@ -110,7 +110,7 @@ export default function InvestmentSales({ defaultValues, type, companyID, invest
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
-                      <Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                      <Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")} disabled>
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
@@ -180,7 +180,7 @@ export default function InvestmentSales({ defaultValues, type, companyID, invest
               <FormItem>
                 <FormLabel>Purchase Price</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Purchase Price" {...field} />
+                  <Input type="number" placeholder="Purchase Price" {...field} disabled />
                 </FormControl>
                 <FormMessage />
               </FormItem>
