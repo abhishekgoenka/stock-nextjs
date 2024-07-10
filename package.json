@@ -12,6 +12,7 @@
     "test:unit:ui": "vitest --ui",
     "test:integration": "playwright test",
     "test:integration:ui": "playwright test --ui",
+    "test:integration:codegen": "playwright codegen localhost:3001",
     "coverage": "vitest run --coverage",
     "update:yahoo": "npm i yahoo-finance2",
     "prettier:format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
