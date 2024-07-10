@@ -11,10 +11,12 @@
     "test:unit:ci": "vitest run",
     "test:unit:ui": "vitest --ui",
     "test:integration": "playwright test",
+    "test:integration:debug": "playwright test example.spec.ts:9 --debug",
     "test:integration:ui": "playwright test --ui",
     "test:integration:codegen": "playwright codegen localhost:3001",
     "coverage": "vitest run --coverage",
     "update:yahoo": "npm i yahoo-finance2",
+    "update:playwright": "npm install -D @playwright/test@latest",
     "prettier:format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "prettier:check": "prettier --check \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "prepare": "husky"
