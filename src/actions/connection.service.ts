@@ -22,8 +22,8 @@ export class ConnectionService {
       ConnectionService.sequelize = new Sequelize({
         logging: false,
         dialect: "sqlite",
-        storage: "portfolio.sqlite",
-        // storage: dbPath,
+        // storage: "portfolio.sqlite",
+        storage: dbPath,
         models: [Company, StockInvestment, MutualFund, MutualFundInvestment, Deposit, Sale, AnnualReturn],
       });
       await ConnectionService.sequelize.authenticate();
