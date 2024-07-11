@@ -15,9 +15,6 @@ export class ConnectionService {
 
   static async generateConnection() {
     try {
-      // console.log("path", process.env.PATH);
-      // console.log("__dirname", __dirname);
-      // console.log("cwd", process.cwd());
       const dbPath = path.join(process.cwd(), "portfolio.test.sqlite");
       ConnectionService.sequelize = new Sequelize({
         logging: false,
