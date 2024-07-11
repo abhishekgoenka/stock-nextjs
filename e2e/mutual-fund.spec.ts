@@ -25,7 +25,8 @@ test("add new mutual fund", async ({ page }) => {
   await page.getByPlaceholder("Mutual fund name").fill(mutualFundName);
   await page.getByPlaceholder("URL").fill("http://www.test.com");
   await page.getByLabel("Exchange").click();
-  await page.getByLabel("NSE").click();
+  await page.keyboard.down("ArrowDown");
+  await page.keyboard.press("Enter");
   await page.getByPlaceholder("Symbol").click();
   await page.getByPlaceholder("Symbol").fill("test");
   await page.getByLabel("Index fund").click();
@@ -37,7 +38,7 @@ test("add new mutual fund", async ({ page }) => {
   await expect(page.getByText("Your changes have been saved successfully", { exact: true })).toBeVisible();
   await page.waitForTimeout(1000);
 
-  //validate the new company
+  //validate the new mutual fund
   await page.reload();
   await page.getByPlaceholder("Filter mutual fund...").pressSequentially(mutualFundName, { delay: 500 });
   await page.getByRole("button", { name: "View" }).click();
