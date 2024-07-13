@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { selectCombo } from "./helper";
 
 const mutualFundName = "test mutual fund";
 
@@ -22,16 +23,18 @@ test("add new mutual fund", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Add Mutual Fund" })).toBeVisible();
 
   // add new mutual fund
-  await page.getByPlaceholder("Mutual fund name").fill(mutualFundName);
+  await page.getByPlaceholder("Mutual fund name").pressSequentially(mutualFundName, { delay: 500 });
   await page.getByPlaceholder("URL").fill("http://www.test.com");
-  await page.getByLabel("Exchange").click();
-  await page.keyboard.down("ArrowDown");
-  await page.keyboard.press("Enter");
+  // await page.getByLabel("Exchange").click();
+  // await page.keyboard.down("ArrowDown");
+  // await page.keyboard.press("Enter");
+  await selectCombo(page, "Exchange", "NSE");
   await page.getByPlaceholder("Symbol").click();
   await page.getByPlaceholder("Symbol").fill("test");
   await page.getByLabel("Index fund").click();
   await page.getByPlaceholder("Equity").fill("99");
   await page.getByPlaceholder("Large cap").fill("1");
+  await page.waitForTimeout(1000);
   await page.getByRole("button", { name: "Save" }).click();
   await page.waitForTimeout(1000);
 

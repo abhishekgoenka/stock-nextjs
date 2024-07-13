@@ -32,5 +32,5 @@ test("add stock purchase", async ({ page }) => {
   await page.getByRole("button", { name: "Broker" }).first().click();
   await page.getByRole("option", { name: "GROWW" }).locator("div").click();
   await page.getByRole("button", { name: "Go to last page" }).click();
-  await page.getByText(companyName).nth(1).click();
+  await page.getByText(companyName).first().click();
 });

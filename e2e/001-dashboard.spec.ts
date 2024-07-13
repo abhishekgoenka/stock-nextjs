@@ -17,8 +17,8 @@ test("get overview link", async ({ page }) => {
   const totalInvestmentPage = await page.getByRole("heading", { name: "Total Investment" });
   await expect(totalInvestmentPage.first()).toBeVisible();
 
-  await expect(await page.getByText("₹2,17,04,485.46")).toBeVisible();
-  await expect(await page.getByText("$25,789.27")).toBeVisible();
-  await expect(await page.getByText("₹47,89,131.43")).toBeVisible();
-  await expect(await page.getByText("$12,726.18")).toBeVisible();
+  await expect(page.getByText("₹2,17,04,485.46")).toBeVisible();
+  await expect(page.getByText("$25,789.27")).toBeVisible();
+  await expect(page.getByText("₹47,89,131.43")).toBeVisible();
+  await expect(page.getByText("$12,726.18")).toBeVisible();
 });
