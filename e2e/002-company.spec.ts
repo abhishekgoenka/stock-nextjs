@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { selectCombo } from "./helper";
 
 const companyName = "Dummy company";
 
@@ -23,20 +24,22 @@ test("add new company", async ({ page }) => {
 
   // add new company
 
-  await page.getByPlaceholder("Company name").fill(companyName);
-  await page.getByLabel("Sector").click();
-  await page.keyboard.down("ArrowDown");
-  await page.keyboard.down("ArrowDown");
-  await page.keyboard.press("Enter");
+  await page.getByLabel("Company").pressSequentially(companyName);
+  // await page.getByLabel("Sector").click();
+  // await page.keyboard.down("ArrowDown");
+  // await page.keyboard.down("ArrowDown");
+  // await page.keyboard.press("Enter");
 
+  await selectCombo(page, "Sector", "Retailing");
   await page.getByLabel("Type").click();
   await page.keyboard.down("ArrowDown");
   await page.keyboard.down("ArrowDown");
   await page.keyboard.press("Enter");
 
-  await page.getByLabel("Exchange").click();
-  await page.keyboard.down("ArrowDown");
-  await page.keyboard.press("Enter");
+  // await page.getByLabel("Exchange").click();
+  // await page.keyboard.down("ArrowDown");
+  // await page.keyboard.press("Enter");
+  await selectCombo(page, "Exchange", "NSE");
   await page.getByPlaceholder("Symbol").fill("Test Symbol");
   await page.getByPlaceholder("URL").fill("http:\\www.test.com");
   await page.getByRole("button", { name: "Save" }).click();
@@ -50,7 +53,7 @@ test("add new company", async ({ page }) => {
   await page.getByPlaceholder("Filter companies...").pressSequentially(companyName, { delay: 500 });
   await page.getByRole("button", { name: "Type" }).first().focus();
   await expect(page.getByRole("cell", { name: companyName })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "Commodity Chemicals" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "Retailing" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "Smallcap" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "NASDAQ" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "NSE" })).toBeVisible();
 });
