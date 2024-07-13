@@ -1,6 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
+import { selectCombo, selectDate } from "./helper";
 
-const companyName = "Clean Science & Technology";
+const companyName = "Clean Science & Technology Ltd.";
 test.beforeEach(async ({ page }) => {
   // Runs before each test and signs in each page.
   await page.goto("http://localhost:3001/");
@@ -15,30 +16,21 @@ test("has title", async ({ page }) => {
 
 test("add stock purchase", async ({ page }) => {
   await page.getByRole("link", { name: "Buy Stock" }).click();
-  // await page.getByLabel("Company").click();
-  await selectCombo(page, "Company", "Clean Science & Technology");
-  // await page.getByRole("combobox").first().click();
-  // await page.getByLabel("Clean Science & Technology").getByText("Clean Science & Technology").click();
-});
+  await selectCombo(page, "Company", companyName);
+  await selectCombo(page, "Broker", "GROWW");
+  await selectCombo(page, "Currency", "INR");
+  await selectDate(page, "Purchase Date");
+  await page.getByPlaceholder("Qty").fill("10");
+  await page.getByPlaceholder("Price").fill("10");
+  await page.getByRole("button", { name: "Save Investments" }).click();
+  await page.waitForTimeout(1000);
 
-async function selectCombo(page: Page, label: string, selectItem: string) {
-  console.log(await page.getByLabel(label).allInnerTexts());
-  await page.getByLabel(label).click();
-  await page.getByLabel(label).click();
-  let selected = false;
-  do {
-    await page.keyboard.press("Enter");
-    const currentSelectedItem = await page.getByLabel(label).textContent();
-    console.log(currentSelectedItem);
-    if (selectItem === currentSelectedItem) {
-      console.log("true", currentSelectedItem);
-      selected = true;
-    } else {
-      await page.keyboard.down("ArrowDown");
-      await page.keyboard.down("ArrowDown");
-    }
-  } while (!selected);
-  // await page.keyboard.down("ArrowDown");
-  // await page.keyboard.press("Enter");
-  console.log(await page.getByLabel(label).textContent());
-}
+  await expect(page.getByText("Your changes have been saved successfully", { exact: true })).toBeVisible();
+
+  //validate the new investment
+  await page.reload();
+  await page.getByRole("button", { name: "Broker" }).first().click();
+  await page.getByRole("option", { name: "GROWW" }).locator("div").click();
+  await page.getByRole("button", { name: "Go to last page" }).click();
+  await page.getByText(companyName).nth(1).click();
+});
