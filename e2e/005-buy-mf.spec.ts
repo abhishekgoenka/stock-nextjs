@@ -25,13 +25,15 @@ test("add mutual fund purchase", async ({ page }) => {
   await expect(page.getByText("37490.00")).toBeVisible();
   await page.getByRole("button", { name: "Save Investments" }).click();
   await page.waitForTimeout(1000);
-
   await expect(page.getByText("Your changes have been saved successfully", { exact: true })).toBeVisible();
+});
 
-  // //validate the new investment
-  // await page.reload();
-  // await page.getByRole("button", { name: "Broker" }).first().click();
-  // await page.getByRole("option", { name: "GROWW" }).locator("div").click();
-  // await page.getByRole("button", { name: "Go to last page" }).click();
-  // await page.getByText(companyName).first().click();
+test("search mutual fund purchase", async ({ page }) => {
+  await expect(async () => {
+    await page.getByRole("button", { name: "Broker" }).first().click();
+    await expect(page.getByRole("option", { name: "UPSTOX" }).locator("div")).toBeVisible();
+  }).toPass();
+  await page.getByRole("option", { name: "UPSTOX" }).locator("div").click();
+  await page.getByPlaceholder("Filter mutual funds...").fill(mutualFundName);
+  await expect(await page.getByRole("cell", { name: mutualFundName }).count()).toBe(6);
 });
