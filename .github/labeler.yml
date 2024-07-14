@@ -1,0 +1,9 @@
+workflows:
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**/*"
+db:
+  - changed-files:
+      - any-glob-to-any-file: "*.sqlite"
+e2e:
+  - changed-files:
+      - any-glob-to-any-file: "e2e/**/*"
