@@ -25,11 +25,7 @@ test("add new mutual fund", async ({ page }) => {
   // add new mutual fund
   await page.getByPlaceholder("Mutual fund name").pressSequentially(mutualFundName, { delay: 500 });
   await page.getByPlaceholder("URL").fill("http://www.test.com");
-  // await page.getByLabel("Exchange").click();
-  // await page.keyboard.down("ArrowDown");
-  // await page.keyboard.press("Enter");
   await selectCombo(page, "Exchange", "NSE");
-  await page.getByPlaceholder("Symbol").click();
   await page.getByPlaceholder("Symbol").fill("test");
   await page.getByLabel("Index fund").click();
   await page.getByPlaceholder("Equity").fill("99");
@@ -39,10 +35,10 @@ test("add new mutual fund", async ({ page }) => {
   await page.waitForTimeout(1000);
 
   await expect(page.getByText("Your changes have been saved successfully", { exact: true })).toBeVisible();
-  await page.waitForTimeout(1000);
+});
 
-  //validate the new mutual fund
-  await page.reload();
+test("filter mutual fund and remove columns from view", async ({ page }) => {
+  // await page.reload();
   await page.getByPlaceholder("Filter mutual fund...").pressSequentially(mutualFundName, { delay: 500 });
   await page.getByRole("button", { name: "View" }).click();
   await page.getByRole("menuitemcheckbox", { name: "equity" }).click();

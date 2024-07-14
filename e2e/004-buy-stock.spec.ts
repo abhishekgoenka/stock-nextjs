@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { selectCombo, selectDate } from "./helper";
 
 const companyName = "Clean Science & Technology Ltd.";
@@ -26,10 +26,13 @@ test("add stock purchase", async ({ page }) => {
   await page.waitForTimeout(1000);
 
   await expect(page.getByText("Your changes have been saved successfully", { exact: true })).toBeVisible();
+});
 
-  //validate the new investment
-  await page.reload();
-  await page.getByRole("button", { name: "Broker" }).first().click();
+test("search stock purchase", async ({ page }) => {
+  await expect(async () => {
+    await page.getByRole("button", { name: "Broker" }).first().click();
+    await expect(page.getByRole("option", { name: "GROWW" }).locator("div")).toBeVisible();
+  }).toPass();
   await page.getByRole("option", { name: "GROWW" }).locator("div").click();
   await page.getByRole("button", { name: "Go to last page" }).click();
   await page.getByText(companyName).first().click();
