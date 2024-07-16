@@ -1,19 +1,25 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 
 export async function selectCombo(page: Page, label: string, selectItem: string) {
-  await page.getByLabel(label, { exact: true }).click();
+  await expect(async () => {
+    await page.getByLabel(label, { exact: true }).click();
+    await expect(page.getByRole("option", { name: selectItem })).toBeVisible();
+  }).toPass();
+  await page.getByRole("option", { name: selectItem }).click();
+
   // await page.getByLabel(label, { exact: true }).click();
-  let selected = false;
-  do {
-    await page.keyboard.press("Enter");
-    const currentSelectedItem = await page.getByLabel(label, { exact: true }).textContent();
-    if (selectItem === currentSelectedItem) {
-      selected = true;
-    } else {
-      await page.keyboard.down("ArrowDown");
-      await page.keyboard.down("ArrowDown");
-    }
-  } while (!selected);
+  // // await page.getByLabel(label, { exact: true }).click();
+  // let selected = false;
+  // do {
+  //   await page.keyboard.press("Enter");
+  //   const currentSelectedItem = await page.getByLabel(label, { exact: true }).textContent();
+  //   if (selectItem === currentSelectedItem) {
+  //     selected = true;
+  //   } else {
+  //     await page.keyboard.down("ArrowDown");
+  //     await page.keyboard.down("ArrowDown");
+  //   }
+  // } while (!selected);
 }
 
 export async function selectDate(page: Page, label: string) {
