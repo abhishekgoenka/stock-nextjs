@@ -42,7 +42,7 @@ type AddInvestmentsProps = {
 export default function AddModifyStockInvestment({ defaultValues, id }: AddInvestmentsProps) {
   const router = useRouter();
   const [netAmount, setNetAmount] = useState(0);
-  const [companies, setCompanies] = useState<{ id: number; name: string }[]>([]);
+  const [companies, setCompanies] = useState<{ id: number; name: string; symbol: string }[]>([]);
   const form = useForm<StockInvestmentFormValues>({
     resolver: zodResolver(stockInvestmentFormSchema),
     defaultValues,
@@ -53,7 +53,7 @@ export default function AddModifyStockInvestment({ defaultValues, id }: AddInves
     async function fetchData() {
       const companies = await getCompanies();
       const companyList = companies.map(c => {
-        return { id: c.id!, name: c.name };
+        return { id: c.id!, name: c.name, symbol: c.symbol };
       });
       setCompanies(companyList);
       calculateNetAmount();
@@ -123,7 +123,7 @@ export default function AddModifyStockInvestment({ defaultValues, id }: AddInves
                 <SelectContent>
                   {companies.map(c => (
                     <SelectItem key={c.name} value={c.id.toString()}>
-                      {c.name}
+                      {c.name} ({c.symbol})
                     </SelectItem>
                   ))}
                 </SelectContent>
