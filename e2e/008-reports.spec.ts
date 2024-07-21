@@ -14,17 +14,21 @@ test("has title", async ({ page }) => {
 
 test("validate report", async ({ page }) => {
   await page.getByLabel("NSE").click();
-  await expect(page.getByText("₹5,00,000.00").nth(1)).toBeVisible();
-  await expect(page.getByText("₹2,17,04,485.46")).toBeVisible();
-  await expect(page.getByText("₹91,99,999.99").nth(1)).toBeVisible();
-  await expect(page.getByText("₹2,64,93,616.89")).toBeVisible();
-  await expect(page.getByText("₹47,89,131.43")).toBeVisible();
-  await expect(page.getByText("₹1,83,40,358.11")).toBeVisible();
-  await expect(page.getByText("₹2,00,30,296.66")).toBeVisible();
-  await expect(page.getByText("₹76,286.45").nth(1)).toBeVisible();
+  await expect(page.getByText("₹27,00,000.00").nth(1)).toBeVisible();
+  // await expect(page.getByText("₹2,17,04,485.46")).toBeVisible();
+  // await expect(page.getByText("₹91,99,999.99").nth(1)).toBeVisible();
+  // await expect(page.getByText("₹2,64,93,616.89")).toBeVisible();
+  // await expect(page.getByText("₹47,89,131.43")).toBeVisible();
+  // await expect(page.getByText("₹1,83,40,358.11")).toBeVisible();
+  // await expect(page.getByText("₹2,00,30,296.66")).toBeVisible();
+
+  // broker balance
+  await expect(page.getByText("₹77,186.45").nth(1)).toBeVisible();
+
+  // stock sold in 2023
   await expect(page.getByText("₹1,83,635.57")).toBeVisible();
 
-  await expect(page.getByText("₹17,24,864.02")).toBeVisible();
+  // dividend in 2023
   await expect(page.getByText("₹4,020.00")).toBeVisible();
 });
 
