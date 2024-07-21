@@ -27,3 +27,25 @@ test("validate report", async ({ page }) => {
   await expect(page.getByText("₹17,24,864.02")).toBeVisible();
   await expect(page.getByText("₹4,020.00")).toBeVisible();
 });
+
+test("add annual return", async ({ page }) => {
+  await page.getByRole("link", { name: "Add Annual Return" }).click();
+  await selectCombo(page, "Year", "2024");
+  await page.getByLabel("Investments").fill("1000");
+  await page.getByLabel("Expected return").fill("2000");
+  await page.getByLabel("Actual return").fill("1800");
+  await page.getByLabel("Return percentage").fill("18");
+  await page.getByLabel("Index Return").fill("17");
+  await selectCombo(page, "Exchange", "NSE");
+  await page.getByRole("button", { name: "Save" }).click();
+  await page.waitForTimeout(1000);
+  await expect(page.getByText("Your changes have been saved successfully", { exact: true })).toBeVisible();
+});
+
+test("validate annual return", async ({ page }) => {
+  await expect(page.getByRole("cell", { name: "2024", exact: true }).nth(2)).toBeVisible();
+  await expect(page.getByText("₹1,000.00")).toBeVisible();
+  await expect(page.getByText("₹2,000.00")).toBeVisible();
+  await expect(page.getByText("₹1,800.00")).toBeVisible();
+  await expect(page.getByText("18.00%")).toBeVisible();
+});
