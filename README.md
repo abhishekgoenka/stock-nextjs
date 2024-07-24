@@ -42,3 +42,17 @@ npx playwright --version
 ## Playwright
 
 https://playwright.dev/docs/release-notes
+
+## To test the update, run the outdated command. There should not be any output.
+
+```bash
+npm outdated
+ncu
+```
+
+## Updating local packages
+
+```bash
+npm update --save
+ncu -u
+```
