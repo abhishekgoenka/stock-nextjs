@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { selectCombo, selectDate } from "./helper";
 
 const mutualFundName = "Parag Parikh Flexi Cap Fund - Direct Plan - Growth";

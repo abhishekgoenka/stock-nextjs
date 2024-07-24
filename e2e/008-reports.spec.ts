@@ -1,5 +1,5 @@
-import { test, expect, Page } from "@playwright/test";
-import { selectCombo, selectDate } from "./helper";
+import { test, expect } from "@playwright/test";
+import { selectCombo } from "./helper";
 
 test.beforeEach(async ({ page }) => {
   // Runs before each test and signs in each page.
