@@ -13,13 +13,14 @@ type FetchStatus = {
   isLoading: boolean;
   percentage: number;
   name: string;
+  errorMessage?: string;
 };
 
 export default function SyncPrices() {
-  const [fetchStatus, setFetchStatus] = useState<FetchStatus>({ isLoading: false, name: "", percentage: 0 });
+  const [fetchStatus, setFetchStatus] = useState<FetchStatus>({ isLoading: false, name: "", percentage: 0, errorMessage: "" });
 
   const handleSyncStockPrice = async () => {
-    setFetchStatus(prev => ({ ...prev, isLoading: true }));
+    setFetchStatus(prev => ({ ...prev, isLoading: true, errorMessage: "" }));
     const companies = await getCompanies();
     const nscCompanies = companies.filter(e => e.exchange === "NSE");
     let index = 1;
@@ -29,6 +30,11 @@ export default function SyncPrices() {
 
       //get price
       const price = await syncStockPrice(company.symbol);
+      if (price["error"]) {
+        const errorMessage = `Company ${company.symbol} has error ${price["message"]}`;
+        setFetchStatus(prev => ({ ...prev, isLoading: false, name: "", errorMessage }));
+        break;
+      }
 
       //update price
       company.currentPrice = price.priceInfo.close;
@@ -41,7 +47,7 @@ export default function SyncPrices() {
   };
 
   const handleSyncMutualFundPrice = async () => {
-    setFetchStatus(prev => ({ ...prev, isLoading: true }));
+    setFetchStatus(prev => ({ ...prev, isLoading: true, errorMessage: "" }));
     const mfs = await getMFs();
     let index = 1;
     for (const mf of mfs) {
@@ -52,7 +58,6 @@ export default function SyncPrices() {
       const url = `https://api.mfapi.in/mf/${mf.symbol}/latest`;
       const result = await fetch(url);
       const response = await result.json();
-      console.log(response);
       if (response.data && response.status === "SUCCESS") {
         //update price
         mf.currentPrice = response.data[0].nav;
@@ -65,7 +70,7 @@ export default function SyncPrices() {
   };
 
   const handleSyncUSAStockPrice = async () => {
-    setFetchStatus(prev => ({ ...prev, isLoading: true }));
+    setFetchStatus(prev => ({ ...prev, isLoading: true, errorMessage: "" }));
     const companies = await getCompanies();
     const nscCompanies = companies.filter(e => e.exchange === "NASDAQ");
     let index = 1;
@@ -102,6 +107,11 @@ export default function SyncPrices() {
           Sync USA Stock Price
         </Button>
       </div>
+      {fetchStatus.errorMessage && (
+        <div className="mt-4">
+          <Label>Error: {fetchStatus.errorMessage}</Label>
+        </div>
+      )}
       {fetchStatus.isLoading && (
         <div className="mt-4">
           <Progress value={fetchStatus.percentage} />
