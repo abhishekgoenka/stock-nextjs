@@ -7,7 +7,6 @@ db:
 e2e:
   - changed-files:
       - any-glob-to-any-file: "e2e/**/*"
-
 package:
   - changed-files:
       - any-glob-to-any-file: "package.json"
