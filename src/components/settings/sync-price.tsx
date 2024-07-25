@@ -58,10 +58,14 @@ export default function SyncPrices() {
       const url = `https://api.mfapi.in/mf/${mf.symbol}/latest`;
       const result = await fetch(url);
       const response = await result.json();
-      if (response.data && response.status === "SUCCESS") {
+      if (response.status === "SUCCESS" && response.data && response.data.length) {
         //update price
         mf.currentPrice = response.data[0].nav;
         await updateMF(mf);
+      } else {
+        const errorMessage = `Fund ${mf.name} has error. Check ${mf.symbol} symbol`;
+        setFetchStatus(prev => ({ ...prev, isLoading: false, name: "", errorMessage }));
+        break;
       }
       index++;
     }
