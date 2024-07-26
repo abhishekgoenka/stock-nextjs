@@ -26,7 +26,7 @@ test("add new mutual fund", async ({ page }) => {
   await page.getByPlaceholder("Mutual fund name").pressSequentially(mutualFundName, { delay: 500 });
   await page.getByPlaceholder("URL").fill("http://www.test.com");
   await selectCombo(page, "Exchange", "NSE");
-  await page.getByPlaceholder("Symbol").fill("test");
+  await page.getByPlaceholder("Symbol").fill("12345");
   await page.getByLabel("Index fund").click();
   await page.getByPlaceholder("Equity").fill("99");
   await page.getByPlaceholder("Large cap").fill("1");

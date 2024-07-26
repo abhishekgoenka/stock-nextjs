@@ -27,7 +27,7 @@ test("add new company", async ({ page }) => {
   await selectCombo(page, "Sector", "Retailing");
   await selectCombo(page, "Type", "Smallcap");
   await selectCombo(page, "Exchange", "NSE");
-  await page.getByPlaceholder("Symbol").fill("Test Symbol");
+  await page.getByPlaceholder("Symbol").fill("TestSymbol");
   await page.getByPlaceholder("URL").fill("http:\\www.test.com");
   await page.getByRole("button", { name: "Save" }).click();
   await page.waitForTimeout(1000);
