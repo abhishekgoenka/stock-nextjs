@@ -1,10 +1,11 @@
 "use client";
 
-import { PurchaseDetailType, getPurchaseDetail } from "@/actions/purchase-detail.service";
+import { InvestmentDetailType, PurchaseDetailType, getPurchaseDetail } from "@/actions/purchase-detail.service";
 import NumberFormater, { CustomNumericFormat } from "@/components/shared/number-format";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StockOrMutualFundType } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -29,6 +30,7 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
   }
 
   const currency = data?.data[0]?.currency;
+  const profit = (r: InvestmentDetailType) => r.currentAmount - r.netAmount;
   return (
     <>
       <Table className="caption-top">
@@ -116,8 +118,8 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
               <TableCell className="text-right">
                 <CustomNumericFormat value={r.CAGR} />
               </TableCell>
-              <TableCell className="text-right text-primary">
-                <NumberFormater value={r.currentAmount - r.netAmount} currency={r.currency} />
+              <TableCell className={cn("text-right ", { "text-primary": profit(r) > 0 }, { "text-destructive": profit(r) < 0 })}>
+                <NumberFormater value={profit(r)} currency={r.currency} />
               </TableCell>
               <TableCell className="text-center ">
                 <Button variant={"link"}>

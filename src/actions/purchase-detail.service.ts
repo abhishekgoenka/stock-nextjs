@@ -14,7 +14,7 @@ type InvestmentGrouthRate = {
   percentage18: number;
   percentage24: number;
 };
-type InvestmentDetailType = {
+export type InvestmentDetailType = {
   id: number;
   name: string;
   purchaseDate: string;
