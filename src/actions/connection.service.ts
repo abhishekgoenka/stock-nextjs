@@ -15,6 +15,7 @@ export class ConnectionService {
 
   static async generateConnection() {
     try {
+      // eslint-disable-next-line no-unused-vars
       const dbPath = path.join(process.cwd(), "portfolio.test.sqlite");
       ConnectionService.sequelize = new Sequelize({
         logging: false,
