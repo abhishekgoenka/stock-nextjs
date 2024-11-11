@@ -36,7 +36,7 @@ export default function SyncPrices() {
         break;
       }
 
-      //update price
+      //update price/
       company.currentPrice = price.priceInfo.close;
       await updateCompany(company);
 

@@ -8,6 +8,9 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
     steps:
       - uses: actions/checkout@v4
       # Replace all the occurrences of '{0}' with '42' in the README.md file
@@ -17,9 +20,10 @@ jobs:
           files: "src/actions/connection.service.ts"
           search-text: "portfolio.sqlite"
           replacement-text: "portfolio.test.sqlite"
-      - uses: actions/setup-node@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
