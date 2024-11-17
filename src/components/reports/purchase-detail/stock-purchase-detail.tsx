@@ -41,7 +41,7 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
               Current price : <NumberFormater className="text-black" value={data.currentPrice} currency={currency} />
             </div>
             <div>
-              XIRR : <CustomNumericFormat className="text-black" value={data.totalXIRR} />
+              XIRR : <CustomNumericFormat className="text-black" value={data.totalXIRR} suffix="%" />
             </div>
             <div>
               Profit/Loss : <NumberFormater className="text-black" value={data.returns} currency={currency} />
