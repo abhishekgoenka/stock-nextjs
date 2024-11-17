@@ -64,7 +64,7 @@ export async function getPurchaseDetail(type: StockOrMutualFundType, id: number)
     let qty = 0;
     const totalXIRRData: {
       amount: number;
-      when: Date;
+      date: Date;
     }[] = [];
     const growthRate: InvestmentGrouthRate = {
       percentage10: 0,
@@ -81,12 +81,12 @@ export async function getPurchaseDetail(type: StockOrMutualFundType, id: number)
       let rate = 0;
       if (e.netAmount !== 0) {
         rate = calculateXIRR([
-          { amount: e.netAmount * -1, when: investmentDT },
-          { amount: e.currentAmount, when: new Date() },
+          { amount: Math.round(e.netAmount) * -1, date: investmentDT },
+          { amount: Math.round(e.currentAmount), date: new Date() },
         ]);
       }
 
-      totalXIRRData.push({ amount: e.netAmount * -1, when: investmentDT });
+      totalXIRRData.push({ amount: Math.round(e.netAmount) * -1, date: investmentDT });
       e.XIRR = rate * 100;
       e.CAGR = calculateCAGR(investmentDT, e.price, e.currentPrice);
 
@@ -97,11 +97,10 @@ export async function getPurchaseDetail(type: StockOrMutualFundType, id: number)
       growthRate.percentage24 += calculateInterest(investmentDT, e.netAmount, 24);
     });
 
-    totalXIRRData.push({ amount: qty * currentPrice, when: new Date() });
+    totalXIRRData.push({ amount: Math.round(qty * currentPrice), date: new Date() });
     const returns = qty * currentPrice - investedValue;
     const avgPrice = investedValue / qty;
     const totalXIRR = calculateXIRR(totalXIRRData) * 100;
-
     growthRate.percentage10 = round(growthRate.percentage10, 2);
     growthRate.percentage12 = round(growthRate.percentage12, 2);
     growthRate.percentage15 = round(growthRate.percentage15, 2);
@@ -188,8 +187,8 @@ export async function getPurchaseDetailByBroker(broker: string): Promise<any> {
     let rate = 0;
     if (e.netAmount !== 0) {
       rate = calculateXIRR([
-        { amount: na, when: investmentDT },
-        { amount: e.currentAmount, when: new Date() },
+        { amount: na, date: investmentDT },
+        { amount: e.currentAmount, date: new Date() },
       ]);
     }
 

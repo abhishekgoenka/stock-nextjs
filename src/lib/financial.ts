@@ -1,8 +1,10 @@
 // import moment = require("moment");
 import { interest, compoundAnnualGrowthRate } from "capitaljs";
 import { differenceInDays, differenceInYears } from "date-fns";
-import { round } from "lodash";
-var xirr = require("xirr");
+import { orderBy, round } from "lodash";
+// var xirr = require("xirr");
+import { xirr, convertRate, RateInterval } from "node-irr";
+// const { xirr } = require("node-irr");
 
 /**
  * CAGR is 0 if investment is less then a year
@@ -46,11 +48,14 @@ export function calculateInterest(purchaseDate: Date, principal: number, rate: n
   return round(interestValue, 2);
 }
 
-export function calculateXIRR(val: Array<{ amount: number; when: Date }>): number {
+export function calculateXIRR(val: Array<{ amount: number; date: Date }>): number {
   if (val.length < 2) {
     return 0;
   }
-  return xirr(val);
+  const data = orderBy(val, "date");
+  const calculate = xirr(data);
+  const rate = convertRate(calculate.rate, RateInterval.Year);
+  return rate;
 }
 
 export function getCompountedInterest(principal: number, rate: number, periods: number): { interest: number; total: number } {
