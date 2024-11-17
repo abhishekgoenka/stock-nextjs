@@ -3,6 +3,7 @@ import { describe, it, expect, afterEach } from "vitest";
 import { calculateCAGR, calculateInterest, calculateXIRR, customDifferenceInDays, customDifferenceInYears } from "./financial";
 import { sub } from "date-fns";
 import { round } from "lodash";
+import { date } from "zod";
 
 describe("Financial Methods", () => {
   afterEach(() => {
@@ -72,30 +73,30 @@ describe("Financial Methods", () => {
   it("should calculate XIRR", async () => {
     // 1 month of investment
     let value = [
-      { amount: -5000, when: new Date(2024, 5, 1) },
-      { amount: 6000, when: new Date(2024, 6, 5) },
+      { amount: -5000, date: new Date(2024, 5, 1) },
+      { amount: 6000, date: new Date(2024, 6, 5) },
     ];
     let interest = calculateXIRR(value);
-    expect(interest).toBe(6.080011529539937);
+    expect(interest).toBe(6.0800115295401636);
 
     // 1 year of investment
     value = [
-      { amount: -5000, when: new Date(2024, 5, 1) },
-      { amount: 6000, when: new Date(2025, 7, 1) },
+      { amount: -5000, date: new Date(2024, 5, 1) },
+      { amount: 6000, date: new Date(2025, 7, 1) },
     ];
     interest = calculateXIRR(value);
-    expect(interest).toBe(0.16907691913316417);
+    expect(interest).toBe(0.16907691913318468);
 
     // when only 1 value is passed in array
-    value = [{ amount: -5000, when: new Date(2024, 5, 1) }];
+    value = [{ amount: -5000, date: new Date(2024, 5, 1) }];
     interest = calculateXIRR(value);
     expect(interest).toBe(0);
 
     // when negative value is not passed
     value = [
-      { amount: 5000, when: new Date(2024, 5, 1) },
-      { amount: 6000, when: new Date(2025, 7, 1) },
+      { amount: 5000, date: new Date(2024, 5, 1) },
+      { amount: 6000, date: new Date(2025, 7, 1) },
     ];
-    expect(() => calculateXIRR(value)).toThrowError("Transactions must not all be nonnegative");
+    expect(calculateXIRR(value)).toBeNaN();
   });
 });
