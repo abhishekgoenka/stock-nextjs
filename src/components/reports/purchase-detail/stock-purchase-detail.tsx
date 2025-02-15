@@ -93,11 +93,11 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
           <TableRow>
             <TableHead className="font-bold">Name</TableHead>
             <TableHead className="">Date</TableHead>
-            <TableHead className="text-right">Qty </TableHead>
-            <TableHead className="text-right">Price </TableHead>
+            <TableHead className="text-center">Qty </TableHead>
+            <TableHead className="text-center">Price </TableHead>
             <TableHead>Broker</TableHead>
-            <TableHead className="text-right">XIRR</TableHead>
-            <TableHead className="text-right">CAGR</TableHead>
+            <TableHead className="text-center">XIRR</TableHead>
+            <TableHead className="text-right">Overall Gain</TableHead>
             <TableHead className="text-right">Profit/Loss</TableHead>
             <TableHead className="text-right"></TableHead>
           </TableRow>
@@ -112,11 +112,11 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
                 <NumberFormater value={r.price} currency={r.currency} />
               </TableCell>
               <TableCell>{r.broker}</TableCell>
-              <TableCell className="text-right">
-                <CustomNumericFormat value={r.XIRR} />
+              <TableCell className={cn("text-right ", { "text-primary": r.XIRR > 0 }, { "text-destructive": r.XIRR < 0 })}>
+                <CustomNumericFormat value={r.XIRR} suffix="%" />
               </TableCell>
-              <TableCell className="text-right">
-                <CustomNumericFormat value={r.CAGR} />
+              <TableCell className={cn("text-right ", { "text-primary": r.overallGain > 0 }, { "text-destructive": r.overallGain < 0 })}>
+                <CustomNumericFormat value={r.overallGain} suffix="%" />
               </TableCell>
               <TableCell className={cn("text-right ", { "text-primary": profit(r) > 0 }, { "text-destructive": profit(r) < 0 })}>
                 <NumberFormater value={profit(r)} currency={r.currency} />

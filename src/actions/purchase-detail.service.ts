@@ -27,7 +27,7 @@ export type InvestmentDetailType = {
   currentAmount: number;
   currency: string;
   XIRR: number;
-  CAGR: number;
+  overallGain: number;
 };
 export type PurchaseDetailType = {
   totalXIRR: number;
@@ -88,7 +88,7 @@ export async function getPurchaseDetail(type: StockOrMutualFundType, id: number)
 
       totalXIRRData.push({ amount: Math.round(e.netAmount) * -1, date: investmentDT });
       e.XIRR = rate * 100;
-      e.CAGR = calculateCAGR(investmentDT, e.price, e.currentPrice);
+      e.overallGain = (e.currentPrice * 100) / e.price - 100;
 
       growthRate.percentage10 += calculateInterest(investmentDT, e.netAmount, 10);
       growthRate.percentage12 += calculateInterest(investmentDT, e.netAmount, 12);
