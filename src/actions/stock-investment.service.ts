@@ -6,7 +6,8 @@ import { connectDB } from "./base.service";
 
 export async function getStockInvestments(): Promise<StockInvestmentType[]> {
   await connectDB();
-  return await StockInvestment.findAll({ include: Company });
+  const result = await StockInvestment.findAll({ include: Company });
+  return JSON.parse(JSON.stringify(result));
 }
 
 export async function getStockInvestmentByID(id: string): Promise<StockInvestmentType | null> {

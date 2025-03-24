@@ -11,7 +11,8 @@ export async function getMFs(): Promise<MutualFundType[]> {
 
 export async function getMFByID(id: string): Promise<MutualFundType | null> {
   await connectDB();
-  return await MutualFund.findByPk(id);
+  const record = await MutualFund.findByPk(id);
+  return record ? JSON.parse(JSON.stringify(record)) : null;
 }
 
 export async function addMF(mutualFund: MutualFundType): Promise<MutualFundType | null> {
