@@ -70,7 +70,7 @@
     "sequelize": "^6.37.3",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
-    "stock-nse-india": "^1.1.7",
+    "stock-nse-india": "^1.2.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "xirr": "^1.1.0",
