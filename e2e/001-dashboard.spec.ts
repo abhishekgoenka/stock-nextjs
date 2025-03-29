@@ -22,3 +22,14 @@ test("get overview link", async ({ page }) => {
   await expect(page.getByText("₹47,89,131.43")).toBeVisible();
   await expect(page.getByText("$12,726.18")).toBeVisible();
 });
+
+test("should show charts", async ({ page }) => {
+  await page.goto("http://localhost:3001/");
+
+  // expect the chart to be visible
+  const chart = await page.locator(".recharts-rectangle").first();
+  await expect(chart).toBeVisible();
+
+  // expect the total purchase chart to be visible
+  await expect(page.getByText("Axis", { exact: true })).toBeVisible();
+});

@@ -13,7 +13,8 @@ export async function getCompanies(): Promise<CompanyType[]> {
 
 export async function getCompanyByID(id: string): Promise<CompanyType | null> {
   await connectDB();
-  return await Company.findByPk(id);
+  const record = await Company.findByPk(id);
+  return record ? JSON.parse(JSON.stringify(record)) : null;
 }
 
 export async function addCompany(company: CompanyType): Promise<CompanyType | null> {

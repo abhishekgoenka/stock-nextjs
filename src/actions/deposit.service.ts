@@ -13,7 +13,8 @@ export async function getDeposits(): Promise<DepositType[]> {
 
 export async function getDepositByID(id: string): Promise<DepositType | null> {
   await connectDB();
-  return await Deposit.findByPk(id);
+  const record = await Deposit.findByPk(id);
+  return record ? JSON.parse(JSON.stringify(record)) : null;
 }
 
 export async function addDeposit(deposit: DepositType): Promise<DepositType | null> {

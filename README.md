@@ -48,6 +48,7 @@ https://playwright.dev/docs/release-notes
 ```bash
 npm outdated
 ncu
+ncu -i --> Interactive Mode
 ```
 
 ## Updating local packages

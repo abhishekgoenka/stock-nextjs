@@ -7,7 +7,8 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function PurchaseDetailStockPage({ params }: { params: { id: string } }) {
+export default async function PurchaseDetailStockPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <StockPurchaseDetail id={+params.id} type="mf" />

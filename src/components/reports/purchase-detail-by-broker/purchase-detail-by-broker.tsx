@@ -55,7 +55,7 @@ export default function PurchaseDetailByBroker({ broker }: StockPurchaseDetailBy
         </TableHeader>
         <TableBody>
           {data?.data.map(r => (
-            <TableRow key={r.id}>
+            <TableRow key={`${r.id}-${r.name}`}>
               <TableCell className="font-bold">{r.name}</TableCell>
               <TableCell>{format(r.purchaseDate, "PPP")}</TableCell>
               <TableCell className="text-right">{r.qty}</TableCell>

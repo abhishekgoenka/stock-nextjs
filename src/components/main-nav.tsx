@@ -46,10 +46,10 @@ export type NavItem = {
 export function MainNav() {
   return (
     <div className="flex gap-6 md:gap-10">
-      <a href="/" className="flex items-center space-x-2">
+      <Link href="/" className="flex items-center space-x-2">
         <Icons.activity className="h-6 w-6" />
         <span className="inline-block font-bold">StockSync</span>
-      </a>
+      </Link>
 
       <NavigationMenu>
         <NavigationMenuList>
@@ -64,14 +64,14 @@ export function MainNav() {
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <li className="row-span-3">
                   <NavigationMenuLink asChild>
-                    <a
-                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                    <Link
                       href="/"
+                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                     >
                       <Icons.activity className="h-6 w-6" />
                       <div className="mb-2 mt-4 text-lg font-medium">StockSync</div>
                       <p className="text-sm leading-tight text-muted-foreground">Simplify Your Inventory and Order Management</p>
-                    </a>
+                    </Link>
                   </NavigationMenuLink>
                 </li>
                 <ListItem href="/companies" title="Company Information">
