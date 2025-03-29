@@ -33,7 +33,7 @@ test("validate report", async ({ page }) => {
 });
 
 test("add annual return", async ({ page }) => {
-  await page.getByRole("link", { name: "Add Annual Return" }).click();
+  await page.getByRole("button", { name: "Add Annual Return" }).click();
   await selectCombo(page, "Year", "2024");
   await page.getByLabel("Investments").fill("1000");
   await page.getByLabel("Expected return").fill("2000");
