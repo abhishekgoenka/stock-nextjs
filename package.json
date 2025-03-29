@@ -106,6 +106,10 @@
   },
   "overrides": {
     "@types/react": "19.0.12",
-    "@types/react-dom": "19.0.4"
+    "@types/react-dom": "19.0.4",
+    "recharts": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }
