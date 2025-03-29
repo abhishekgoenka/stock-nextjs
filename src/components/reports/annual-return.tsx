@@ -24,17 +24,17 @@ export default function AnnualReturn() {
     return <div>Not found!!!</div>;
   }
 
+  const onAnualReturnClickHandler = () => {
+    window.location.href = "/reports/annual-return/create";
+  };
+
   return (
     <Table className="caption-top">
       <TableCaption>
         <div className="flex justify-between">
           Annual Returns
           <div className="flex gap-4 flex-row-reverse">
-            <Button>
-              <Link className="w-full" href="/reports/annual-return/create" rel="noopener noreferrer">
-                Add Annual Return
-              </Link>
-            </Button>
+            <Button onClick={onAnualReturnClickHandler}>Add Annual Return</Button>
           </div>
         </div>
       </TableCaption>

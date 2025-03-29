@@ -56,13 +56,17 @@ export default function InvestmentReturn() {
       <TableBody>
         {expected?.returns.map(r => (
           <TableRow key={r.broker}>
-            <Link className="w-full" href={`/reports/purchase-detail-by-broker/${getBroker(r.broker)}`} rel="noopener noreferrer">
-              <TableCell className="font-bold">
-                <Button size="sm" variant="link">
-                  {r.broker}
-                </Button>{" "}
-              </TableCell>
-            </Link>
+            <TableCell className="font-bold">
+              <Button
+                size="sm"
+                variant="link"
+                onClick={() => {
+                  window.location.href = `/reports/purchase-detail-by-broker/${getBroker(r.broker)}`;
+                }}
+              >
+                {r.broker}
+              </Button>
+            </TableCell>
             <TableCell className="text-right">
               <NumberFormater value={r.percentage12} exchange={exchange} />
             </TableCell>
