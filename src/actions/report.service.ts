@@ -833,6 +833,7 @@ export async function getYearlyDividend(exchange: string): Promise<YearlyDividen
 type SaleByYear = {
   year: number;
   sales: number;
+  profitLoss: number;
 };
 export type TotalSaleByYear = {
   sales: SaleByYear[];
@@ -841,7 +842,7 @@ export type TotalSaleByYear = {
 export async function getTotalSales(exchange: string): Promise<TotalSaleByYear | null> {
   try {
     const sequelize = await connectDB();
-    const salesSQL = ` SELECT STRFTIME("%Y", [saleDate]) as "year", sum((qty*salePrice)+charges) as "sales" FROM sales
+    const salesSQL = ` SELECT STRFTIME("%Y", [saleDate]) as "year", sum((qty*salePrice)+charges) as "sales", sum((qty * (salePrice - purchasePrice)) + charges) as "profitLoss" FROM sales
                           WHERE exchange = :exchange GROUP BY STRFTIME("%Y", [saleDate])`;
     const result: SaleByYear[] = await sequelize.query(salesSQL, {
       replacements: { exchange: exchange },

@@ -35,6 +35,7 @@ export default function YearlySales() {
         <TableRow>
           <TableHead className="font-bold">Year</TableHead>
           <TableHead className="text-right">Sales</TableHead>
+          <TableHead className="text-right">P/L</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -42,7 +43,10 @@ export default function YearlySales() {
           <TableRow key={r.year}>
             <TableCell className="font-bold">{r.year}</TableCell>
             <TableCell className="text-right">
-              <NumberFormater value={r.sales} exchange={exchange} />
+              <NumberFormater value={r.sales} exchange={exchange} data-testid={`salesSold${r.year}`} />
+            </TableCell>
+            <TableCell className="text-right">
+              <NumberFormater value={r.profitLoss} exchange={exchange} data-testid={`salesProfitLoss${r.year}`} />
             </TableCell>
           </TableRow>
         ))}
