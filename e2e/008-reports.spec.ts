@@ -26,7 +26,8 @@ test("validate report", async ({ page }) => {
   await expect(page.getByText("₹77,186.45").nth(1)).toBeVisible();
 
   // stock sold in 2023
-  await expect(page.getByText("₹1,83,635.57")).toBeVisible();
+  await expect(page.getByTestId("salesSold2023")).toHaveText("₹1,83,635.57");
+  await expect(page.getByTestId("salesProfitLoss2023")).toHaveText("₹13,911.85");
 
   // dividend in 2023
   await expect(page.getByText("₹4,020.00")).toBeVisible();
