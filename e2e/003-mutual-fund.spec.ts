@@ -68,6 +68,6 @@ test.describe("Mutual Fund Purchase Detail", () => {
   test("has overall gain column", async ({ page }) => {
     await expect(page.getByRole("heading", { name: "Purchase Detail" })).toBeVisible();
     await expect(page.getByRole("cell", { name: "Overall Gain" })).toBeVisible();
-    await expect(page.getByText("0.02%")).toBeVisible();
+    await expect(page.getByText("0.02%").last()).toBeVisible();
   });
 });
