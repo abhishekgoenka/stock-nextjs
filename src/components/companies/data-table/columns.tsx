@@ -2,11 +2,12 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { CompanyType } from "@/models/company.model";
-import { DataTableRowActions } from "./data-table-row-actions";
 import NumberFormater from "@/components/shared/number-format";
 import { convertToExchangeType } from "@/lib/utils";
+import { CompanyType } from "@/models/company.model";
+
+import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 export const Columns: ColumnDef<CompanyType>[] = [
   {

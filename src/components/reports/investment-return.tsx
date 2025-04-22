@@ -1,11 +1,12 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ExpectedReturnType, expectedReturn } from "@/actions/report.service";
-import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useStockSyncStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
-import Link from "next/link";
+
+import { expectedReturn, ExpectedReturnType } from "@/actions/report.service";
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useStockSyncStore } from "@/store/store";
+
+import NumberFormater from "../shared/number-format";
 import { Button } from "../ui/button";
 
 export default function InvestmentReturn() {

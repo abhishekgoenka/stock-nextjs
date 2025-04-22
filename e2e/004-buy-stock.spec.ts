@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
 import { selectCombo, selectDate } from "./helper";
 
 const companyName = "Clean Science & Technology Ltd.";

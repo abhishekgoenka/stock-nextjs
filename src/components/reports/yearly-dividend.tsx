@@ -1,11 +1,13 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { YearlyDividendType, getYearlyDividend } from "@/actions/report.service";
-import NumberFormater from "../shared/number-format";
-import { useEffect, useState } from "react";
 import { sumBy } from "lodash";
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+
+import { getYearlyDividend, YearlyDividendType } from "@/actions/report.service";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useStockSyncStore } from "@/store/store";
+
+import NumberFormater from "../shared/number-format";
 
 export default function YearlyDividend() {
   const [dividend, setDividend] = useState<YearlyDividendType[]>([]);

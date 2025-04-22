@@ -1,11 +1,13 @@
 "use client";
 
+import { PlusIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+
 import { Input } from "../../ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

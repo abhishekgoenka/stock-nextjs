@@ -1,8 +1,9 @@
-import { getStockInvestmentByID } from "@/actions/stock-investment.service";
-import { Separator } from "@/components/ui/separator";
-import { Metadata } from "next";
 import { toDate } from "date-fns";
+import { Metadata } from "next";
+
+import { getStockInvestmentByID } from "@/actions/stock-investment.service";
 import AddModifyStockInvestment, { StockInvestmentFormValues } from "@/components/investments/stocks/add-modify-stock-investment";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "StockSync : Investments",

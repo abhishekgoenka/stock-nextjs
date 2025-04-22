@@ -1,11 +1,12 @@
 "use client";
 
-import { PurchaseDetailByBrokerType, getPurchaseDetailByBroker } from "@/actions/purchase-detail.service";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+
+import { getPurchaseDetailByBroker, PurchaseDetailByBrokerType } from "@/actions/purchase-detail.service";
 import NumberFormater, { CustomNumericFormat } from "@/components/shared/number-format";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { useEffect, useState } from "react";
 
 type StockPurchaseDetailByBrokerProps = {
   broker: string;

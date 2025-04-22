@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { getDeposits } from "@/actions/deposit.service";
 import { Columns } from "@/components/deposit/data-table/columns";
 import { DataTable } from "@/components/deposit/data-table/data-table";

@@ -1,6 +1,7 @@
 "use server";
 
 import AnualReturn, { AnnualReturnType } from "@/models/annual-return.model";
+
 import { connectDB } from "./base.service";
 
 export async function getAnnualReturn(exchange: string): Promise<AnnualReturnType[]> {

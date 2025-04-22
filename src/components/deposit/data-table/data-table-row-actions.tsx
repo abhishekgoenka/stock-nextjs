@@ -2,18 +2,18 @@
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { deleteDeposit } from "@/actions/deposit.service";
+import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
+import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
+import { DEPOSIT_DIVIDEND_RECEIVED } from "@/lib/constants";
+import { DepositType } from "@/models/deposit.model";
 
 import { Button } from "../../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "../../ui/dropdown-menu";
-
-import Link from "next/link";
-import { toastDBDeleteSuccess, toastDBSaveError } from "@/components/shared/toast-message";
-import { DeleteConfirmation } from "@/components/shared/delete-confirmation";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { DepositType } from "@/models/deposit.model";
-import { deleteDeposit } from "@/actions/deposit.service";
-import { DEPOSIT_DIVIDEND_RECEIVED } from "@/lib/constants";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;

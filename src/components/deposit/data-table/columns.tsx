@@ -1,12 +1,13 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+
+import NumberFormater from "@/components/shared/number-format";
+import { DepositType } from "@/models/deposit.model";
 
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { DepositType } from "@/models/deposit.model";
-import { format } from "date-fns";
-import NumberFormater from "@/components/shared/number-format";
 
 export const Columns: ColumnDef<DepositType>[] = [
   {

@@ -1,8 +1,9 @@
 "use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardOverviewType } from "@/actions/dashboard.service";
-import { Overview } from "./tabs/overview";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Forecast } from "./tabs/forecast";
+import { Overview } from "./tabs/overview";
 import { Stocks } from "./tabs/stocks";
 
 type DashboardProps = {

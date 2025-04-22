@@ -1,7 +1,8 @@
-import { getStockInvestmentByID } from "@/actions/stock-investment.service";
-import InvestmentSales, { SalesFormValues } from "@/components/sales/investment-sales";
 import { toDate } from "date-fns";
 import { Metadata } from "next";
+
+import { getStockInvestmentByID } from "@/actions/stock-investment.service";
+import InvestmentSales, { SalesFormValues } from "@/components/sales/investment-sales";
 
 export const metadata: Metadata = {
   title: "StockSync : Sales",

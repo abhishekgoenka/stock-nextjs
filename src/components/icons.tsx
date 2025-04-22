@@ -1,4 +1,5 @@
 import {
+  Activity,
   AlertTriangle,
   ArrowRight,
   Check,
@@ -24,7 +25,6 @@ import {
   Twitter,
   User,
   X,
-  Activity,
   // type Icon as LucideIcon,
 } from "lucide-react";
 

@@ -1,11 +1,12 @@
 "use server";
 
-import Sale, { SaleType } from "../models/sale.model";
-import { getStockInvestmentByID } from "./stock-investment.service";
-import { connectDB } from "./base.service";
 import { StockOrMutualFundType } from "@/lib/constants";
-import { deleteMutualFundInvestment } from "./mutual-fund-investment.service";
 import StockInvestment from "@/models/stock-investment.model";
+
+import Sale, { SaleType } from "../models/sale.model";
+import { connectDB } from "./base.service";
+import { deleteMutualFundInvestment } from "./mutual-fund-investment.service";
+import { getStockInvestmentByID } from "./stock-investment.service";
 
 export async function addSales(sale: SaleType, type: StockOrMutualFundType, investmentID: number): Promise<SaleType | null> {
   let transaction;

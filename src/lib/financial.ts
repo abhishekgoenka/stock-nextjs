@@ -1,9 +1,9 @@
 // import moment = require("moment");
-import { interest, compoundAnnualGrowthRate } from "capitaljs";
+import { compoundAnnualGrowthRate, interest } from "capitaljs";
 import { differenceInDays, differenceInYears } from "date-fns";
 import { orderBy, round } from "lodash";
 // var xirr = require("xirr");
-import { xirr, convertRate, RateInterval } from "node-irr";
+import { convertRate, RateInterval, xirr } from "node-irr";
 // const { xirr } = require("node-irr");
 
 /**

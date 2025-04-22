@@ -1,5 +1,6 @@
-import { EXCHANGE_TYPE } from "@/lib/constants";
 import { NumberFormatBase, NumericFormat } from "react-number-format";
+
+import { EXCHANGE_TYPE } from "@/lib/constants";
 
 type NumberFormaterProps = {
   value: string | number;

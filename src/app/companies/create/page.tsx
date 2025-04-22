@@ -1,6 +1,7 @@
+import { Metadata } from "next";
+
 import AddModifyCompany, { CompanyFormValues } from "@/components/companies/add-modify-company";
 import { Separator } from "@/components/ui/separator";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Companies",

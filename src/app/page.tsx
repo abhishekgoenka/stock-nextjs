@@ -1,7 +1,7 @@
+import { Metadata } from "next";
+
 import { getDashboardOverview } from "@/actions/dashboard.service";
 import { Dashboard } from "@/components/dashboard/dashboard";
-
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Dashboard",

@@ -1,8 +1,9 @@
+import { toDate } from "date-fns";
+import { Metadata } from "next";
+
 import { getMutualFundInvestmentByID } from "@/actions/mutual-fund-investment.service";
 import AddModifyMFInvestment, { MutualFundInvestmentFormValues } from "@/components/investments/mutual-fund/add-modify-mf-investment";
 import { Separator } from "@/components/ui/separator";
-import { Metadata } from "next";
-import { toDate } from "date-fns";
 
 export const metadata: Metadata = {
   title: "StockSync : Investments",

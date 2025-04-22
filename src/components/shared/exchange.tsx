@@ -1,8 +1,10 @@
 "use client";
 import { useShallow } from "zustand/react/shallow";
+
+import { useStockSyncStore } from "@/store/store";
+
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { useStockSyncStore } from "@/store/store";
 
 export function Exchange() {
   const { exchange, changeExchange } = useStockSyncStore(

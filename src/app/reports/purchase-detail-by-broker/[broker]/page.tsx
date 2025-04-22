@@ -1,5 +1,6 @@
-import PurchaseDetailByBroker from "@/components/reports/purchase-detail-by-broker/purchase-detail-by-broker";
 import { Metadata } from "next";
+
+import PurchaseDetailByBroker from "@/components/reports/purchase-detail-by-broker/purchase-detail-by-broker";
 
 export const metadata: Metadata = {
   title: "StockSync : Purchase detail by broker",

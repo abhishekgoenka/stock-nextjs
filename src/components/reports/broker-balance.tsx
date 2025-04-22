@@ -1,10 +1,12 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { BrokerBalanceType, getBrokerBalance } from "@/actions/report.service";
-import NumberFormater, { CustomNumericFormat } from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useStockSyncStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
+
+import { BrokerBalanceType, getBrokerBalance } from "@/actions/report.service";
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useStockSyncStore } from "@/store/store";
+
+import NumberFormater, { CustomNumericFormat } from "../shared/number-format";
 
 export default function BrokerBalance() {
   const [balance, setBalance] = useState<BrokerBalanceType | null>(null);

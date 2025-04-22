@@ -1,13 +1,14 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import NumberFormater, { CustomNumericFormat } from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useStockSyncStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
-import { AnnualReturnType } from "@/models/annual-return.model";
+
 import { getAnnualReturn } from "@/actions/annual-return.service";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AnnualReturnType } from "@/models/annual-return.model";
+import { useStockSyncStore } from "@/store/store";
+
+import NumberFormater, { CustomNumericFormat } from "../shared/number-format";
 import { Button } from "../ui/button";
-import Link from "next/link";
 
 export default function AnnualReturn() {
   const [annualReturns, setAnnualReturns] = useState<AnnualReturnType[]>([]);

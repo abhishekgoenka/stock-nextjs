@@ -1,11 +1,13 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { InvestmentByBrokerType, getInvestmentByBroker } from "@/actions/report.service";
-import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { Switch } from "../ui/switch";
-import { useStockSyncStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
+
+import { getInvestmentByBroker, InvestmentByBrokerType } from "@/actions/report.service";
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useStockSyncStore } from "@/store/store";
+
+import NumberFormater from "../shared/number-format";
+import { Switch } from "../ui/switch";
 
 export default function InvestmentByBroker() {
   const [data, setData] = useState<InvestmentByBrokerType | null>(null);

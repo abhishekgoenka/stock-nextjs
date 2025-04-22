@@ -1,9 +1,22 @@
 {
   "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
+  "plugins": ["unused-imports", "simple-import-sort"],
   "globals": {
     "React": "readonly"
   },
   "rules": {
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   }
 }

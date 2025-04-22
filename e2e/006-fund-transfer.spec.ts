@@ -1,4 +1,5 @@
-import { test, expect, Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
 import { selectCombo, selectDate } from "./helper";
 
 test.beforeEach(async ({ page }) => {

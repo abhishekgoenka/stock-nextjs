@@ -1,8 +1,9 @@
+import { Metadata } from "next";
+
 import { getStockInvestments } from "@/actions/stock-investment.service";
 import { Columns } from "@/components/investments/stocks/data-table/columns";
 import { DataTable } from "@/components/investments/stocks/data-table/data-table";
 import { StockInvestmentType } from "@/models/stock-investment.model";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Investments",

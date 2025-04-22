@@ -1,14 +1,16 @@
+import { faDollarSign, faGear, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+
 import { EstimatedReturnType, getEstimatedReturn } from "@/actions/dashboard.service";
 import NumberFormater from "@/components/shared/number-format";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { RecentSales } from "../recent-sales";
-import { Overview2 } from "./overview2";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDollarSign, faIndianRupeeSign, faGear } from "@fortawesome/free-solid-svg-icons";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+
+import { RecentSales } from "../recent-sales";
+import { Overview2 } from "./overview2";
 
 export function Forecast() {
   const [year, setYear] = useState("2042");

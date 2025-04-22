@@ -1,6 +1,7 @@
 "use server";
 
 import Company, { CompanyType } from "@/models/company.model";
+
 import { connectDB } from "./base.service";
 
 export async function getCompanies(): Promise<CompanyType[]> {

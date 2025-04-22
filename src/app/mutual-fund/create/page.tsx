@@ -1,6 +1,7 @@
+import { Metadata } from "next";
+
 import AddModifyMutualFund, { MutualFundFormValues } from "@/components/mutual-fund/add-modify-mutualfund";
 import { Separator } from "@/components/ui/separator";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Mutual Fund",

@@ -1,7 +1,8 @@
-import { EXCHANGE_TYPE } from "@/lib/constants";
-import { StateCreator, create } from "zustand";
+import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { EXCHANGE_TYPE } from "@/lib/constants";
 
 // const customMiddlewares = f => devtools(persist(immer(f), { name: "stockSync" }));
 

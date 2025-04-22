@@ -1,4 +1,5 @@
-import { Model, Column, Table, PrimaryKey, AutoIncrement, BelongsTo, ForeignKey } from "sequelize-typescript";
+import { AutoIncrement, BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
+
 import Company from "./company.model";
 
 export type StockInvestmentType = {

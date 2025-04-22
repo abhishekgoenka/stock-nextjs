@@ -1,6 +1,7 @@
+import { Metadata } from "next";
+
 import AddModifyAnnualReturn, { AnnualReturnFormValues } from "@/components/reports/annual-return/add-modify-annual-return";
 import { Separator } from "@/components/ui/separator";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Annual Return",
