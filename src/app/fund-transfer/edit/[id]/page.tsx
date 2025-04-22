@@ -1,8 +1,9 @@
+import { toDate } from "date-fns";
+import { Metadata } from "next";
+
 import { getDepositByID } from "@/actions/deposit.service";
 import AddModifyDeposit, { DepositFormValues } from "@/components/deposit/add-modify-deposit";
 import { Separator } from "@/components/ui/separator";
-import { toDate } from "date-fns";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Fund transfer",

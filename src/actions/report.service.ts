@@ -1,10 +1,12 @@
 "use server";
 
-import { QueryTypes } from "sequelize";
-import { connectDB } from "./base.service";
 import { parse } from "date-fns";
 import { round, slice, sortBy, sumBy } from "lodash";
+import { QueryTypes } from "sequelize";
+
 import { calculateInterest } from "@/lib/financial";
+
+import { connectDB } from "./base.service";
 export type MonthlyInvestmentType = {
   month: Date;
   stocks: number;

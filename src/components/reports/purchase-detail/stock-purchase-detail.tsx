@@ -1,14 +1,15 @@
 "use client";
 
-import { InvestmentDetailType, PurchaseDetailType, getPurchaseDetail } from "@/actions/purchase-detail.service";
+import { format } from "date-fns";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import { getPurchaseDetail, InvestmentDetailType, PurchaseDetailType } from "@/actions/purchase-detail.service";
 import NumberFormater, { CustomNumericFormat } from "@/components/shared/number-format";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StockOrMutualFundType } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 type StockPurchaseDetailProps = {
   id: number;

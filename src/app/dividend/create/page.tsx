@@ -1,6 +1,7 @@
+import { Metadata } from "next";
+
 import AddModifyDeposit, { DepositFormValues } from "@/components/deposit/add-modify-deposit";
 import { Separator } from "@/components/ui/separator";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Dividend",

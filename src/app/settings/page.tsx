@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import SyncPrices from "@/components/settings/sync-price";
 
 export const metadata: Metadata = {

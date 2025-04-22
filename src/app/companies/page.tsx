@@ -1,8 +1,8 @@
-import { DataTable } from "@/components/companies/data-table/data-table";
-
 import { Metadata } from "next";
+
 import { getCompanies } from "@/actions/company.service";
 import { Columns } from "@/components/companies/data-table/columns";
+import { DataTable } from "@/components/companies/data-table/data-table";
 
 export const metadata: Metadata = {
   title: "StockSync : Companies",

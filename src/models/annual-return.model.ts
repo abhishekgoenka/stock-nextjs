@@ -1,4 +1,4 @@
-import { Model, Column, Table, PrimaryKey, AutoIncrement } from "sequelize-typescript";
+import { AutoIncrement, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
 
 export type AnnualReturnType = {
   id?: number;

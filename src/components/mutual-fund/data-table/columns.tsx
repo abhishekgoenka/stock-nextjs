@@ -2,10 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
+import { CustomNumericFormat } from "@/components/shared/number-format";
+import { MutualFundType } from "@/models/mutual-fund.model";
+
 import { DataTableColumnHeader } from "../../companies/data-table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { MutualFundType } from "@/models/mutual-fund.model";
-import { CustomNumericFormat } from "@/components/shared/number-format";
 
 export const Columns: ColumnDef<MutualFundType>[] = [
   {

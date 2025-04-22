@@ -1,13 +1,14 @@
 import { Metadata } from "next";
-import MonthlyInvestment from "@/components/reports/monthly-investments";
-import YearlyInvestment from "@/components/reports/yearly-investments";
-import { Exchange } from "@/components/shared/exchange";
-import InvestmentReturn from "@/components/reports/investment-return";
-import InvestmentByBroker from "@/components/reports/investment-by-broker";
-import BrokerBalance from "@/components/reports/broker-balance";
-import YearlyDividend from "@/components/reports/yearly-dividend";
-import YearlySales from "@/components/reports/yearly-sales";
+
 import AnnualReturn from "@/components/reports/annual-return";
+import BrokerBalance from "@/components/reports/broker-balance";
+import InvestmentByBroker from "@/components/reports/investment-by-broker";
+import InvestmentReturn from "@/components/reports/investment-return";
+import MonthlyInvestment from "@/components/reports/monthly-investments";
+import YearlyDividend from "@/components/reports/yearly-dividend";
+import YearlyInvestment from "@/components/reports/yearly-investments";
+import YearlySales from "@/components/reports/yearly-sales";
+import { Exchange } from "@/components/shared/exchange";
 
 export const metadata: Metadata = {
   title: "StockSync : Report",

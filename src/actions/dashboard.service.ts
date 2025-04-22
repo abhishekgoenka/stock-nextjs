@@ -1,8 +1,10 @@
 "use server";
 
 import { QueryTypes } from "sequelize";
-import { connectDB } from "./base.service";
+
 import { getCompountedInterest } from "@/lib/financial";
+
+import { connectDB } from "./base.service";
 
 export type TotalInvestmentType = {
   totalINRInvestments: number;

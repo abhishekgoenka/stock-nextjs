@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { getMFs } from "@/actions/mutual-fund.service";
 import { Columns } from "@/components/mutual-fund/data-table/columns";
 import { DataTable } from "@/components/mutual-fund/data-table/data-table";

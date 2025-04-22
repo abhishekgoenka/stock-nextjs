@@ -1,12 +1,14 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "../ui/badge";
-import { MonthlyInvestmentType, getMonthlyInvestments } from "@/actions/report.service";
 import { format } from "date-fns";
-import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+
+import { getMonthlyInvestments, MonthlyInvestmentType } from "@/actions/report.service";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useStockSyncStore } from "@/store/store";
+
+import NumberFormater from "../shared/number-format";
+import { Badge } from "../ui/badge";
 
 export default function MonthlyInvestment() {
   const [investments, setInvestments] = useState<MonthlyInvestmentType[]>([]);

@@ -1,10 +1,12 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { TotalSaleByYear, getTotalSales } from "@/actions/report.service";
-import NumberFormater from "../shared/number-format";
 import { useEffect, useState } from "react";
-import { useStockSyncStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
+
+import { getTotalSales, TotalSaleByYear } from "@/actions/report.service";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useStockSyncStore } from "@/store/store";
+
+import NumberFormater from "../shared/number-format";
 
 export default function YearlySales() {
   const [sales, setSales] = useState<TotalSaleByYear | null>(null);

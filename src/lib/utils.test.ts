@@ -1,5 +1,6 @@
 import { cleanup } from "@testing-library/react";
-import { describe, it, expect, afterEach } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+
 import { convertToExchangeType } from "./utils";
 
 describe("Utility Methods", () => {

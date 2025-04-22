@@ -1,11 +1,12 @@
 import { Sequelize } from "sequelize-typescript";
-import Company from "@/models/company.model";
-import StockInvestment from "@/models/stock-investment.model";
-import MutualFundInvestment from "@/models/mutual-fund-investment.model";
-import MutualFund from "@/models/mutual-fund.model";
-import Deposit from "@/models/deposit.model";
-import Sale from "@/models/sale.model";
+
 import AnnualReturn from "@/models/annual-return.model";
+import Company from "@/models/company.model";
+import Deposit from "@/models/deposit.model";
+import MutualFund from "@/models/mutual-fund.model";
+import MutualFundInvestment from "@/models/mutual-fund-investment.model";
+import Sale from "@/models/sale.model";
+import StockInvestment from "@/models/stock-investment.model";
 
 export class ConnectionService {
   static sequelize: Sequelize;

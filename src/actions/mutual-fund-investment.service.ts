@@ -1,7 +1,7 @@
 "use server";
 
-import MutualFundInvestment, { MutualFundInvestmentType } from "../models/mutual-fund-investment.model";
 import MutualFund from "../models/mutual-fund.model";
+import MutualFundInvestment, { MutualFundInvestmentType } from "../models/mutual-fund-investment.model";
 import { connectDB } from "./base.service";
 
 export async function getMutualFundInvestments(): Promise<MutualFundInvestment[]> {

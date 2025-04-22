@@ -1,11 +1,13 @@
-import { InvestmentReturnType, TotalInvestmentType, getInvestmentReturn, getTotalInvestment } from "@/actions/dashboard.service";
+import { faDollarSign, faHandHoldingDollar, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+
+import { getInvestmentReturn, getTotalInvestment, InvestmentReturnType, TotalInvestmentType } from "@/actions/dashboard.service";
 import NumberFormater from "@/components/shared/number-format";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { RecentSales } from "../recent-sales";
 import { Overview2 } from "./overview2";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDollarSign, faIndianRupeeSign, faHandHoldingDollar } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
 
 export function Overview() {
   const [totalInvestments, setTotalInvestments] = useState<TotalInvestmentType | null>(null);

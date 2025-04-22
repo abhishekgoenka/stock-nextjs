@@ -1,8 +1,9 @@
+import { Metadata } from "next";
+
 import { getMutualFundInvestments } from "@/actions/mutual-fund-investment.service";
 import { Columns } from "@/components/investments/mutual-fund/data-table/columns";
 import { DataTable } from "@/components/investments/mutual-fund/data-table/data-table";
 import MutualFundInvestment from "@/models/mutual-fund-investment.model";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "StockSync : Investments",
