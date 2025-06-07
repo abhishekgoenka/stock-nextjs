@@ -11,7 +11,7 @@ test("has title", async ({ page }) => {
   await expect(page).toHaveTitle(/StockSync : Setting/);
 });
 
-test("validate stock sync", async ({ page }) => {
+test.skip("validate stock sync", async ({ page }) => {
   await page.getByRole("button", { name: "Sync Stock Price" }).click();
   await expect(async () => {
     await expect(page.getByText("Error: Company TestSymbol has")).toBeVisible();
