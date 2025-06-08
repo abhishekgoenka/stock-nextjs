@@ -10,7 +10,9 @@ export type DepositType = {
   amount: number;
 };
 
-@Table
+@Table({
+  tableName: "Deposits",
+})
 export default class Deposit extends Model<DepositType> {
   @AutoIncrement
   @PrimaryKey

@@ -16,7 +16,9 @@ export type StockInvestmentType = {
   company?: Company;
 };
 
-@Table
+@Table({
+  tableName: "StockInvestments",
+})
 export default class StockInvestment extends Model<StockInvestmentType> {
   @AutoIncrement
   @PrimaryKey

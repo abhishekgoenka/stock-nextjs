@@ -1,3 +1,4 @@
+import fs from "fs";
 import { Sequelize } from "sequelize-typescript";
 
 import AnnualReturn from "@/models/annual-return.model";
@@ -15,8 +16,13 @@ export class ConnectionService {
 
   static async generateConnection() {
     try {
-      const dbPath = process.env.SQLITE_DB_PATH;
+      const dbPath = process.env.SQLITE_DB_PATH ?? "";
       console.log(`Connecting to SQLite database at ${dbPath}`);
+      if (!fs.existsSync(dbPath)) {
+        console.error("Database file not found at:", dbPath);
+      } else {
+        console.log("Database file found at:", dbPath);
+      }
       ConnectionService.sequelize = new Sequelize({
         logging: false,
         dialect: "sqlite",

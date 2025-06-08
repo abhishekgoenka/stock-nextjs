@@ -8,7 +8,7 @@
     {
       "previewLimit": 50,
       "driver": "SQLite",
-      "database": "${workspaceFolder:stock-nextjs}/portfolio.sqlite",
+      "database": "${workspaceFolder:stock-nextjs}/data/portfolio.sqlite",
       "name": "portfolio"
     }
   ]
