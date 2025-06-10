@@ -17,7 +17,7 @@ jobs:
       - name: Replace single file
         uses: richardrigutins/replace-in-files@v2
         with:
-          files: "src/actions/connection.service.ts"
+          files: "./.env.local"
           search-text: "portfolio.sqlite"
           replacement-text: "portfolio.test.sqlite"
       - name: Use Node.js ${{ matrix.node-version }}
