@@ -11,7 +11,9 @@ export type AnnualReturnType = {
   exchange: string;
 };
 
-@Table
+@Table({
+  tableName: "AnnualReturns",
+})
 export default class AnnualReturn extends Model<AnnualReturnType> {
   @AutoIncrement
   @PrimaryKey

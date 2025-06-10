@@ -13,13 +13,6 @@ jobs:
         node-version: [20.x]
     steps:
       - uses: actions/checkout@v4
-      # Replace all the occurrences of '{0}' with '42' in the README.md file
-      - name: Replace single file
-        uses: richardrigutins/replace-in-files@v2
-        with:
-          files: "src/actions/connection.service.ts"
-          search-text: "portfolio.sqlite"
-          replacement-text: "portfolio.test.sqlite"
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:

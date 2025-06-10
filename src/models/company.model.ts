@@ -13,7 +13,9 @@ export type CompanyType = {
   currentPrice: number;
 };
 
-@Table
+@Table({
+  tableName: "Companies",
+})
 export default class Company extends Model<CompanyType> {
   @AutoIncrement
   @PrimaryKey

@@ -13,7 +13,9 @@ export type SaleType = {
   currency: string;
 };
 
-@Table
+@Table({
+  tableName: "Sales",
+})
 export default class Sale extends Model<SaleType> {
   @AutoIncrement
   @PrimaryKey

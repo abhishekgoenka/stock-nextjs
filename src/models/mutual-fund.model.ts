@@ -17,7 +17,9 @@ export type MutualFundType = {
   indexFund: boolean;
 };
 
-@Table
+@Table({
+  tableName: "MutualFunds",
+})
 export default class MutualFund extends Model<MutualFundType> {
   @AutoIncrement
   @PrimaryKey

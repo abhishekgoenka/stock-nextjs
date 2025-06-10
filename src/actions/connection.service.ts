@@ -15,11 +15,12 @@ export class ConnectionService {
 
   static async generateConnection() {
     try {
+      const dbPath = process.env.SQLITE_DB_PATH;
+      console.log("Connecting to SQLite database at:", dbPath);
       ConnectionService.sequelize = new Sequelize({
         logging: false,
         dialect: "sqlite",
-        storage: "portfolio.sqlite",
-        // storage: "portfolio.test.sqlite",
+        storage: dbPath,
         models: [Company, StockInvestment, MutualFund, MutualFundInvestment, Deposit, Sale, AnnualReturn],
       });
       await ConnectionService.sequelize.authenticate();

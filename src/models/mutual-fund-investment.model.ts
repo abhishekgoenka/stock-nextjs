@@ -15,7 +15,9 @@ export type MutualFundInvestmentType = {
   broker: string;
 };
 
-@Table
+@Table({
+  tableName: "MutualFundInvestments",
+})
 export default class MutualFundInvestment extends Model<MutualFundInvestmentType> {
   @AutoIncrement
   @PrimaryKey

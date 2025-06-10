@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack -p 3001",
     "build": "next build",
+    "postbuild": "mkdir -p .next/data && cp data/portfolio.sqlite .next/data/",
     "start": "next start -p 3001",
     "lint": "next lint",
     "test": "vitest",
@@ -55,6 +56,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.416.0",
