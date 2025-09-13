@@ -124,7 +124,7 @@ export default function StockPurchaseDetail({ id, type }: StockPurchaseDetailPro
               </TableCell>
               <TableCell className="text-center ">
                 <Button variant={"link"}>
-                  <Link className="w-full" href={`/sales/stock/${r?.id}`} rel="noopener noreferrer">
+                  <Link className="w-full" href={`/sales/${type}/${r?.id}`} rel="noopener noreferrer">
                     Sales
                   </Link>
                 </Button>

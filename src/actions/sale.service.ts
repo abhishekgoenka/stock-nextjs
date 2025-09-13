@@ -1,11 +1,12 @@
 "use server";
 
 import { StockOrMutualFundType } from "@/lib/constants";
+import MutualFundInvestment from "@/models/mutual-fund-investment.model";
 import StockInvestment from "@/models/stock-investment.model";
 
 import Sale, { SaleType } from "../models/sale.model";
 import { connectDB } from "./base.service";
-import { deleteMutualFundInvestment } from "./mutual-fund-investment.service";
+import { getMutualFundInvestmentByID } from "./mutual-fund-investment.service";
 import { getStockInvestmentByID } from "./stock-investment.service";
 
 export async function addSales(sale: SaleType, type: StockOrMutualFundType, investmentID: number): Promise<SaleType | null> {
@@ -32,7 +33,22 @@ export async function addSales(sale: SaleType, type: StockOrMutualFundType, inve
         }
       }
     } else {
-      await deleteMutualFundInvestment(investmentID);
+      // await deleteMutualFundInvestment(investmentID);
+      const currentInvestment = await getMutualFundInvestmentByID(investmentID.toString());
+      if (currentInvestment) {
+        if (currentInvestment.qty === sale.qty) {
+          await MutualFundInvestment.destroy({
+            where: { id: currentInvestment.id },
+            transaction,
+          });
+        } else {
+          currentInvestment.qty -= sale.qty;
+          await MutualFundInvestment.update(currentInvestment, {
+            where: { id: currentInvestment.id },
+            transaction,
+          });
+        }
+      }
     }
     await transaction.commit();
     return JSON.parse(JSON.stringify(record));
