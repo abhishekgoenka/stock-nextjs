@@ -11,7 +11,14 @@ export async function getMutualFundInvestments(): Promise<MutualFundInvestment[]
 
 export async function getMutualFundInvestmentByID(id: string): Promise<MutualFundInvestmentType | null> {
   await connectDB();
-  const record = await MutualFundInvestment.findByPk(id);
+  const record = await MutualFundInvestment.findByPk(id, {
+    include: [
+      {
+        model: MutualFund,
+        required: true,
+      },
+    ],
+  });
   return record ? JSON.parse(JSON.stringify(record)) : null;
 }
 

@@ -73,6 +73,8 @@ export default function InvestmentSales({ defaultValues, type, companyID, invest
       toastDBSaveSuccess();
       if (type === "stock") {
         router.push(`/reports/purchase-detail/stock/${companyID}`);
+      } else if (type === "mf") {
+        router.push(`/reports/purchase-detail/mf/${companyID}`);
       }
     } else {
       toastDBSaveError();
