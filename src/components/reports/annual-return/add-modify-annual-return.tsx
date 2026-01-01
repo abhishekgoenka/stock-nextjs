@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { EXCHANGE } from "@/lib/constants";
 import { AnnualReturnType } from "@/models/annual-return.model";
 
-const YEARS = ["2020", "2021", "2022", "2023", "2024"];
+const YEARS = ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"];
 const annualReturnFormSchema = z.object({
   year: z.string().min(3, "Select year"),
   investments: z.coerce.number(),
